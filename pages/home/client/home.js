@@ -19,8 +19,8 @@ Template.home.events({
                             },
                             email: e,
                             password: p
-                        })
-                    
+                        }),
+
                     function(error) {
                         if (error) { // if registration fails
                             console.log(error.reason); // console log reason [show display error to user]

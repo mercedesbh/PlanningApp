@@ -2,6 +2,7 @@ Template.home.helpers({
 
 });
 
+
 Template.home.events({
             "submit .js-register": function(event) {
                 event.preventDefault();

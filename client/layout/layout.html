@@ -1,23 +1,16 @@
 <template name="layout">
-	<div class="container">
-		<ul class="nav nav-pills">
-  			<li role="presentation">
-  				<a href="{{pathFor 'home'}}">Home</a>
-  			</li>
-  			<li role="presentation">
-  				<a href="/about">About</a>
-  			</li>
- 			 <li role="presentation">
- 			 	<a href="/comments">Comments</a>
- 			 </li>
-			<li role="presentation">
- 			 	<a href="/showRides">Available Carpooling Rides</a>
- 			 </li>
- 			 <li>
- 			 	{{> loginButtons}}
- 			 </li>
-		</ul>
+
+	<ul class="css-nav">
+		<li>
+			<div class="css-logo">PlanningApp</div>
+		</li>
+		<li class="css-login">
+			<div>
+				<a href="{{pathFor 'login'}}">Login</a>
+			</div>
+		</li>
+	</ul>
+
 	{{> yield}}
 
-	</div>
 </template>

@@ -22,5 +22,3 @@ insecure                # Allow all DB writes from clients (for prototyping)
 iron:router
 twbs:bootstrap
 accounts-password
-accounts-google
-ian:accounts-ui-bootstrap-3

@@ -1,12 +1,24 @@
 <template name="home">
-  <h1>Brandeis CarPooling App</h1>
-  Welcome... please register and log in!
-  {{#if currentUser}}
-     Congratulations for getting logged in!
-  {{else}}
-     You better log in!!!!!!!!dhjhj
-  {{/if}}
+    <div class="css-banner">
 
-Making it rain $$ since 2016
+        <div class="css-banner-left">
+            <!-- busyMan.jpg image -->
+        </div>
+        <div class="css-banner-right">
+            <form class="js-register css-register" action="home.html" method="post">
+                <h1>Register</h1>
+                <br>
+                <input class="js-first-name form-control" type="text" placeholder="First name">
+                <br>
+                <input class="js-last-name form-control" type="text" placeholder="Last name">
+                <br>
+                <input class="js-email form-control" type="email" placeholder="Email">
+                <br>
+                <input class="js-password form-control" type="password" placeholder="Password">
+                <h6>By clicking Sign up, I agree to the Terms of Service and Privacy Policy.</h6>
+                <input class="js-register-btn btn" type="button" value="Sign up - it's free">
+            </form>
+        </div>
 
+    </div>
 </template>

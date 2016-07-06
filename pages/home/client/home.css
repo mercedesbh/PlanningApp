@@ -1,0 +1,45 @@
+.css-banner {
+    position: relative;
+    width: auto;
+    height: 450px;
+}
+.css-banner div {
+    position: relative;
+    display: inline-block;
+}
+.css-banner-left {
+    position: relative;
+    float: left;
+    height: 100%;
+    width: 60%;
+    background-image: url(/images/busyMan.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+.css-banner-right {
+    position: relative;
+    float: right;
+    background-color: #ffffff;
+    height: 100%;
+    width: 40%;
+}
+.css-register {
+  position: relative;
+  width: 75%;
+  margin: auto;
+  margin-top: 40px;
+}
+.css-register input {
+  position: relative;
+  display: block;
+  margin: auto;
+  width: 100%;
+}
+.css-register h6 {
+  text-align: center;
+}
+.btn {
+  background-color: #fe5a5a;
+  color: #ffffff;
+}

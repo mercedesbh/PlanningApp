@@ -1,9 +1,11 @@
 * {
     font-family: Arial Rounded MT Bold;
+    margin: 0;
 }
-body {
+html, body {
     background-color: #f0f0f0;
     margin: 0 auto;
+    height: 100%;
 }
 a {
     text-decoration: none;
@@ -11,7 +13,8 @@ a {
 }
 a:hover {
     text-decoration: none;
-    color: grey;  /* change color */
+    color: grey;
+    /* change color */
 }
 .css-nav {
     position: relative;
@@ -37,7 +40,7 @@ a:hover {
     font-family: Arial Rounded MT Bold;
     color: #fe5a5a;
 }
-.css-login {
+.css-login-link {
     float: right;
     vertical-align: middle;
     padding: 12.5px 30px 12.5px 30px;

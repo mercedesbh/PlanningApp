@@ -1,9 +1,9 @@
-.css-banner {
+.css-home-banner {
     position: relative;
     width: auto;
     height: 450px;
 }
-.css-banner div {
+.css-home-banner div {
     position: relative;
     display: inline-block;
 }
@@ -25,21 +25,21 @@
     width: 40%;
 }
 .css-register {
-  position: relative;
-  width: 75%;
-  margin: auto;
-  margin-top: 40px;
+    position: relative;
+    width: 75%;
+    margin: auto;
+    margin-top: 40px;
 }
 .css-register input {
-  position: relative;
-  display: block;
-  margin: auto;
-  width: 100%;
+    position: relative;
+    display: block;
+    margin: auto;
+    width: 100%;
 }
 .css-register h6 {
-  text-align: center;
+    text-align: center;
 }
 .btn {
-  background-color: #fe5a5a;
-  color: #ffffff;
+    background-color: #fe5a5a;
+    color: #ffffff;
 }

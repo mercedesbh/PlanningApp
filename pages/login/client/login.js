@@ -15,8 +15,7 @@ Template.login.events({
                 console.log(error.reason); // // console log reason [show display error to user]
                 return;
             } else {
-                alert("You are now logged in.");
-                // Router.go("");
+                Router.go("/upcoming");
             }
         });
     },

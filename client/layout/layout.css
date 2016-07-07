@@ -23,39 +23,64 @@ a:hover {
     height: 45px;
     background-color: #ffffff;
     list-style-type: none;
-    text-align: center;
+    /*text-align: center;*/
     border-bottom: 1px solid #f0f0f0;
+    display: table;
 }
-.css-nav li {
-    position: relative;
-    display: inline-block;
-    margin: 0 auto;
-    text-align: center;
+.css-more {
+  /*background-color: green;*/
+  padding: 9.5px 0px 9.5px 0px;
+}
+.css-more span {
+  margin-left: 12px;
+  font-size: 20px;
+  color: #252525;
 }
 .css-logo {
-    position: relative;
-    margin: auto;
-    width: auto;
-    font-size: 30px;
-    font-family: Arial Rounded MT Bold;
-    color: #fe5a5a;
-}
-.css-login-link {
-    float: right;
-    vertical-align: middle;
-    padding: 12.5px 30px 12.5px 30px;
-    color: #252525;
+  /*background-color: orange;*/
+  color: #fe5a5a;
+  font-size: 30px;
+  padding: 0px 0px 2px 0px;
+  text-align: center;
 }
 .css-live-user {
-  float: right;
-  vertical-align: middle;
-  padding: 12.5px 30px 12.5px 30px;
+  /*background-color: purple;*/
+  padding: 12px 0px 12px 0px;
 }
-.css-user {
+.css-live-user .css-notify {
+  margin-left: 40px;
+}
+.css-live-user .css-username {
+  position: relative;
+  float: right;
+  margin-right: 30px;
   color: #fe5a5a;
 }
-/*.css-more {
+.dropdown {
+  /*background-color: blue;*/
+  position: relative;
+  float: right;
+}
+.css-login-link {
+  /*background-color: red;*/
+  padding: 12px 0px 12px 0px;
+}
+.css-login-link a{
+  position: relative;
+  float: right;
+  margin-right: 30px;
+  color: #252525;
+}
+
+/* side navigation */
+.css-side-nav {
+  position: absolute;
   float: left;
-  vertical-align: middle;
-  padding: 12.5px 30px 12.5px 30px;
-}*/
+  left: -300px;
+  width: 300px;
+  height: 100%;
+  background-color: #252525;
+  opacity: 0.8;
+  z-index: 1;
+  color: red; /* temporary */
+}

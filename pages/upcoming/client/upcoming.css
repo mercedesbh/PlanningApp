@@ -1,0 +1,22 @@
+.css-upcoming-container {
+  position: relative;
+  margin: auto;
+  width: 60%;
+  background-color: #ffffff;
+  height: 100%;
+  padding: 0px 15px 0px 15px;
+}
+.css-upcoming-tabs {
+  background-color: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+}
+.css-today {
+  text-align: center;
+  font-size: 20px;
+  padding: 10px;
+}
+.css-tomorrow {
+  text-align: center;
+  font-size: 20px;
+  padding: 10px;
+}

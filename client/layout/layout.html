@@ -1,41 +1,50 @@
 <template name="layout">
 
-
-
 	{{#if currentUser}}
-	<ul class="css-nav">
-		<!-- <li><span class="css-more glyphicon glyphicon-th"></span></li> -->
-		<li>
-			<div class="css-logo">PlanningApp</div>
-		</li>
-		<li class="css-live-user">
-			<div class="btn-group">
-				<div class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<a class="css-user" href="#"> {{userName.profile.first}} {{userName.profile.last}} <span class="caret"></span> </a>
-				</div>
+
+	<div class="css-nav row">
+		<div class="css-more col-sm-4">
+			<a href="#"><span class="js-more-btn glyphicon glyphicon-th"></span></a>
+		</div>
+		<div class="css-logo col-sm-4">
+			PlanningApp
+		</div>
+		<div class="css-live-user col-sm-4">
+
+			<a class="css-notify" href="#">[N]</a>
+
+			<div role="presentation" class="dropdown">
+				<a class="css-username dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> {{userName.profile.first}} {{userName.profile.last}} <span class="caret"></span> </a>
 				<ul class="dropdown-menu">
-					<li><a href="#">Events</a></li>
-					<li><a href="#">Upcoming</a></li>
+					<li><a href="{{pathFor 'events'}}">Events</a></li>
+					<li><a href="{{pathFor 'upcoming'}}">Upcoming</a></li>
 					<li role="separator" class="divider"></li>
 					<li class="js-logout"><a href="#">Logout</a></li>
 				</ul>
 			</div>
-			<div class="btn-group">
-			</div>
-		</li>
-		<!-- <li>[N]</li> -->
-	</ul>
+
+		</div>
+	</div>
+
+	<div class="css-side-nav js-side-nav">
+		NAV WILL NOT CLOSE, NEED FIX [JUST REFRESH FOR NOW]
+	</div>
+
 	{{else}}
-	<ul class="css-nav">
-		<li>
-			<div class="css-logo">PlanningApp</div>
-		</li>
-		<li class="css-login-link">
-			<div>
-				<a href="{{pathFor 'login'}}">Login</a>
-			</div>
-		</li>
-	</ul>
-	{{/if}} {{> yield}}
+
+	<div class="css-nav row">
+		<div class="css-more col-sm-4"></div>
+		<div class="css-logo col-sm-4">
+			PlanningApp
+		</div>
+		<div class="css-login-link col-sm-4">
+			<a href="{{pathFor 'login'}}">Login</a>
+		</div>
+	</div>
+
+	{{/if}}
+
+	<!-- where other templates will be rendered -->
+	{{> yield}}
 
 </template>

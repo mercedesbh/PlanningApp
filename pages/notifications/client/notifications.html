@@ -1,0 +1,22 @@
+<template name="notifications">
+
+	<div class="jumbotron">
+		<h1> Notifications </h1>
+	</div>
+
+	<div>
+		<p>
+			{{#if currentUser}}
+				You're logged in. View your upcoming notifications for today and tomorrow here!
+			{{else}}
+				You must log in.
+			{{/if}}
+		</p>
+	</div>
+
+	<ul class="nav nav-justified nav-inverse">
+  		<li role="presentation" class="active"><a href="#">Today</a></li>
+  		<li role="presentation"><a href="#">Tomorrow</a></li>
+	</ul>
+
+</template>

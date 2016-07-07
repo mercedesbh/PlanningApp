@@ -26,9 +26,8 @@ Template.home.events({
                     return;
                 } else {
                     Router.go('/'); // else go to ??? page
+                    alert("You're registered!");
                 }
-
-                alert("You're registered!");
             }
     }
 });

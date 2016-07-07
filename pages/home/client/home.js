@@ -2,7 +2,6 @@ Template.home.helpers({
 
 });
 
-
 Template.home.events({
     "submit .js-register": function(event) {
         event.preventDefault();
@@ -13,21 +12,20 @@ Template.home.events({
         const p = $(".js-password").val();
 
         Accounts.createUser({
-                profile: {
-                    first: f,
-                    last: l
-                },
-                email: e,
-                password: p
-            }),
-            function(error) {
-                if (error) { // if registration fails
-                    console.log(error.reason); // console log reason [show display error to user]
-                    return;
-                } else {
-                    Router.go('/'); // else go to ??? page
-                    alert("You're registered!");
-                }
-            }
-    }
+          profile: {
+            first: f,
+            last: l
+          },
+          email: e,
+          password: p
+        }, function(error) {
+          if(error) { // if registration fails
+            console.log(error.reason); // console log reason
+            return;
+          } else {
+            Router.go('/upcoming'); // else go to upcoming page
+          }
+        });
+      },
+
 });

@@ -1,17 +1,32 @@
 <template name="layout">
 
-	<ul class="css-nav">
-		<li>
-			<div class="css-logo">PlanningApp</div>
-		</li>
-		<li class="css-login-link">
-			<div>
-				<a href="{{pathFor 'login'}}">Login</a>
-			</div>
-		</li>
 
-		 <li role="presentation"><a href="{{pathFor 'notifications'}}">Notifications</a></li>
-	</ul>
+
+	{{#if currentUser}}
+		<ul class="css-nav">
+			<li>[more]</li>
+			<li>
+				<div class="css-logo">PlanningApp</div>
+			</li>
+			<li class="css-login-link">
+				<div>
+					[User F + L]
+				</div>
+			</li>
+			<li>[N]</li>
+		</ul>
+	{{else}}
+		<ul class="css-nav">
+			<li>
+				<div class="css-logo">PlanningApp</div>
+			</li>
+			<li class="css-login-link">
+				<div>
+					<a href="{{pathFor 'login'}}">Login</a>
+				</div>
+			</li>
+		</ul>
+	{{/if}}
 
 	{{> yield}}
 

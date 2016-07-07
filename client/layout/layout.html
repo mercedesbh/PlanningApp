@@ -3,31 +3,39 @@
 
 
 	{{#if currentUser}}
-		<ul class="css-nav">
-			<li>[more]</li>
-			<li>
-				<div class="css-logo">PlanningApp</div>
-			</li>
-			<li class="css-login-link">
-				<div>
-					[User F + L]
+	<ul class="css-nav">
+		<!-- <li><span class="css-more glyphicon glyphicon-th"></span></li> -->
+		<li>
+			<div class="css-logo">PlanningApp</div>
+		</li>
+		<li class="css-live-user">
+			<div class="btn-group">
+				<div class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<a class="css-user" href="#"> {{userName.profile.first}} {{userName.profile.last}} <span class="caret"></span> </a>
 				</div>
-			</li>
-			<li>[N]</li>
-		</ul>
+				<ul class="dropdown-menu">
+					<li><a href="#">Events</a></li>
+					<li><a href="#">Upcoming</a></li>
+					<li role="separator" class="divider"></li>
+					<li class="js-logout"><a href="#">Logout</a></li>
+				</ul>
+			</div>
+			<div class="btn-group">
+			</div>
+		</li>
+		<!-- <li>[N]</li> -->
+	</ul>
 	{{else}}
-		<ul class="css-nav">
-			<li>
-				<div class="css-logo">PlanningApp</div>
-			</li>
-			<li class="css-login-link">
-				<div>
-					<a href="{{pathFor 'login'}}">Login</a>
-				</div>
-			</li>
-		</ul>
-	{{/if}}
-
-	{{> yield}}
+	<ul class="css-nav">
+		<li>
+			<div class="css-logo">PlanningApp</div>
+		</li>
+		<li class="css-login-link">
+			<div>
+				<a href="{{pathFor 'login'}}">Login</a>
+			</div>
+		</li>
+	</ul>
+	{{/if}} {{> yield}}
 
 </template>

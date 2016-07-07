@@ -46,3 +46,16 @@ a:hover {
     padding: 12.5px 30px 12.5px 30px;
     color: #252525;
 }
+.css-live-user {
+  float: right;
+  vertical-align: middle;
+  padding: 12.5px 30px 12.5px 30px;
+}
+.css-user {
+  color: #fe5a5a;
+}
+/*.css-more {
+  float: left;
+  vertical-align: middle;
+  padding: 12.5px 30px 12.5px 30px;
+}*/

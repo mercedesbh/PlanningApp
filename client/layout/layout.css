@@ -1,3 +1,18 @@
+/* Hex Colors
+ * #252525 Header Font
+ * #666666 Font Color / Neutral Color [?]
+ * #fe5a5a Accent Color / Icon Ouline Color
+ * # Icon Fill Color
+ * #acacac Font Hover Color / Other Minor Font / Neutral Color [?]
+ * #4D5656 Side Nav Color
+ * #f0f0f0 Site Background Color / Border Color
+ * #ffffff Nav Color
+ * #999999 Shadow Color
+ * #e61610 Urgent Color
+ * #0c59cf Important Color
+ * #
+ */
+
 * {
     font-family: Arial Rounded MT Bold;
     margin: 0;
@@ -9,13 +24,16 @@ html, body {
 }
 a {
     text-decoration: none;
-    color: #252525;
+    color: #666666;
 }
 a:hover {
     text-decoration: none;
-    color: grey;
+    color: #acacac;
     /* change color */
 }
+
+/* main navigation */
+
 .css-nav {
     position: relative;
     margin: 0 auto;
@@ -26,61 +44,86 @@ a:hover {
     /*text-align: center;*/
     border-bottom: 1px solid #f0f0f0;
     display: table;
+    z-index: 2;
+    /* notice */
 }
 .css-more {
-  /*background-color: green;*/
-  padding: 9.5px 0px 9.5px 0px;
+    /*background-color: green;*/
+    padding: 9.5px 0px 9.5px 0px;
 }
 .css-more span {
-  margin-left: 12px;
-  font-size: 20px;
-  color: #252525;
+    margin-left: 12px;
+    font-size: 20px;
+    color: #acacac;
 }
 .css-logo {
-  /*background-color: orange;*/
-  color: #fe5a5a;
-  font-size: 30px;
-  padding: 0px 0px 2px 0px;
-  text-align: center;
+    /*background-color: orange;*/
+    color: #fe5a5a;
+    font-size: 30px;
+    padding: 0px 0px 2px 0px;
+    text-align: center;
 }
 .css-live-user {
-  /*background-color: purple;*/
-  padding: 12px 0px 12px 0px;
+    /*background-color: purple;*/
+    padding: 12px 0px 12px 0px;
 }
 .css-live-user .css-notify {
-  margin-left: 40px;
+    margin-left: 40px;
 }
 .css-live-user .css-username {
-  position: relative;
-  float: right;
-  margin-right: 30px;
-  color: #fe5a5a;
+    position: relative;
+    float: right;
+    margin-right: 30px;
+    color: #fe5a5a;
 }
 .dropdown {
-  /*background-color: blue;*/
-  position: relative;
-  float: right;
+    /*background-color: blue;*/
+    position: relative;
+    float: right;
 }
 .css-login-link {
-  /*background-color: red;*/
-  padding: 12px 0px 12px 0px;
+    /*background-color: red;*/
+    padding: 12px 0px 12px 0px;
 }
-.css-login-link a{
-  position: relative;
-  float: right;
-  margin-right: 30px;
-  color: #252525;
+.css-login-link a {
+    position: relative;
+    float: right;
+    margin-right: 30px;
+    color: #666666;
 }
 
 /* side navigation */
-.css-side-nav {
-  position: absolute;
-  float: left;
-  left: -300px;
-  width: 300px;
-  height: 100%;
-  background-color: #252525;
-  opacity: 0.8;
-  z-index: 1;
-  color: red; /* temporary */
+
+.css-side-nav-container {
+    /*background-color: green;*/
+    height: 100%;
+    position: relative;
+    bottom: 45px;
 }
+.css-side-nav {
+    position: absolute;
+    width: 100px;
+    height: 100%;
+    background-color: #4D5656;
+    /*bottom: 45px;*/
+    z-index: 1;
+    transition: 0.4s width ease-in-out;
+    box-shadow: 8px 6px 6px -5px #999999;
+}
+.css-side-nav:hover {
+    width: 140px;
+}
+.css-stacked-nav {
+    /*background-color: yellow;*/
+    position: relative;
+    width: 64px;
+    margin: auto;
+    margin-top: 125px;
+}
+.css-stacked-nav li {
+    text-align: center;
+    color: #ffffff;
+    line-height: 35px;
+}
+
+/* main body */

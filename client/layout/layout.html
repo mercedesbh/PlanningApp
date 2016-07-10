@@ -4,7 +4,7 @@
 
 	<div class="css-nav row">
 		<div class="css-more col-sm-4">
-			<a href="#"><span class="js-more-btn glyphicon glyphicon-th"></span></a>
+			<!-- <a href="#"><span class="js-more-btn glyphicon glyphicon-th" onclick="sidenavSlide()"></span></a> -->
 		</div>
 		<div class="css-logo col-sm-4">
 			PlanningApp
@@ -19,6 +19,9 @@
 					<li><a href="{{pathFor 'events'}}">Events</a></li>
 					<li><a href="{{pathFor 'upcoming'}}">Upcoming</a></li>
 					<li role="separator" class="divider"></li>
+					<li><a href="#">Notes</a></li>
+					<li><a href="#">Calendar</a></li>
+					<li role="separator" class="divider"></li>
 					<li class="js-logout"><a href="#">Logout</a></li>
 				</ul>
 			</div>
@@ -26,8 +29,37 @@
 		</div>
 	</div>
 
-	<div class="css-side-nav js-side-nav">
-		NAV WILL NOT CLOSE, NEED FIX [JUST REFRESH FOR NOW]
+	<div class="css-side-nav-container">
+		<div class="css-side-nav">
+
+			<ul class="css-stacked-nav nav nav-pills nav-stacked">
+				<a href="{{pathFor 'events'}}">
+					<li>
+						<img src="/images/size32.png" alt="" />
+						<p>Events</p>
+					</li>
+				</a>
+				<a href="#">
+					<li>
+						<img src="/images/size32.png" alt="" />
+						<p>Notes</p>
+					</li>
+				</a>
+				<a href="#">
+					<li>
+						<img src="/images/size32.png" alt="" />
+						<p>Calendar</p>
+					</li>
+				</a>
+
+			</ul>
+
+		</div>
+		<div class="css-main-body">
+			<!-- where other templates will be rendered -->
+			{{> yield}}
+		</div>
+
 	</div>
 
 	{{else}}
@@ -42,9 +74,7 @@
 		</div>
 	</div>
 
-	{{/if}}
-
 	<!-- where other templates will be rendered -->
-	{{> yield}}
+	{{> yield}} {{/if}}
 
 </template>

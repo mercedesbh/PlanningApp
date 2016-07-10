@@ -1,22 +1,35 @@
+/* body */
+
 .css-upcoming-container {
-  position: relative;
-  margin: auto;
-  width: 60%;
-  background-color: #ffffff;
-  height: 100%;
-  padding: 0px 15px 0px 15px;
+    background-color: #ffffff;
+    position: absolute;
+    margin: auto;
+    width: 90%;
+    height: 100%;
+    left: 0;
+    /*padding: 10px;*/
+    box-shadow: 0px 0px 10px 0px #999999;
+}
+.css-upcoming-tabs-container {
+    /*background-color: red;*/
+    position: relative;
+    float: right;
+    width: 92%;
+    height: 100%;
 }
 .css-upcoming-tabs {
-  background-color: #ffffff;
-  border-bottom: 1px solid #f0f0f0;
+    /*background-color: green;*/
+    position: relative;
+    width: 100%;
+    margin: auto;
+    top: 45px;
+    height: auto;
+    text-align: center;
+    /*float: right;*/
+    border-bottom: 1px solid #f0f0f0;
 }
-.css-today {
-  text-align: center;
-  font-size: 20px;
-  padding: 10px;
-}
-.css-tomorrow {
-  text-align: center;
-  font-size: 20px;
-  padding: 10px;
+.css-upcoming-tabs div {
+    font-size: 18px;
+    /*background-color: orange;*/
+    padding: 15px;
 }

@@ -42,4 +42,10 @@
 .btn {
     background-color: #fe5a5a;
     color: #ffffff;
+    transition: 0.2s background-color ease-in-out;
+}
+.btn:hover {
+  background-color: transparent;
+  border: 1px solid #fe5a5a;
+  color: #fe5a5a;
 }

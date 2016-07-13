@@ -1,0 +1,95 @@
+.css-events-nav {
+  position: relative;
+  margin: 0 !important;
+  height: 40px;
+  width: 100%;
+  background-color: #ffffff;
+}
+.css-events-nav div {
+  height: 100%;
+  /*background-color: purple;*/
+  padding-bottom: 3px;
+}
+.css-events-nav-dropdown {
+  position: relative;
+  height: 20px !important;
+  margin-top: 10px;
+  margin-right: 50px;
+  margin-bottom: -3px !important;
+  /*background-color: orange;*/
+}
+.css-events-nav-tabs li a:hover {
+  background-color: transparent;
+}
+.css-events-nav-tabs li a:focus {
+  background-color: #ffffff;
+  border-bottom: 3px solid #fe5a5a;
+  color: #252525;
+}
+.css-events {
+  position: relative;
+  height: 100% !important;
+  overflow-y: hidden;
+  margin: 0;
+  /*background-color: orange;*/
+}
+.css-events-left {
+  position: relative;
+  /*height: 100%;*/
+  /*background-color: red;*/
+}
+.css-events-right {
+  position: relative;
+  height: 100%;
+  /*background-color: green;*/
+}
+.css-events-data {
+  position: relative;
+  height: 100%;
+  /*background-color: grey;*/
+}
+
+/* lack of reponsive design starts here */
+.css-category {
+  position: relative;
+  height: 100%;
+  /*background-color: yellow;*/
+
+}
+.css-entries {
+  position: relative;
+  height: 100%;
+  /*background-color: red;*/
+}
+.css-entry-detail {
+  position: relative;
+  height: 100%;
+  /*background-color: blue;*/
+}
+.css-category-data {
+  position: relative;
+  width: 150px;
+  height: 500px;
+  margin: 0 auto;
+  margin-top: 20px;
+  border-right: 1px solid #e6e6e6;
+  /*background-color: orange;*/
+}
+.css-entries-data {
+  position: relative;
+  width: 260px;
+  height: 500px;
+  margin: 0 auto;
+  margin-top: 20px;
+  border-right: 1px solid #e6e6e6;
+  /*background-color: orange;*/
+}
+.css-entry-detail-data {
+  position: relative;
+  width: 630px;
+  height: 100%;
+  margin: 0 auto;
+  margin-top: 20px;
+  /*background-color: orange;*/
+}
+/* end */

@@ -21,6 +21,7 @@ html, body {
     background-color: #f0f0f0;
     margin: 0 auto;
     height: 100%;
+    overflow-y: hidden;
 }
 a {
     text-decoration: none;
@@ -29,7 +30,12 @@ a {
 a:hover {
     text-decoration: none;
     color: #acacac;
-    /* change color */
+}
+.css-layout-body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /*background-color: orange;*/
 }
 
 /* main navigation */
@@ -41,15 +47,14 @@ a:hover {
     height: 45px;
     background-color: #ffffff;
     list-style-type: none;
-    /*text-align: center;*/
     border-bottom: 1px solid #f0f0f0;
     display: table;
-    z-index: 2;
-    /* notice */
+    z-index: 9;
+    /*text-align: center;*/
 }
 .css-more {
-    /*background-color: green;*/
     padding: 9.5px 0px 9.5px 0px;
+    /*background-color: green;*/
 }
 .css-more span {
     margin-left: 12px;
@@ -57,15 +62,22 @@ a:hover {
     color: #acacac;
 }
 .css-logo {
-    /*background-color: orange;*/
     color: #fe5a5a;
     font-size: 30px;
     padding: 0px 0px 2px 0px;
     text-align: center;
+    /*background-color: orange;*/
+}
+.css-logo a {
+    text-decoration: none;
+    color: #fe5a5a;
+}
+.css-logo a:hover {
+    text-decoration: none;
 }
 .css-live-user {
-    /*background-color: purple;*/
     padding: 12px 0px 12px 0px;
+    /*background-color: purple;*/
 }
 .css-live-user .css-notify {
     margin-left: 40px;
@@ -77,13 +89,13 @@ a:hover {
     color: #fe5a5a;
 }
 .dropdown {
-    /*background-color: blue;*/
     position: relative;
     float: right;
+    /*background-color: blue;*/
 }
 .css-login-link {
-    /*background-color: red;*/
     padding: 12px 0px 12px 0px;
+    /*background-color: red;*/
 }
 .css-login-link a {
     position: relative;
@@ -94,36 +106,48 @@ a:hover {
 
 /* side navigation */
 
-.css-side-nav-container {
-    /*background-color: green;*/
-    height: 100%;
-    position: relative;
-    bottom: 45px;
-}
 .css-side-nav {
     position: absolute;
-    width: 100px;
     height: 100%;
+    width: 100px;
     background-color: #4D5656;
-    /*bottom: 45px;*/
-    z-index: 1;
+    z-index: 8;
+    overflow: hidden;
+    box-shadow: 3px 0px 6px #999999;
     transition: 0.4s width ease-in-out;
-    box-shadow: 8px 6px 6px -5px #999999;
 }
 .css-side-nav:hover {
-    width: 140px;
+    width: 125px;
 }
 .css-stacked-nav {
-    /*background-color: yellow;*/
     position: relative;
-    width: 64px;
     margin: auto;
-    margin-top: 125px;
+    height: auto;
+    width: auto;
+    /*background-color: orange;*/
 }
-.css-stacked-nav li {
+.css-stacked-nav a li {
+    position: relative;
     text-align: center;
+    padding-top: 15px;
     color: #ffffff;
-    line-height: 35px;
+}
+.css-stacked-nav a span {
+  color: #ffffff;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  font-size: 25px;
+}
+.css-stacked-nav img {
+  padding-bottom: 10px;
 }
 
-/* main body */
+/* yield container */
+
+.css-container-fluid {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    /*background-color: purple;*/
+}

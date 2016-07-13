@@ -2,37 +2,43 @@
 
 	{{#if currentUser}}
 
-	<div class="css-nav row">
-		<div class="css-more col-sm-4">
-			<!-- <a href="#"><span class="js-more-btn glyphicon glyphicon-th" onclick="sidenavSlide()"></span></a> -->
-		</div>
-		<div class="css-logo col-sm-4">
-			PlanningApp
-		</div>
-		<div class="css-live-user col-sm-4">
+	<div class="css-layout-body">
 
-			<a class="css-notify" href="#">[N]</a>
-
-			<div role="presentation" class="dropdown">
-				<a class="css-username dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> {{userName.profile.first}} {{userName.profile.last}} <span class="caret"></span> </a>
-				<ul class="dropdown-menu">
-					<li><a href="{{pathFor 'events'}}">Events</a></li>
-					<li><a href="{{pathFor 'upcoming'}}">Upcoming</a></li>
-					<li role="separator" class="divider"></li>
-					<li><a href="#">Notes</a></li>
-					<li><a href="#">Calendar</a></li>
-					<li role="separator" class="divider"></li>
-					<li class="js-logout"><a href="#">Logout</a></li>
-				</ul>
+		<div class="css-nav row">
+			<div class="css-more col-sm-4">
+				<!-- <a href="#"><span class="js-more-btn glyphicon glyphicon-th" onclick="sidenavSlide()"></span></a> -->
 			</div>
+			<div class="css-logo col-sm-4">
+				<a href="{{pathFor 'upcoming'}}">PlanningApp</a>
+			</div>
+			<div class="css-live-user col-sm-4">
 
+				<a class="css-notify" href="#">[N]</a>
+
+				<div role="presentation" class="dropdown">
+					<a class="css-username dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> {{userName.profile.first}} {{userName.profile.last}} <span class="caret"></span> </a>
+					<ul class="dropdown-menu">
+						<li><a href="{{pathFor 'events'}}">Events</a></li>
+						<li><a href="{{pathFor 'upcoming'}}">Upcoming</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#">Calendar</a></li>
+						<li role="separator" class="divider"></li>
+						<li class="js-logout"><a href="#">Logout</a></li>
+					</ul>
+				</div>
+
+			</div>
 		</div>
-	</div>
 
-	<div class="css-side-nav-container">
+
 		<div class="css-side-nav">
 
 			<ul class="css-stacked-nav nav nav-pills nav-stacked">
+				<a href="#">
+					<li>
+						<span class="glyphicon glyphicon-plus"></span>
+					</li>
+				</a>
 				<a href="{{pathFor 'events'}}">
 					<li>
 						<img src="/images/size32.png" alt="" />
@@ -42,25 +48,21 @@
 				<a href="#">
 					<li>
 						<img src="/images/size32.png" alt="" />
-						<p>Notes</p>
-					</li>
-				</a>
-				<a href="#">
-					<li>
-						<img src="/images/size32.png" alt="" />
 						<p>Calendar</p>
 					</li>
 				</a>
-
 			</ul>
 
 		</div>
-		<div class="css-main-body">
+		<div class="css-container-fluid">
 			<!-- where other templates will be rendered -->
 			{{> yield}}
+			<!-- end -->
 		</div>
 
+
 	</div>
+
 
 	{{else}}
 
@@ -75,6 +77,9 @@
 	</div>
 
 	<!-- where other templates will be rendered -->
-	{{> yield}} {{/if}}
+	{{> yield}}
+	<!-- end -->
+
+	{{/if}}
 
 </template>

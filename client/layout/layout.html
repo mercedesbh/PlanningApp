@@ -114,7 +114,7 @@
 				        <div class='col-sm-6'>
 				            <div class="form-group">
 				                <div class='input-group date' id='datetimepicker5'>
-				                    <input type='text' class="form-control" />
+				                    <input type='text' class="form-control" placeholder="Date & Time"/>
 				                    <span class="input-group-addon">
 				                        <span class="glyphicon glyphicon-calendar"></span>
 				                    </span>
@@ -122,19 +122,13 @@
 				            </div>
 				        </div>
 				        <script type="text/javascript">
-				            $(function () {
-				                $('#datetimepicker5').datetimepicker({
-				                    // defaultDate: "07/13/2016",
-				                    disabledDates: [
-				                        moment().calendar(),
-				                    ]
-				                });
-				            });
+										$(function () {
+                 			$('#datetimepicker5').datetimepicker({  minDate:new Date()});
+           					});
 				        </script>
 				    </div>
 					</div>
 				<br>
-
 				<input class="js-task-location form-control" type="text" placeholder="Location">
 				<br>
 				Is this part of a goal?
@@ -152,7 +146,7 @@
 							<div class='col-sm-6'>
 									<div class="form-group">
 											<div class='input-group date' id='datetimepicker5'>
-													<input type='text' class="form-control" />
+													<input type='text' class="form-control" placeholder="Date & Time"/>
 													<span class="input-group-addon">
 															<span class="glyphicon glyphicon-calendar"></span>
 													</span>
@@ -160,14 +154,9 @@
 									</div>
 							</div>
 							<script type="text/javascript">
-									$(function () {
-											$('#datetimepicker5').datetimepicker({
-													// defaultDate: "07/13/2016",
-													disabledDates: [
-															moment().calendar(),
-													]
-											});
-									});
+								$(function () {
+									$('#datetimepicker5').datetimepicker({  minDate:new Date()});
+								});
 							</script>
 					</div>
 				</div>
@@ -182,7 +171,7 @@
 			{{# if textChosen}}
 			<input class="js-task-title form-control" type="text" placeholder="Title">
 			<br>
-			<textarea class="js-task-note form-control" style="width: 500px; height:100px" placeholder="Add note..."></textarea>
+			<textarea class="js-task-note form-control" style="width: 500px; height:100px" placeholder="Write text..."></textarea>
 			<br>
 			{{/if}}
 

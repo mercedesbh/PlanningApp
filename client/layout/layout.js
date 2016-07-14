@@ -101,6 +101,10 @@ Template.modal.events({
 
             alert("task");
             // Meteor.call(???);
+            $(".js-task-title").val("");
+            $(".js-task-date").val("");
+            $(".js-task-location").val("");
+            $(".js-task-note").val("");
 
         } else if ($(".js-modal-select").val() == "goal") {
 
@@ -137,6 +141,12 @@ Template.modal.events({
 
             alert("goal");
             // Meteor.call(???);
+            $("js-goal-title").val("");
+            $("js-goal-date-s").val("");
+            $("js-goal-date-f").val("");
+            $("js-goal-location").val("");
+            $("js-goal-note").val("");
+
         } else if ($(".js-modal-select").val() == "text") {
 
             const txtTitle = $(".js-text-title");
@@ -154,6 +164,8 @@ Template.modal.events({
 
             alert("text");
             // Meteor.call(???);
+            $(".js-text-title").val("");
+            $(".js-text-text").val("");
         }
 
         $('.modal').modal('hide');

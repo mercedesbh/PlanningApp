@@ -1,3 +1,8 @@
+Meteor.subscribe("theTasks");
+Meteor.subscribe("theGoals");
+Meteor.subscribe("theTexts");
+Meteor.subscribe("theCategories");
+
 Template.layout.helpers({
     userName: function() {
         const liveUser = Meteor.userId();
@@ -100,7 +105,7 @@ Template.modal.events({
             }
 
             alert("task");
-            // Meteor.call(???);
+            Meteor.call("createTask", newTask);
 
         } else if ($(".js-modal-select").val() == "goal") {
 
@@ -136,11 +141,11 @@ Template.modal.events({
             }
 
             alert("goal");
-            // Meteor.call(???);
+            Meteor.call("createGoal", newGoal);
         } else if ($(".js-modal-select").val() == "text") {
 
-            const txtTitle = $(".js-text-title");
-            const txtText = $(".js-text-text");
+            const txtTitle = $(".js-text-title").val();
+            const txtText = $(".js-text-text").val();
 
             const newText = {
                 title: txtTitle,
@@ -153,7 +158,7 @@ Template.modal.events({
             }
 
             alert("text");
-            // Meteor.call(???);
+            Meteor.call("createText", newText);
         }
 
         $('.modal').modal('hide');

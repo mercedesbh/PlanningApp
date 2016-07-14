@@ -134,13 +134,13 @@ a:hover {
     color: #ffffff;
 }
 .css-stacked-nav a span {
-  color: #ffffff;
-  padding-top: 30px;
-  padding-bottom: 20px;
-  font-size: 25px;
+    color: #ffffff;
+    padding-top: 30px;
+    padding-bottom: 20px;
+    font-size: 25px;
 }
 .css-stacked-nav img {
-  padding-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 /* yield container */
@@ -151,4 +151,27 @@ a:hover {
     width: 100%;
     overflow-x: hidden;
     /*background-color: purple;*/
+}
+
+/* modal */
+
+.css-select-container {
+    width: 90%;
+}
+.css-modal-select {
+    border: 0px;
+    box-shadow: none;
+    font-size: 20px;
+}
+.css-modal-select:focus {
+    box-shadow: none;
+}
+.modal-content form {
+    position: relative;
+    margin: auto;
+    width: 90%;
+    /*background-color: blue;*/
+}
+textarea {
+    resize: none;
 }

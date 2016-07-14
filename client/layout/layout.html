@@ -36,18 +36,20 @@
 			<ul class="css-stacked-nav nav nav-pills nav-stacked">
 				<a class="js-modal" data-toggle="modal" data-target=".bd-example-modal-lg" href="#">
 					<li>
-						<span class="glyphicon glyphicon-plus" ></span>
+						<span class="glyphicon glyphicon-plus"></span>
 					</li>
 				</a>
-				<a href="{{pathFor 'events'}}">
+				<a class="js-smart-link" href="#">
 					<li>
-						<img src="/images/size32.png" alt="" />
-						<p>Events</p>
+						<!-- <img src="/images/size32.png" alt="" /> -->
+						<span class="glyphicon glyphicon-th-list"></span>
+						<p> {{link}} </p>
 					</li>
 				</a>
 				<a href="#">
 					<li>
-						<img src="/images/size32.png" alt="" />
+						<!-- <img src="/images/size32.png" alt="" /> -->
+						<span class="glyphicon glyphicon-calendar"></span>
 						<p>Calendar</p>
 					</li>
 				</a>
@@ -56,8 +58,7 @@
 		</div>
 		<div class="css-container-fluid">
 			<!-- where other templates will be rendered -->
-			{{> yield}}
-			{{> modal}}
+			{{> yield}} {{> modal}}
 			<!-- end -->
 		</div>
 
@@ -87,101 +88,147 @@
 
 <template name="modal">
 	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-			<div class="modal-header">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
 
-		         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		           <span aria-hidden="true">&times;</span>
-		         </button>
-		           <h3 class="modal-title" id="myModalLabel">
-								 <div class="dropdown pull-left">
-						       <div role="presentation">
-											 <select class="menu form-control">
-												 <option value="task"><a href="#">Task</a></option>
-												 <option value="goal"><a href="#">Goal</a></option>
-												 <option value="text"><a href="#">Text</a></option>
-											 </select>
-										 </div>
-									 </div>
-							 </h3>
-		    </div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					<h3 class="modal-title" id="myModalLabel">
+						<div class="css-select-container dropdown pull-left">
+							<div role="presentation">
+								<select class="css-modal-select js-modal-select form-control">
+									<option value="task"><a href="#">Task</a></option>
+									<option value="goal"><a href="#">Goal</a></option>
+									<option value="text"><a href="#">Text</a></option>
+								</select>
+							</div>
+						</div>
+					</h3>
+				</div>
+
+				<!-- task view -->
 				{{# if taskChosen}}
-				<input class="js-task-title form-control" type="text" placeholder="Title">
-				<br>
+				<form class="js-new-task" action="layout.html" method="post">
+					<br>
+					<input class="js-task-title form-control" type="text" placeholder="Title">
+					<br>
 					<div class="container">
-				    <div class="row">
-				        <div class='col-sm-6'>
-				            <div class="form-group">
-				                <div class='input-group date' id='datetimepicker5'>
-				                    <input type='text' class="form-control" placeholder="Date & Time"/>
-				                    <span class="input-group-addon">
-				                        <span class="glyphicon glyphicon-calendar"></span>
-				                    </span>
-				                </div>
-				            </div>
-				        </div>
-				        <script type="text/javascript">
-										$(function () {
-                 			$('#datetimepicker5').datetimepicker({  minDate:new Date()});
-           					});
-				        </script>
-				    </div>
-					</div>
-				<br>
-				<input class="js-task-location form-control" type="text" placeholder="Location">
-				<br>
-				Is this part of a goal?
-				<input class="js-task-goal" type="radio" value="other"> Yes
-				<br>
-				<textarea class="js-task-note form-control" style="width: 500px; height:100px" placeholder="Add note..."></textarea>
-				<br>
-			{{/if}}
-
-			{{# if goalChosen}}
-			<input class="js-task-title form-control" type="text" placeholder="Title">
-			<br>
-				<div class="container">
-					<div class="row">
+						<div class="row">
 							<div class='col-sm-6'>
-									<div class="form-group">
-											<div class='input-group date' id='datetimepicker5'>
-													<input type='text' class="form-control" placeholder="Date & Time"/>
-													<span class="input-group-addon">
-															<span class="glyphicon glyphicon-calendar"></span>
-													</span>
-											</div>
+								<div class="form-group">
+									<div class='input-group date' id='datetimepicker5'>
+										<input type='text' class="js-task-date form-control" placeholder="Date & Time"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
 									</div>
+								</div>
 							</div>
 							<script type="text/javascript">
-								$(function () {
-									$('#datetimepicker5').datetimepicker({  minDate:new Date()});
+								$(function() {
+									$('#datetimepicker5').datetimepicker({
+										minDate: new Date()
+									});
 								});
 							</script>
+						</div>
 					</div>
-				</div>
-			<br>
+					<br>
+					<input class="js-task-location form-control" type="text" placeholder="Location">
+					<br>
+					<span><input class="js-task-goal" type="radio" value="other"> Check to make it a part of a Goal.</span>
+					<br>
+					<br>
+					<textarea class="js-task-note form-control" placeholder="Add note..."></textarea>
+					<br>
+				</form>
+				{{/if}}
 
-			<input class="js-task-location form-control" type="text" placeholder="Location">
-			<br>
-			<textarea class="js-task-note form-control" style="width: 500px; height:100px" placeholder="Add note..."></textarea>
-			<br>
-			{{/if}}
+				<!-- goals view -->
+				{{# if goalChosen}}
+				<form class="js-new-goal" action="layout.html" method="post">
+					<br>
+					<input class="js-goal-title form-control" type="text" placeholder="Title">
+					<br>
 
-			{{# if textChosen}}
-			<input class="js-task-title form-control" type="text" placeholder="Title">
-			<br>
-			<textarea class="js-task-note form-control" style="width: 500px; height:100px" placeholder="Write text..."></textarea>
-			<br>
-			{{/if}}
+					<!-- start goal by... -->
+					<div class="container">
+						<div class="row">
+							<div class='col-sm-6'>
+								<h5>Start by:</h5>
+								<div class="form-group">
+									<div class='input-group date' id='datetimepicker5'>
+										<input type='text' class="js-goal-date-s form-control" placeholder="Date & Time"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+								</div>
+							</div>
+							<script type="text/javascript">
+								$(function() {
+									$('#datetimepicker5').datetimepicker({
+										minDate: new Date()
+									});
+								});
+							</script>
+						</div>
+					</div>
+
+					<!-- finish goal by... -->
+					<div class="container">
+						<div class="row">
+							<div class='col-sm-6'>
+								<h5>Finish by:</h5>
+								<div class="form-group">
+									<div class='input-group date' id='datetimepicker6'>
+										<input type='text' class="js-goal-date-f form-control" placeholder="Date & Time"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+								</div>
+							</div>
+							<script type="text/javascript">
+								$(function() {
+									$('#datetimepicker6').datetimepicker({
+										minDate: new Date()
+									});
+								});
+							</script>
+						</div>
+					</div>
+
+					<br>
+					<input class="js-goal-location form-control" type="text" placeholder="Location">
+					<br>
+					<textarea class="js-goal-note form-control" style="height: 150px" placeholder="Add note..."></textarea>
+					<br>
+				</form>
+				{{/if}}
+
+				<!-- text view -->
+				{{# if textChosen}}
+				<form class="js-new-text" action="index.html" method="post">
+					<br>
+					<input class="js-text-title form-control" type="text" placeholder="Title">
+					<br>
+					<textarea class="js-text-text form-control" style="height: 300px" placeholder="Write text..."></textarea>
+					<br>
+				</form>
+				{{/if}}
 
 
-		<div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="button" class="js-add-entry btn btn-primary">Add to schedule</button>
+					</div>
+
+			</div>
+		</div>
+	</div>
 
 </template>

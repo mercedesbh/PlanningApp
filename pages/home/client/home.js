@@ -14,7 +14,9 @@ Template.home.events({
         Accounts.createUser({
           profile: {
             first: f,
-            last: l
+            last: l,
+            joined: new Date()
+            // theme: ???
           },
           email: e,
           password: p

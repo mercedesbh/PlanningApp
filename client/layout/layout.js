@@ -8,7 +8,7 @@ Template.layout.helpers({
     link: function() {
         if (Router.current().route.path() == "/events") {
             return "Upcoming";
-        } else if (Router.current().route.path() == "/upcoming") {
+        } else if (Router.current().route.path() == "/upcoming" || Router.current().route.path() == "/") {
             return "Events";
         }
     }
@@ -26,7 +26,7 @@ Template.layout.events({
 
         if (Router.current().route.path() == "/events") {
             Router.go("/upcoming");
-        } else if (Router.current().route.path() == "/upcoming") {
+        } else if (Router.current().route.path() == "/upcoming" || Router.current().route.path() == "/") {
             Router.go("/events");
         }
 

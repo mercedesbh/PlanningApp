@@ -120,7 +120,7 @@ Template.modal.events({
             const newGoal = {
                 title: gTitle,
                 start_date: gDateS,
-                finsih_date: gDateF,
+                finish_date: gDateF,
                 location: gLocation,
                 note: gNote,
                 createdAt: new Date(),

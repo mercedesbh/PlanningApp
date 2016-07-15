@@ -22,6 +22,8 @@ html, body {
     background-color: #f0f0f0;
     margin: 0 auto;
     height: 100%;
+
+    /* need to change for only when user is logged in (maybe when user logs in OR depending on the route OR simply if there is a current user) */
     overflow-y: hidden;
 }
 a {
@@ -130,17 +132,22 @@ a:hover {
 .css-stacked-nav a li {
     position: relative;
     text-align: center;
-    padding-top: 15px;
+    padding-top: 10px;
     color: #ffffff;
+    font-size: 12px
 }
 .css-stacked-nav a span {
-    color: #ffffff;
-    padding-top: 30px;
-    padding-bottom: 20px;
+    /*color: #ffffff;*/
+    padding-top: 15px;
+    padding-bottom: 15px;
     font-size: 25px;
+    /*background-color: green;*/
 }
 .css-stacked-nav img {
     padding-bottom: 10px;
+}
+.css-current-local {
+  color: #fe5a5a !important;
 }
 
 /* yield container */

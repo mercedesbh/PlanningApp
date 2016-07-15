@@ -15,6 +15,7 @@ Template.login.events({
                 console.log(error.reason); // // console log reason [show display error to user]
                 return;
             } else {
+                Session.set("highlight", "css-current-local");
                 Router.go("/upcoming");
             }
         });

@@ -3,6 +3,12 @@ Meteor.subscribe("theGoals");
 Meteor.subscribe("theTexts");
 Meteor.subscribe("theCategories");
 
+// MUST BE REMOVED BEFORE PRODUCTION STAGE
+Deps.autorun(function () {
+  Meteor.subscribe("theUsers");
+});
+// END
+
 Template.layout.helpers({
     userName: function() {
         const liveUser = Meteor.userId();
@@ -10,13 +16,19 @@ Template.layout.helpers({
             _id: liveUser
         });
     },
-    link: function() {
-        if (Router.current().route.path() == "/events") {
-            return "Upcoming";
-        } else if (Router.current().route.path() == "/upcoming" || Router.current().route.path() == "/") {
-            return "Events";
-        }
-    }
+    // highlightUpcoming: function() {
+    //   return Session.get("highlight");
+    // },
+    // highlightEvents: function() {
+    //   return Session.get("highlight");
+    // },
+    // highlightCalendar: function() {
+    //   return Session.get("highlight");
+    // },
+    // highlightSearch: function() {
+    //   return Session.get("highlight");
+    // },
+
 });
 
 Template.layout.events({
@@ -26,17 +38,31 @@ Template.layout.events({
         Meteor.logout();
         Router.go('/');
     },
-    "click .js-smart-link": function() {
-        event.preventDefault();
+    // "click .css-sidenav-upcoming": function() {
+    //   Session.set("highlightUpcoming", "css-current-local");
+    //   Session.set("highlightEvents", "");
+    //   Session.set("highlightCalendar", "");
+    //   Session.set("highlightSearch", "");
+    // },
+    // "click .css-sidenav-events": function() {
+    //   Session.set("highlightUpcoming", "");
+    //   Session.set("highlightEvents", "css-current-local");
+    //   Session.set("highlightCalendar", "");
+    //   Session.set("highlightSearch", "");
+    // },
+    // "click .css-sidenav-calendar": function() {
+    //   Session.set("highlightUpcoming", "");
+    //   Session.set("highlightEvents", "");
+    //   Session.set("highlightCalendar", "css-current-local");
+    //   Session.set("highlightSearch", "");
+    // },
+    // "click .css-sidenav-search": function() {
+    //   Session.set("highlightUpcoming", "");
+    //   Session.set("highlightEvents", "");
+    //   Session.set("highlightCalendar", "");
+    //   Session.set("highlightSearch", "css-current-local");
+    // },
 
-        if (Router.current().route.path() == "/events") {
-            Router.go("/upcoming");
-        } else if (Router.current().route.path() == "/upcoming" || Router.current().route.path() == "/") {
-            Router.go("/events");
-        }
-
-        // alert(Router.current().route.path());
-    },
 });
 
 Template.modal.helpers({

@@ -37,20 +37,31 @@
 				<a class="js-modal" data-toggle="modal" data-target=".bd-example-modal-lg" href="#">
 					<li>
 						<span class="glyphicon glyphicon-plus"></span>
+						<p>New Entry</p>
 					</li>
 				</a>
-				<a class="js-smart-link" href="#">
-					<li>
-						<!-- <img src="/images/size32.png" alt="" /> -->
+				<a href="{{pathFor 'upcoming'}}">
+					<li class="css-sidenav-upcoming {{highlightUpcoming}}">
 						<span class="glyphicon glyphicon-th-list"></span>
-						<p> {{link}} </p>
+						<p> Upcoming </p>
+					</li>
+				</a>
+				<a href="{{pathFor 'events'}}">
+					<li class="css-sidenav-events {{highlightEvents}}">
+						<span class="glyphicon glyphicon-list"></span>
+						<p> Events </p>
 					</li>
 				</a>
 				<a href="#">
-					<li>
-						<!-- <img src="/images/size32.png" alt="" /> -->
+					<li class="css-sidenav-calendar {{highlightCalendar}}">
 						<span class="glyphicon glyphicon-calendar"></span>
 						<p>Calendar</p>
+					</li>
+				</a>
+				<a href="#">
+					<li class="css-sidenav-search {{highlightSearch}}">
+						<span class="glyphicon glyphicon-search"></span>
+						<p>Search</p>
 					</li>
 				</a>
 			</ul>

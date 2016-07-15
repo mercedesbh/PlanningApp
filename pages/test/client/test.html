@@ -1,6 +1,6 @@
-<template name="test">
+<!-- <template name="test">
 
-  <!-- <div>
+  <div>
     <head>
       <title>Geolocation</title>
       <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -17,25 +17,26 @@
       </style>
     </head>
     <body>
-      <div id="map" style="width:1000px;height:380px;"></div>
+      <div id="map" style="width:810px;height:400px;"></div>
       <div id="capture"></div>
       <script>
+
         // Note: This example requires that you consent to location sharing when
         // prompted by your browser. If you see the error "The Geolocation service
         // failed.", it means you probably did not give permission for the browser to
         // locate you.
 
         function initMap() {
-          var latlng = new google.maps.LatLng(37.09024, -95.712891);
+          var latlng = new google.maps.LatLng(42.358970, -71.066093);
           var myOptions = {
-              zoom: 3,
+              zoom: 6,
               center: latlng,
               mapTypeId: google.maps.MapTypeId.ROADMAP
           };
           var map = new google.maps.Map(document.getElementById("map"), myOptions);
           // var map = new google.maps.Map(document.getElementById('map'), {
-          //   center: {lat: 42.3601, lng: -71.0589},
-          //   zoom: 3
+          // 	center: {lat: 42.3601, lng: -71.0589},
+          // 	zoom: 3
           // });
           var infoWindow = new google.maps.InfoWindow({map: map});
 
@@ -70,5 +71,5 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M&callback=initMap">
       </script>
     </body>
-  </div> -->
-</template>
+  </div>
+</template> -->

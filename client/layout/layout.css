@@ -182,3 +182,8 @@ a:hover {
 textarea {
     resize: none;
 }
+
+/* map */
+.css-map {
+  display: none;
+}

@@ -22,3 +22,4 @@ twbs:bootstrap
 accounts-password
 tsega:bootstrap3-datetimepicker
 momentjs:moment
+dburles:google-maps

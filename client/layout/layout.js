@@ -97,11 +97,13 @@ Template.modal.events({
             template.textChosen.set(true);
         }
     },
-    "focus .js-task-location": function(event, template){
+    "keypress .js-task-location": function(event, template){
       template.map.set(true);
     },
     "blur .js-task-location": function(event, template){
-      template.map.set(false);
+      if ($(".js-task-location").val() == 0){
+        template.map.set(false);
+      }
     },
     "click .js-add-entry": function(event) {
         event.preventDefault();
@@ -109,6 +111,8 @@ Template.modal.events({
         if ($(".js-modal-select").val() == "task") {
 
             const tTitle = $(".js-task-title").val();
+            console.log($(".js-task-title").val());
+
             const tDate = $(".js-task-date").val();
             var tLocation = $(".js-task-location").val();
             var tNote = $(".js-task-note").val();
@@ -150,11 +154,11 @@ Template.modal.events({
 
         } else if ($(".js-modal-select").val() == "goal") {
 
-            const gTitle = $("js-goal-title").val();
-            const gDateS = $("js-goal-date-s").val();
-            const gDateF = $("js-goal-date-f").val();
-            var gLocation = $("js-goal-location").val();
-            var gNote = $("js-goal-note").val();
+            const gTitle = $(".js-goal-title").val();
+            const gDateS = $(".js-goal-date-s").val();
+            const gDateF = $(".js-goal-date-f").val();
+            var gLocation = $(".js-goal-location").val();
+            var gNote = $(".js-goal-note").val();
 
             if (gLocation == "") {
                 gLocation = null;

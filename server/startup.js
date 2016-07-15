@@ -1,5 +1,5 @@
 Meteor.startup(function() {
-    Meteor.users.remove({});
+    // Meteor.users.remove({});
 
     // Tasks.insert({});
 

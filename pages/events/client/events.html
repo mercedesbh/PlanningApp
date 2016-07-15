@@ -33,7 +33,15 @@
 
                 <div class="css-category col-sm-2">
                     <div class="css-category-data">
+                        <ul>
 
+                        {{#each categories}}
+
+                            <li>{{name}}</li>
+
+                        {{/each}}
+
+                        </ul>
                     </div>
                     <div class="css-new-category">
                       <a href="#"><span class="css-add-category js-add-category glyphicon glyphicon-plus"></span></a>

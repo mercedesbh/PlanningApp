@@ -7,5 +7,9 @@ Meteor.methods({
   },
   createText: function(text) {
     Texts.insert(text);
-  }
+  },
+  createCategory: function(category) {
+    Meteor.users.insert({_id: this.userId}, {$push: {categories: category}});
+  },
+
 });

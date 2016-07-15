@@ -75,6 +75,9 @@ Template.modal.helpers({
     textChosen: function() {
         return Template.instance().textChosen.get();
     },
+    map: function() {
+      return Template.instance().map.get();
+    }
 });
 
 
@@ -84,7 +87,6 @@ Template.modal.events({
             template.taskChosen.set(true);
             template.goalChosen.set(false);
             template.textChosen.set(false);
-
         } else if ($(event.target).val() == "goal") {
             template.taskChosen.set(false);
             template.goalChosen.set(true);
@@ -94,6 +96,12 @@ Template.modal.events({
             template.goalChosen.set(false);
             template.textChosen.set(true);
         }
+    },
+    "focus .js-task-location": function(event, template){
+      template.map.set(true);
+    },
+    "blur .js-task-location": function(event, template){
+      template.map.set(false);
     },
     "click .js-add-entry": function(event) {
         event.preventDefault();
@@ -138,6 +146,7 @@ Template.modal.events({
             $(".js-task-date").val("");
             $(".js-task-location").val("");
             $(".js-task-note").val("");
+
 
         } else if ($(".js-modal-select").val() == "goal") {
 
@@ -213,9 +222,11 @@ Template.modal.onCreated(function() {
     this.taskChosen = new ReactiveVar(true);
     this.goalChosen = new ReactiveVar(false);
     this.textChosen = new ReactiveVar(false);
+    this.map = new ReactiveVar(false);
 });
 
 Template.modal.onRendered(function() {
     this.$('.datetimepicker5').datetimepicker();
     this.$('.datetimepicker6').datetimepicker();
+
 });

@@ -21,26 +21,53 @@ Template.events.helpers({
     console.log(Texts.find({createdBy: Meteor.userId()}).fetch());
     return Texts.find({createdBy: Meteor.userId()}).fetch(); //
   },
+  showCategoryInput: function() {
+    return Template.instance().showCategoryInput.get();
+  },
+
 });
 
 Template.events.events({
-    "click .js-add-category": function(event) {
-        event.preventDefault();
+    "click .css-new-category": function(event, template) {
+      event.preventDefault();
+      // alert("Here");
 
-        const cName = $(".js-category-name");
-
-        const newCategory = {
-          name: cName,
-          tasks: [],
-          goals: [],
-          texts: [],
-          createdAt: new Date(),
-          owner: Meteor.userId(),
-          modified: new Date()
-        }
-
-        // alert("add code for new category creation");
-        Meteor.call("createCategory", newCategory);
-
+      template.showCategoryInput.set(true);
     },
-})
+    "blur .js-category-name-input": function(event, template) {
+      event.preventDefault();
+      // alert("Here");
+
+      if ($(".js-category-name-input").val() == 0){
+        template.showCategoryInput.set(false);
+      }
+    },
+    "click .js-create-category": function(event, template) {
+      event.preventDefault();
+
+      // alert("test");
+      const cName = $(".js-category-name-input").val();
+
+      const newCategory = {
+        name: cName,
+        tasks: [],
+        goals: [],
+        texts: [],
+        createdAt: new Date(),
+        owner: Meteor.userId(),
+        modified: new Date()
+      }
+
+      // alert("add code for new category creation");
+      Meteor.call("createCategory", newCategory);
+
+      $(".js-category-name-input").val("");
+
+      template.showCategoryInput.set(false);
+    },
+
+});
+
+Template.events.onCreated(function() {
+    this.showCategoryInput = new ReactiveVar(false);
+});

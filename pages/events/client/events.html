@@ -1,50 +1,61 @@
 <template name="events">
 
     <div class="css-events row">
-        <div class="css-events-nav row">
-            <div class="col-sm-2">
 
-            </div>
-            <div class="col-sm-4">
-                <div class="css-events-nav-dropdown dropdown">
-                    <a href="#" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        Refine
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a href="#">XXX</a></li>
-                        <li><a href="#">???</a></li>
-                        <li><a href="#">!!!</a></li>
-                        <li><a href="#">OOO</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <ul class="css-events-nav-tabs nav nav-justified">
-                    <li role="presentation"><a href="#">Tasks</a></li>
-                    <li role="presentation"><a href="#">Goals</a></li>
-                    <li role="presentation"><a href="#">Notes</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="css-events-left col-sm-1"></div>
-        <div class="css-events-right col-sm-11">
+        <div class="css-events-right col-sm-12">
+          <div class="css-events-nav row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-2">
+                <a href="#">
+                  <div class="css-new-category">
+                    Category <span class="glyphicon glyphicon-plus"></span>
+                  </div>
+                </a>
+              </div>
+              <div class="col-sm-3">
+                  <div class="css-events-nav-dropdown dropdown">
+                      <a href="#" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          Refine
+                          <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                          <li><a href="#">XXX</a></li>
+                          <li><a href="#">???</a></li>
+                          <li><a href="#">!!!</a></li>
+                          <li><a href="#">OOO</a></li>
+                      </ul>
+                  </div>
+              </div>
+              <div class="col-sm-6">
+                  <ul class="css-events-nav-tabs nav nav-justified">
+                      <li><a href="#">Tasks</a></li>
+                      <li><a href="#">Goals</a></li>
+                      <li><a href="#">Texts</a></li>
+                  </ul>
+              </div>
+          </div>
             <div class="css-events-data row">
-
+                <div class="css-events-left col-sm-1"></div>
                 <div class="css-category col-sm-2">
                     <div class="css-category-data">
                         <ul>
 
                         {{#each categories}}
 
-                            <li>{{name}}</li>
+                            <a href="#"><li>{{name}}</li></a>
 
                         {{/each}}
 
+                        <br>
+
+                        {{# if showCategoryInput}}
+                        <li class="css-add-category-input js-add-category-input">
+                          <input class="js-category-name-input form-control" type="text" placeholder="Name category" autofocus="true">
+                          <input class="js-create-category btn" type="button" name="name" value="Add">
+                        </li>
+                        {{/if}}
+
                         </ul>
-                    </div>
-                    <div class="css-new-category">
-                      <a href="#"><span class="css-add-category js-add-category glyphicon glyphicon-plus"></span></a>
                     </div>
                 </div>
                 <div class="css-entries col-sm-3">
@@ -80,7 +91,7 @@
                       </ul> -->
                     </div>
                 </div>
-                <div class="css-entry-detail col-sm-7">
+                <div class="css-entry-detail col-sm-6">
                     <div class="css-entry-detail-data">
 
                     </div>

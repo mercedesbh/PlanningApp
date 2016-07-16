@@ -9,7 +9,7 @@ Meteor.methods({
     Texts.insert(text);
   },
   createCategory: function(category) {
-    Meteor.users.insert({_id: this.userId}, {$push: {categories: category}});
+    Meteor.users.update({_id: this.userId}, {$push: {categories: category}});
   },
 
 });

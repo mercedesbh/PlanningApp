@@ -4,48 +4,63 @@
   height: 40px;
   width: 100%;
   background-color: #ffffff;
+  /*background-color: orange;*/
+}
+.css-new-category {
+  position: relative;
+  padding: 10px;
+  width: 100%;
+  text-align: center;
+  /*background-color: blue;*/
+}
+.css-new-category:hover {
+  background-color: #f4f4f4;
 }
 .css-events-nav div {
-  height: 100%;
+  /*height: 100%;*/
   /*background-color: purple;*/
-  padding-bottom: 3px;
+  /*padding-bottom: 3px;*/
 }
 .css-events-nav-dropdown {
   position: relative;
-  height: 20px !important;
+  /*height: auto;*/
+  padding: 10px;
+  /*height: 20px !important;
   margin-top: 10px;
-  margin-right: 50px;
-  margin-bottom: -3px !important;
-  /*background-color: orange;*/
+  margin-bottom: -3px !important;*/
+  /*background-color: red;*/
 }
 .css-events-nav-tabs li a:hover {
   background-color: transparent;
-}
-.css-events-nav-tabs li a:focus {
-  background-color: #ffffff;
-  border-bottom: 3px solid #fe5a5a;
-  color: #252525;
 }
 .css-events {
   position: relative;
   height: 100% !important;
   overflow-y: hidden;
   margin: 0;
+  padding: 0px;
   /*background-color: orange;*/
 }
 .css-events-left {
   position: relative;
   /*height: 100%;*/
+  padding: 0px;
   /*background-color: red;*/
 }
 .css-events-right {
   position: relative;
   height: 100%;
+  padding: 0px;
+  margin: 0;
+  /*width: 100%;*/
+  /*margin: 0 auto;*/
   /*background-color: green;*/
 }
 .css-events-data {
   position: relative;
   height: 100%;
+  padding: 0px;
+  margin: 0px;
   /*background-color: grey;*/
 }
 
@@ -53,6 +68,7 @@
 .css-category {
   position: relative;
   height: 100%;
+  /*padding: 0px;*/
   /*background-color: yellow;*/
 
 }
@@ -60,38 +76,30 @@
   position: relative;
   height: 100%;
   /*background-color: red;*/
+  /*padding: 0px;*/
 }
 .css-entry-detail {
   position: relative;
   height: 100%;
   /*background-color: blue;*/
+  /*padding: 0px;*/
 }
 .css-category-data {
   position: relative;
-  width: 150px;
-  height: 450px;
+  width: 100%;
+  height: 500px;
   margin: 0 auto;
   margin-top: 20px;
   border-right: 1px solid #e6e6e6;
   /*background-color: orange;*/
 }
-.css-new-category {
+.css-category-data ul {
   position: relative;
-  width: 150px;
-  height: 50px;
-  margin: 0 auto;
-  border-right: 1px solid #e6e6e6;
-  /*background-color: red;*/
-}
-.css-add-category {
-  position: relative;
-  width: 50px;
   margin: auto;
+  list-style: none;
   text-align: center;
-  display: block;
   padding: 10px;
-  font-size: 25px;
-  color: #fe5a5a;
+  font-size: 16px;
   /*background-color: green;*/
 }
 .css-entries-data {

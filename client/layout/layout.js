@@ -77,7 +77,7 @@ Template.modal.helpers({
     },
     map: function() {
       return Template.instance().map.get();
-    }
+    },
 });
 
 

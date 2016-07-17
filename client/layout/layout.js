@@ -16,52 +16,52 @@ Template.layout.helpers({
             _id: liveUser
         });
     },
-    // highlightUpcoming: function() {
-    //   return Session.get("highlight");
-    // },
-    // highlightEvents: function() {
-    //   return Session.get("highlight");
-    // },
-    // highlightCalendar: function() {
-    //   return Session.get("highlight");
-    // },
-    // highlightSearch: function() {
-    //   return Session.get("highlight");
-    // },
+    highlightUpcoming: function() {
+      return Template.instance().upcoming.get();
+    },
+    highlightEvents: function() {
+      return Template.instance().events.get();
+    },
+    highlightCalendar: function() {
+      return Template.instance().calendar.get();
+    },
+    highlightSearch: function() {
+      return Template.instance().search.get();
+    },
 
 });
 
 Template.layout.events({
-    "click .js-logout": function() {
+    "click .js-logout": function(event) {
         event.preventDefault();
 
         Meteor.logout();
-        Router.go('/');
+        // Router.go('/');
     },
-    // "click .css-sidenav-upcoming": function() {
-    //   Session.set("highlightUpcoming", "css-current-local");
-    //   Session.set("highlightEvents", "");
-    //   Session.set("highlightCalendar", "");
-    //   Session.set("highlightSearch", "");
-    // },
-    // "click .css-sidenav-events": function() {
-    //   Session.set("highlightUpcoming", "");
-    //   Session.set("highlightEvents", "css-current-local");
-    //   Session.set("highlightCalendar", "");
-    //   Session.set("highlightSearch", "");
-    // },
-    // "click .css-sidenav-calendar": function() {
-    //   Session.set("highlightUpcoming", "");
-    //   Session.set("highlightEvents", "");
-    //   Session.set("highlightCalendar", "css-current-local");
-    //   Session.set("highlightSearch", "");
-    // },
-    // "click .css-sidenav-search": function() {
-    //   Session.set("highlightUpcoming", "");
-    //   Session.set("highlightEvents", "");
-    //   Session.set("highlightCalendar", "");
-    //   Session.set("highlightSearch", "css-current-local");
-    // },
+    "click .css-sidenav-upcoming": function(event, template) {
+      template.upcoming.set("css-side-nav-highlight");
+      template.events.set("");
+      template.calendar.set("");
+      template.search.set("");
+    },
+    "click .css-sidenav-events": function(event, template) {
+      template.upcoming.set("");
+      template.events.set("css-side-nav-highlight");
+      template.calendar.set("");
+      template.search.set("");
+    },
+    "click .css-sidenav-calendar": function(event, template) {
+      template.upcoming.set("");
+      template.events.set("");
+      template.calendar.set("css-side-nav-highlight");
+      template.search.set("");
+    },
+    "click .css-sidenav-search": function(event, template) {
+      template.upcoming.set("");
+      template.events.set("");
+      template.calendar.set("");
+      template.search.set("css-side-nav-highlight");
+    },
 
 });
 
@@ -220,6 +220,39 @@ Template.modal.events({
         $('.modal').modal('hide');
     },
 
+});
+
+Template.layout.onCreated(function() {
+
+    this.upcoming = new ReactiveVar("");
+    this.events = new ReactiveVar("");
+    this.calendar = new ReactiveVar("");
+    this.search = new ReactiveVar("");
+
+    if (Router.current().route.getName() == "upcoming") {
+      this.upcoming = new ReactiveVar("css-side-nav-highlight");
+      this.events = new ReactiveVar("");
+      this.calendar = new ReactiveVar("");
+      this.search = new ReactiveVar("");
+
+    } else if (Router.current().route.getName() == "events") {
+      this.events = new ReactiveVar("");
+      this.events = new ReactiveVar("css-side-nav-highlight");
+      this.calendar = new ReactiveVar("");
+      this.search = new ReactiveVar("");
+
+    } else if (Router.current().route.getName() == "calendar") {
+      this.calendar = new ReactiveVar("");
+      this.events = new ReactiveVar("");
+      this.calendar = new ReactiveVar("css-side-nav-highlight");
+      this.search = new ReactiveVar("");
+
+    } else if (Router.current().route.getName() == "search") {
+      this.search = new ReactiveVar("");
+      this.events = new ReactiveVar("");
+      this.calendar = new ReactiveVar("");
+      this.search = new ReactiveVar("css-side-nav-highlight");
+    }
 });
 
 Template.modal.onCreated(function() {

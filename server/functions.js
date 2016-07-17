@@ -1,24 +1,30 @@
-Accounts.onCreateUser(function(user) {
+Accounts.onCreateUser(function(options, user) {
 
-  // user.categories = [];
+  // think about generation you own _id
+  // with the Random package so you can
+  // set owner in the default category
+  
+  // const rID = Random.id;
+  // console.log(rID);
+  // user._id = rID;
 
+  user.categories = [];
+  user.profile = {
+    first: options.first,
+    last: options.last
+  };
 
-  const categories = [{
+  const userCategories = [{
     name: "To-Do",
     tasks: [],
     goals: [],
     text: [],
+    // owner: ???,
     createdAt: new Date(),
     modified: new Date()
   }];
 
-
-
-
-
-  // Meteor.call("insertDefault", defaultCategory);
-
-  user.categories = categories;
+  user.categories = userCategories;
   user.joined = new Date();
 
   return user;

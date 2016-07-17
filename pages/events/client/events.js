@@ -3,22 +3,21 @@ Meteor.subscribe("theTasks");
 Meteor.subscribe("theGoals");
 Meteor.subscribe("theTexts");
 
-
 Template.events.helpers({
   categories: function() {
     // console.log(Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories);
     return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories; //
   },
   tasks: function() {
-    console.log(Tasks.find({createdBy: Meteor.userId()}).fetch());
+    // console.log(Tasks.find({createdBy: Meteor.userId()}).fetch());
     return Tasks.find({createdBy: Meteor.userId()}).fetch(); //
   },
   goals: function() {
-    console.log(Goals.find({createdBy: Meteor.userId()}).fetch());
+    // console.log(Goals.find({createdBy: Meteor.userId()}).fetch());
     return Goals.find({createdBy: Meteor.userId()}).fetch(); //
   },
   texts: function() {
-    console.log(Texts.find({createdBy: Meteor.userId()}).fetch());
+    // console.log(Texts.find({createdBy: Meteor.userId()}).fetch());
     return Texts.find({createdBy: Meteor.userId()}).fetch(); //
   },
   showCategoryInput: function() {
@@ -33,6 +32,9 @@ Template.events.events({
       // alert("Here");
 
       template.showCategoryInput.set(true);
+      // $(".js-category-name-input").focus();
+
+      setTimeout(function() {$(".js-category-name-input").focus();}, 100);
     },
     "blur .js-category-name-input": function(event, template) {
       event.preventDefault();

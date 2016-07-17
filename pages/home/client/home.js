@@ -11,15 +11,14 @@ Template.home.events({
         const e = $(".js-email").val();
         const p = $(".js-password").val();
 
-        Accounts.createUser({
-          profile: {
-            first: f,
-            last: l
-            // pic_url: ???
-          },
+        const options = {
+          first: f,
+          last: l,
           email: e,
           password: p
-        }, function(error) {
+        }
+
+        Accounts.createUser(options, function(error) {
           if(error) { // if registration fails
             console.log(error.reason); // console log reason
             return;

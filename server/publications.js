@@ -5,6 +5,6 @@ Meteor.publish("theTexts", function() {return Texts.find();})
 
 // MUST BE REMOVED BEFORE PRODUCTION STAGE
 Meteor.publish("theUsers", function() {
-  return Meteor.users.find({_id: this.userId}, {fields: {categories: 1, joined: 1, email: 1}});
+  return Meteor.users.find();
 });
 // END

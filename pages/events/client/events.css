@@ -102,6 +102,20 @@
   font-size: 16px;
   /*background-color: green;*/
 }
+.css-category-data li {
+  padding: 10px;
+  border-left: 3px solid transparent;
+  /*background-color: orange;*/
+}
+.css-category-data li:hover {
+  background-color: #e6e6e6;
+  border-left: 3px solid #fe5a5a;
+}
+.css-create-category {
+  position: relative;
+  width: 100%;
+  margin-top: 10px;
+}
 .css-entries-data {
   position: relative;
   width: 260px;

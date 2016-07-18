@@ -72,9 +72,9 @@
 
                       <ul>
 
-                      {{#each goals}}
+                      {{#each g in goals}}
 
-                          <li>{{title}}</li>
+                          <a class="js-abcde" href="#"> <li>{{g.title}}</li> </a>
 
                       {{/each}}
 
@@ -93,7 +93,10 @@
                 </div>
                 <div class="css-entry-detail col-sm-6">
                     <div class="css-entry-detail-data">
+                      <!-- {{#if }} -->
+                        <!-- {{defaultDisplay.title}} -->
 
+                      {{detailedGoal.title}}
                     </div>
                 </div>
 
@@ -102,3 +105,9 @@
         </div>
     </div>
 </template>
+
+<!-- <template name="detailed">
+
+  {{detailedGoal.title}}
+
+</template> -->

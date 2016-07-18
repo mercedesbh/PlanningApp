@@ -155,6 +155,7 @@ Template.modal.events({
         } else if ($(".js-modal-select").val() == "goal") {
 
             const gTitle = $(".js-goal-title").val();
+            console.log(gTitle);
             const gDateS = $(".js-goal-date-s").val();
             const gDateF = $(".js-goal-date-f").val();
             var gLocation = $(".js-goal-location").val();
@@ -185,15 +186,15 @@ Template.modal.events({
                     // repeat: ???
             }
 
-            alert("goal");
+            //alert("goal");
 
             Meteor.call("createGoal", newGoal);
 
-            $("js-goal-title").val("");
-            $("js-goal-date-s").val("");
-            $("js-goal-date-f").val("");
-            $("js-goal-location").val("");
-            $("js-goal-note").val("");
+            $(".js-goal-title").val("");
+            $(".js-goal-date-s").val("");
+            $(".js-goal-date-f").val("");
+            $(".js-goal-location").val("");
+            $(".js-goal-note").val("");
 
         } else if ($(".js-modal-select").val() == "text") {
 

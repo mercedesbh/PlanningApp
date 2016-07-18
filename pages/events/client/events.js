@@ -23,8 +23,18 @@ Template.events.helpers({
   showCategoryInput: function() {
     return Template.instance().showCategoryInput.get();
   },
-
+  detailedGoal: function() {
+    //return Goals.findOne({_id:this._id});
+    return Template.instance().detailedGoal.get();
+  },
 });
+
+// Template.detailed.helpers({
+//   detailedGoal: function() {
+//     //return Goals.findOne({_id:this._id});
+//     return Template.instance().detailedGoal.get();
+//   }
+// });
 
 Template.events.events({
     "click .css-new-category": function(event, template) {
@@ -67,9 +77,19 @@ Template.events.events({
 
       template.showCategoryInput.set(false);
     },
+    "click .js-abcde": function(event, template) {
+      event.preventDefault();
+          const d = Goals.findOne({_id:this._id});
+          template.detailedGoal.set(d);
+    }
 
 });
 
 Template.events.onCreated(function() {
     this.showCategoryInput = new ReactiveVar(false);
+    this.detailedGoal = new ReactiveVar(null);
 });
+
+// Template.detailed.onCreated(function() {
+//     this.detailedGoal = new ReactiveVar(null);
+// });

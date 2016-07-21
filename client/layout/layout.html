@@ -13,7 +13,17 @@
 			</div>
 			<div class="css-live-user col-sm-4">
 
-				<a class="css-notify" href="#">[N]</a>
+				<!-- <a class="css-notify" href="#">[N]</a> -->
+				<div class="css-notify dropdown">
+					<a class=" dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> [N] </a>
+					<ul class="css-notify-dropdown dropdown-menu" aria-labelledby="dropdownMenu1">
+						<li><a href="#">?????</a></li>
+						<li><a href="#">!!!!!</a></li>
+						<li><a href="#">XOXOX</a></li>
+						<!-- <li role="separator" class="divider"></li> -->
+						<li><a href="#">AVAVA</a></li>
+					</ul>
+				</div>
 
 				<div role="presentation" class="dropdown">
 					<a class="css-username dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> {{userName.profile.first}} {{userName.profile.last}} <span class="caret"></span> </a>
@@ -127,6 +137,12 @@
 					<br>
 					<input class="js-task-title form-control" type="text" placeholder="Title">
 					<br>
+					<select class="js-select-category form-control">
+						{{#each selectCategory}}
+						<option value="{{name}}">{{name}}</option>
+						{{/each}}
+					</select>
+					<br>
 					<div class="container">
 						<div class="row">
 							<div class='col-sm-6'>
@@ -227,6 +243,25 @@
 					<br>
 					<span><input class="js-task-goal" type="radio" value="other"> Check to make it a part of a Goal.</span>
 					<br>
+					<select class="js-select-task-priority form-control">
+						<!-- the html in the values must be removed because i might be hackable -->
+						<option value="<span style='color: #666666'>Neutral</span>">Neutral</option>
+						<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
+						<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
+					</select>
+					<br>
+					{{#with tags}}
+					{{#if this.length}}
+					<select class="js-select-task-tag form-control">
+						<option value="">Select tag</option>
+						{{#each tags}}
+						<option value="{{tTagName}}">{{tTagName}}</option>
+						{{/each}}
+					</select>
+					{{/if}}
+					{{/with}}
+					<br>
+					<input class="js-new-tag-name form-control" type="text" name="name" placeholder="New tag">
 					<br>
 					<textarea class="js-task-note form-control" placeholder="Add note..."></textarea>
 					<br>
@@ -239,6 +274,13 @@
 					<br>
 					<input class="js-goal-title form-control" type="text" placeholder="Title">
 					<br>
+
+					<!-- <select class="">
+						<option value=""><a href="#">Select its category</a></option>
+						{{#each selectCategory}}
+						<option value=""><a href="#">{{selectCategory.name}}</a></option>
+						{{/each}}
+					</select> -->
 
 					<!-- start goal by... -->
 					<div class="container">
@@ -287,7 +329,12 @@
 							</script>
 						</div>
 					</div>
-
+					<select class="js-select-goal-priority form-control">
+						<!-- the html in the values must be removed because i might be hackable -->
+						<option value="<span style='color: #666666'>Neutral</span>">Neutral</option>
+						<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
+						<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
+					</select>
 					<br>
 					<input class="js-goal-location form-control" type="text" placeholder="Location">
 					<br>

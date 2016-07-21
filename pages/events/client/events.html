@@ -19,10 +19,10 @@
                           <span class="caret"></span>
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                          <li><a href="#">XXX</a></li>
-                          <li><a href="#">???</a></li>
-                          <li><a href="#">!!!</a></li>
-                          <li><a href="#">OOO</a></li>
+                          <li><a href="#">by priority</a></li>
+                          <li><a href="#">by group</a></li>
+                          <li><a href="#">by date</a></li>
+                          <li><a href="#">by time</a></li>
                       </ul>
                   </div>
               </div>
@@ -48,47 +48,64 @@
 
                         <br>
 
+
+
+                        </ul>
                         {{# if showCategoryInput}}
                         <!-- <li class="css-add-category-input js-add-category-input"> -->
                           <input class="js-category-name-input form-control" type="text" placeholder="Name category" autofocus="true">
                           <input class="css-create-category js-create-category btn" type="button" name="name" value="Add">
                         <!-- </li> -->
                         {{/if}}
-
-                        </ul>
                     </div>
                 </div>
                 <div class="css-entries col-sm-3">
                     <div class="css-entries-data">
-                      <!-- <ul>
+                      <ul>
 
                       {{#each tasks}}
 
-                          <li>{{title}}</li>
+                      <a class="js-detail-entry" href="#">
+                        <li>
+                          <div class="js-detail-entry">
+
+                          </div>
+                          <h5> {{title}} </h5>
+                          <h5>
+                            {{#if task }}
+                              {{time}}
+                            {{/if}}
+                            {{#if goal}}
+                              {{start_time}}
+                            {{/if}}
+                            {{#if text}}
+                              {{modified_time}}
+                            {{/if}}
+                            <span class="pull-right">
+                              {{#if task}}
+                                {{date}}
+                              {{/if}}
+                              {{#if goal}}
+                                {{start_date}}
+                              {{/if}}
+                              {{#if text}}
+                                {{modified_date}}
+                              {{/if}}
+                            </span>
+                          </h5>
+
+                          <!-- {{{???}}} is XSS attack prone -->
+                          <h5>
+                            <span>
+                              <div class="css-tag-color" style="background-color: #{{tagColor}}"></div>{{tag}}
+                              <span class="pull-right"> {{{priority}}} </span>
+                            </span>
+                          </h5>
+                        </li>
+                      </a>
 
                       {{/each}}
-
-                      </ul> -->
-
-                      <ul>
-
-                      {{#each g in goals}}
-
-                          <a class="js-abcde" href="#"> <li>{{g.title}}</li> </a>
-
-                      {{/each}}
-
-                      </ul>
-
-                      <!-- <ul>
-
-                      {{#each texts}}
-
-                          <li>{{title}}</li>
-
-                      {{/each}}
-
-                      </ul> -->
+                    </ul>
                     </div>
                 </div>
                 <div class="css-entry-detail col-sm-6">
@@ -96,7 +113,19 @@
                       <!-- {{#if }} -->
                         <!-- {{defaultDisplay.title}} -->
 
-                      {{detailedGoal.title}}
+                      <div class="css-detailed-entry">
+                        <h3> {{detailedGoal.title}} </h3>
+                        <h4>Priority: </h4>
+                        <h4>Time: {{detailedGoal.start_date}} </h4>
+                        <h4> {{detailedGoal.finish_date}} </h4>
+                        <h5>Group: </h5>
+                      </div>
+                      <br>
+                      <button class="btn pull-right" type="button">Edit</button>
+                      <br>
+                      <hr>
+                      <h5>Notes:</h5>
+                      <textarea class="form-control" rows="15" cols="40">{{detailedGoal.note}}</textarea>
                     </div>
                 </div>
 

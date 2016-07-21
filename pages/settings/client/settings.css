@@ -1,0 +1,26 @@
+.css-settings-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  background-color: #ffffff;
+}
+.css-settings {
+  position: relative;
+  width: 85%;
+  height: 100%;
+  float: right;
+  color: #666666;
+  /*background-color: purple;*/
+}
+.css-settings-wrap {
+  position: relative;
+  width: 80%;
+  height: 100%;
+  margin: auto;
+  /*background-color: green;*/
+}
+.css-settings-wrap span {
+  font-size: 28px;
+  color: #fe5a5a;
+}

@@ -78,6 +78,17 @@ Template.modal.helpers({
     map: function() {
       return Template.instance().map.get();
     },
+    selectCategory: function() {
+      // const user = Meteor.users.findOne(Meteor.userId()); //
+      // return Meteor.users.find({_id: Meteor.userId()}).fetch()[0];
+      const user = Meteor.users.findOne(Meteor.userId()); //
+      // console.dir(user);
+      // console.log(user);
+      return user.categories
+    },
+    tags: function() {
+      return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories[0].tags;
+    }
 });
 
 
@@ -111,11 +122,45 @@ Template.modal.events({
         if ($(".js-modal-select").val() == "task") {
 
             const tTitle = $(".js-task-title").val();
-            console.log($(".js-task-title").val());
-
-            const tDate = $(".js-task-date").val();
+            var tTime = $(".js-task-date").val();
+            var tDate = $(".js-task-date").val();
             var tLocation = $(".js-task-location").val();
             var tNote = $(".js-task-note").val();
+            const tPriority = $(".js-select-task-priority").val();
+            const tCategory = $(".js-select-category").val();
+
+            var tTag = $(".js-select-task-tag").val();
+
+            if (tTag && $(".js-new-tag-name").val().length >= 1) {
+              alert("Do u want to create a tag or tag it with an existing one?");
+              return;
+            } else if ($(".js-new-tag-name").val().length >= 1) {
+              tTag = $(".js-new-tag-name").val();
+            } else {
+              tTag = null;
+            }
+            // console.log("here");
+
+            var tTagColor = intToRGB(hashCode(tTag));
+
+            function hashCode(str) { // java String#hashCode
+              var hash = 0;
+              for (var i = 0; i < str.length; i++) {
+              hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+              return hash;
+            }
+
+            function intToRGB(i){
+              var c = (i & 0x00FFFFFF)
+              .toString(16)
+              .toUpperCase();
+
+              return "00000".substring(0, 6 - c.length) + c;
+            }
+
+            tTime = moment(tTime).format('h:mm A');
+            tDate = moment(tDate).format('MMM Do YY');
 
             if (tLocation == "") {
                 tLocation = null;
@@ -127,39 +172,64 @@ Template.modal.events({
             // alert(tDate);
 
             const newTask = {
+                task: "task",
                 title: tTitle,
                 date: tDate,
+                time: tTime,
                 location: tLocation,
                 note: tNote,
                 createdAt: new Date(),
                 createdBy: Meteor.userId(),
                 modified: new Date(),
-                completed: false
+                completed: false,
                     // isGoal: ???
                     // reminder: ???
-                    // tag: ???
-                    // priority: ???
+                tag: tTag,
+                tagColor: tTagColor,
+                priority: tPriority
                     // repeat: ???
             }
 
-            alert("task");
+            const tTagObj = {
+              tTagName: tTag,
+              tTagColor: tTagColor
+            }
 
-            Meteor.call("createTask", newTask);
+            // alert("task");
 
-            $(".js-task-title").val("");
-            $(".js-task-date").val("");
-            $(".js-task-location").val("");
-            $(".js-task-note").val("");
+            Meteor.call("createTask", newTask,function(error, result){
+              if (error) {
+                console.log(error);
+              }
+              else {
+                var lastEntry = Tasks.findOne({}, {sort: {createdAt: -1, limit: 1}})._id;
+                Meteor.call("linkTask", lastEntry, tCategory);
+                Meteor.call("addTag", tCategory, tTagObj);
+
+                // console.log("Did it work?");
+                $(".js-task-title").val("");
+                $(".js-task-date").val("");
+                $(".js-task-location").val("");
+                $(".js-task-note").val("");
+              }
+            });
 
 
         } else if ($(".js-modal-select").val() == "goal") {
 
             const gTitle = $(".js-goal-title").val();
-            console.log(gTitle);
             const gDateS = $(".js-goal-date-s").val();
             const gDateF = $(".js-goal-date-f").val();
+            const gPriority = $(".js-select-goal-priority").val();
             var gLocation = $(".js-goal-location").val();
             var gNote = $(".js-goal-note").val();
+
+            gDateST = moment(gDateS).format('h:mm A');
+            gDateSD = moment(gDateS).format('MMM Do YY');
+
+            gDateFT = moment(gDateF).format('h:mm A');
+            gDateFD = moment(gDateF).format('MMM Do YY');
+
 
             if (gLocation == "") {
                 gLocation = null;
@@ -169,20 +239,23 @@ Template.modal.events({
             }
 
             const newGoal = {
+                goal: "goal",
                 title: gTitle,
-                start_date: gDateS,
-                finish_date: gDateF,
+                start_date: gDateSD,
+                start_time: gDateST,
+                finish_date: gDateFD,
+                finish_time: gDateFT,
                 location: gLocation,
                 note: gNote,
                 createdAt: new Date(),
                 createdBy: Meteor.userId(),
                 modified: new Date(),
                 completed: false,
-                tasks: []
+                tasks: [],
                     // isGoal: ???
                     // reminder: ???
                     // tag: ???
-                    // priority: ???
+                priority: gPriority
                     // repeat: ???
             }
 
@@ -202,11 +275,13 @@ Template.modal.events({
             const txtText = $(".js-text-text").val();
 
             const newText = {
+                text: "text",
                 title: txtTitle,
                 text: txtText,
                 createdAt: new Date(),
-                createBy: Meteor.userId(),
-                modified: new Date()
+                createdBy: Meteor.userId(),
+                modified_time: moment(new Date()).format('h:mm A'),
+                modified_date: moment(new Date()).format('MMM Do YY'),
                     // reminder: ???
                     // notes [???]
             }

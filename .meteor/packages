@@ -21,6 +21,8 @@ iron:router
 twbs:bootstrap
 tsega:bootstrap3-datetimepicker
 momentjs:moment
-dburles:google-maps
 npm-bcrypt
 accounts-password
+session
+dburles:google-maps
+mdg:geolocation

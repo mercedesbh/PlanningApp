@@ -89,14 +89,14 @@ Template.modal.events({
             template.textChosen.set(true);
         }
     },
-    // "keypress .js-task-destination": function(event, template){
-    //   template.map.set(true);
-    // },
-    // "blur .js-task-destination": function(event, template){
-    //   if ($(".js-task-destination").val() == 0){
-    //     template.map.set(false);
-    //   }
-    // },
+    "keypress .js-task-destination": function(event, template){
+      template.map.set(true);
+    },
+    "blur .js-task-destination": function(event, template){
+      if ($(".js-task-destination").val() == 0){
+        template.map.set(false);
+      }
+    },
     "click .js-add-entry": function(event) {
         event.preventDefault();
 
@@ -249,8 +249,8 @@ Template.modal.events({
     },
     "click .js-submit-location": function(event) {
         event.preventDefault();
-        const origin = $(".js-start").val();
-        const destination = $(".js-end").val();
+        const origin = $(".js-task-origin").val();
+        const destination = $(".js-task-destination").val();
         console.log(origin);
         console.log(destination);
         calculateRoute(origin, destination);

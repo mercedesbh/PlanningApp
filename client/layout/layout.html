@@ -165,14 +165,22 @@
 						</div>
 					</div>
 					<div class="js-task-map">
+						<!-- <form class="js-task-path"> -->
+							<div class="css-task-origin">
 								<b>Start Location: </b>
 								<input id="start" class="js-task-origin form-control" type="text" placeholder="Start">
+							</div>
 								<b>End Destination: </b>
 								<input id="end" class="js-task-destination form-control" type="text" placeholder="Enter a location">
 								<input class="js-submit-location btn" type="submit" value="Get Path">
+						<!-- </form> -->
+								{{#if map}}
+
 							<div class="map-container">
+
 								{{> googleMap name="initMap" options=exampleMapOptions}}
 						</div>
+						{{/if}}
 					</div>
 					<br>
 					<span><input class="js-task-goal" type="radio" value="other"> Check to make it a part of a Goal.</span>

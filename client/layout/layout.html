@@ -45,32 +45,32 @@
 		<div class="css-side-nav">
 
 			<ul class="css-stacked-nav nav nav-pills nav-stacked">
-				<a class="js-modal" data-toggle="modal" data-target=".bd-example-modal-lg" href="#">
+				<a id="mapTrigger" class="js-modal" data-toggle="modal" data-target=".bd-example-modal-lg" href="#">
 					<li>
 						<span class="glyphicon glyphicon-plus"></span>
 						<p>New Entry</p>
 					</li>
 				</a>
 				<a href="{{pathFor 'upcoming'}}">
-					<li class="css-sidenav-upcoming {{highlightUpcoming}}">
+					<li class="css-sidenav-upcoming {{highlight 'upcoming'}}">
 						<span class="glyphicon glyphicon-th-list"></span>
 						<p> Upcoming </p>
 					</li>
 				</a>
 				<a href="{{pathFor 'events'}}">
-					<li class="css-sidenav-events {{highlightEvents}}">
+					<li class="css-sidenav-events {{highlight 'events'}}">
 						<span class="glyphicon glyphicon-th-large"></span>
 						<p> Events </p>
 					</li>
 				</a>
 				<a href="#">
-					<li class="css-sidenav-calendar {{highlightCalendar}}">
+					<li class="css-sidenav-calendar {{highlight 'calendar'}}">
 						<span class="glyphicon glyphicon-calendar"></span>
 						<p>Calendar</p>
 					</li>
 				</a>
 				<a href="#">
-					<li class="css-sidenav-search {{highlightSearch}}">
+					<li class="css-sidenav-search {{highlight 'search'}}">
 						<span class="glyphicon glyphicon-search"></span>
 						<p>Search</p>
 					</li>
@@ -143,7 +143,7 @@
 						{{/each}}
 					</select>
 					<br>
-					<div class="container">
+					<!-- <div class="container"> -->
 						<div class="row">
 							<div class='col-sm-6'>
 								<div class="form-group">
@@ -154,7 +154,7 @@
 										</span>
 									</div>
 								</div>
-							</div>
+							<!-- </div> -->
 							<script type="text/javascript">
 								$(function() {
 									$('#datetimepicker5').datetimepicker({
@@ -164,25 +164,24 @@
 							</script>
 						</div>
 					</div>
-					<br>
-					<!-- <input class="js-task-location form-control" type="text" placeholder="Location">
-					<br>
-					{{# if map}} -->
 					<div class="js-task-map">
-						<div id="floating-panel">
-							<form class="js-location">
+						<!-- <form class="js-task-path"> -->
+							<div class="css-task-origin">
 								<b>Start Location: </b>
-								<input id="start" class="js-start form-control" type="text" placeholder="Start">
+								<input id="start" class="js-task-origin form-control" type="text" placeholder="Start">
+							</div>
 								<b>End Destination: </b>
-								<input id="end" class="js-end form-control" type="text" placeholder="Enter a location">
-								<input class="js-submit-location btn" type="submit" value="Get Directions">
-							</form>
-						</div>
+								<input id="end" class="js-task-destination form-control" type="text" placeholder="Enter a location">
+								<input class="js-submit-location btn" type="submit" value="Get Path">
+						<!-- </form> -->
+								{{#if map}}
+
 							<div class="map-container">
+
 								{{> googleMap name="initMap" options=exampleMapOptions}}
 						</div>
+						{{/if}}
 					</div>
-					<!-- {{/if}} -->
 					<br>
 					<span><input class="js-task-goal" type="radio" value="other"> Check to make it a part of a Goal.</span>
 					<br>
@@ -278,8 +277,6 @@
 						<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
 						<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
 					</select>
-					<br>
-					<input class="js-goal-location form-control" type="text" placeholder="Location">
 					<br>
 					<textarea class="js-goal-note form-control" style="height: 150px" placeholder="Add note..."></textarea>
 					<br>

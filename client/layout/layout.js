@@ -6,15 +6,6 @@ Meteor.subscribe("theGoals");
 Meteor.subscribe("theTexts");
 Meteor.subscribe("theCategories");
 
-<<<<<<< HEAD
-=======
-// MUST BE REMOVED BEFORE PRODUCTION STAGE
-Deps.autorun(function () {
-  Meteor.subscribe("theUsers");
-});
-// END
-
-
 if (Meteor.isClient) {
   Meteor.startup(function() {
     GoogleMaps.load({ v: '3', key: 'AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M', libraries: 'places' });
@@ -22,7 +13,6 @@ if (Meteor.isClient) {
   });
 }
 
->>>>>>> 916942f1d0030fb907431f3cb456be7f6bf45db4
 Template.layout.helpers({
     userName: function() {
         const liveUser = Meteor.userId();
@@ -169,32 +159,6 @@ Template.modal.events({
                 tTagColor: tTagColor
             }
 
-<<<<<<< HEAD
-            Meteor.call("createTask", newTask, function(error, result) {
-                if (error) {
-                    console.log(error);
-                } else {
-                    var lastEntry = Tasks.findOne({}, {sort: {createdAt: -1,limit: 1}})._id;
-                    Meteor.call("linkTask", lastEntry, tCategory);
-                    if (tTag.length > 0) {
-                      Meteor.call("linkTag", tCategory, tTagObj);
-                    }
-
-                    $(".js-task-title").val("");
-                    $(".js-task-date").val("");
-                    $(".js-task-location").val("");
-                    $(".js-task-note").val("");
-                    // const tTitle = $(".js-task-title").val();
-                    // var tTime = $(".js-task-date").val();
-                    // var tDate = $(".js-task-date").val();
-                    // var tLocation = $(".js-task-location").val();
-                    // var tNote = $(".js-task-note").val();
-                    // const tPriority = $(".js-select-task-priority").val();
-                    // const tCategory = $(".js-select-category").val();
-                }
-=======
-            // alert("task");
-
             Meteor.call("createTask", newTask,function(error, result){
               if (error) {
                 console.log(error);
@@ -210,7 +174,6 @@ Template.modal.events({
                 $(".js-task-destination").val("");
                 $(".js-task-note").val("");
               }
->>>>>>> 916942f1d0030fb907431f3cb456be7f6bf45db4
             });
 
         } else if ($(".js-modal-select").val() == "goal") {
@@ -292,7 +255,6 @@ Template.modal.events({
         $('.modal').modal('hide');
     },
     "click .js-submit-location": function(event) {
-<<<<<<< HEAD
         event.preventDefault();
         const origin = $(".js-start").val();
         const destination = $(".js-end").val();
@@ -365,82 +327,19 @@ $(document).ready(function() {
 
 });
 
-Template.layout.onCreated(function() {
-    if (Meteor.isClient) {
-        Meteor.startup(function() {
-            GoogleMaps.load({
-                v: '3',
-                key: 'AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M',
-                libraries: 'places'
-            });
-        });
-=======
-      event.preventDefault();
-      const origin = $(".js-task-origin").val();
-      const destination = $(".js-task-destination").val();
-      console.log(origin);
-      console.log(destination);
-      calculateRoute(origin, destination);
-    },
-});
-
-Template.layout.onCreated(function() {
-
-    this.upcoming = new ReactiveVar("");
-    this.events = new ReactiveVar("");
-    this.calendar = new ReactiveVar("");
-    this.search = new ReactiveVar("");
-
-    if (Router.current().route.getName() == "upcoming") {
-      this.upcoming = new ReactiveVar("css-side-nav-highlight");
-      this.events = new ReactiveVar("");
-      this.calendar = new ReactiveVar("");
-      this.search = new ReactiveVar("");
-
-    } else if (Router.current().route.getName() == "events") {
-      this.events = new ReactiveVar("");
-      this.events = new ReactiveVar("css-side-nav-highlight");
-      this.calendar = new ReactiveVar("");
-      this.search = new ReactiveVar("");
-
-    } else if (Router.current().route.getName() == "calendar") {
-      this.calendar = new ReactiveVar("");
-      this.events = new ReactiveVar("");
-      this.calendar = new ReactiveVar("css-side-nav-highlight");
-      this.search = new ReactiveVar("");
-
-    } else if (Router.current().route.getName() == "search") {
-      this.search = new ReactiveVar("");
-      this.events = new ReactiveVar("");
-      this.calendar = new ReactiveVar("");
-      this.search = new ReactiveVar("css-side-nav-highlight");
->>>>>>> 916942f1d0030fb907431f3cb456be7f6bf45db4
-    }
-});
-
 Template.modal.onCreated(function() {
     this.taskChosen = new ReactiveVar(true);
     this.goalChosen = new ReactiveVar(false);
     this.textChosen = new ReactiveVar(false);
     this.map = new ReactiveVar(false);
-    //Map onCreated
+    // Map onCreated
     // We can use the `ready` callback to interact with the map API once the map is ready.
     GoogleMaps.ready('initMap', function(map) {
-<<<<<<< HEAD
         // Add a marker to the map once it's ready
         // var marker = new google.maps.Marker({
         //   position: map.options.center,
         //   map: map.instance
         // });
-=======
-
-
-      // Add a marker to the map once it's ready
-      // var marker = new google.maps.Marker({
-      //   position: map.options.center,
-      //   map: map.instance
-      // });
->>>>>>> 916942f1d0030fb907431f3cb456be7f6bf45db4
     });
 });
 
@@ -458,30 +357,6 @@ Template.modal.onRendered(function() {
     var lat;
     var lng;
     window.onload = function() {
-<<<<<<< HEAD
-        var latlng;
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                lat = pos.lat;
-                lng = pos.lng;
-                latlng = new google.maps.LatLng(pos.lat, pos.lng);
-
-                //Set start field to current location
-                document.getElementById('start').defaultValue = lat + ", " + lng;
-                console.log(lat + ", " + lng);
-
-            });
-        } else {
-            console.log("never reaches");
-            latlng = new google.maps.LatLng(42.358970, -71.066093);
-        }
-        var input = document.getElementById('end');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-=======
 
       var latlng;
       if (navigator.geolocation) {
@@ -506,7 +381,6 @@ Template.modal.onRendered(function() {
           });
           var input = document.getElementById('end');
           var autocomplete = new google.maps.places.Autocomplete(input);
->>>>>>> 916942f1d0030fb907431f3cb456be7f6bf45db4
 
         // When the user selects an address from the dropdown,
         google.maps.event.addListener(autocomplete, 'place_changed', function() {
@@ -514,12 +388,6 @@ Template.modal.onRendered(function() {
             // Get the place details from the autocomplete object.
             var place = autocomplete.getPlace();
 
-
-<<<<<<< HEAD
-            //  console.log("place: " + JSON.stringify(place) );
-        });
-    };
-=======
                console.log("place: " + JSON.stringify(place) );
           });
       } else {
@@ -543,8 +411,6 @@ Template.modal.onRendered(function() {
           //     //  console.log("place: " + JSON.stringify(place) );
           // });
       };
-
->>>>>>> 916942f1d0030fb907431f3cb456be7f6bf45db4
 });
 function calculateRoute(origin, destination) {
         var directionsService = new google.maps.DirectionsService();

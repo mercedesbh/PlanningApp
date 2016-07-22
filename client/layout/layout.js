@@ -58,11 +58,8 @@ Template.modal.helpers({
     tags: function() {
       return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories[0].tags;
     },
-<<<<<<< HEAD
 
     //Map helpers
-=======
->>>>>>> 666c7c1d0a37969b8c3cf7a1b477eae115ba74f6
     exampleMapOptions: function() {
       // Make sure the maps API has loaded
       if (GoogleMaps.loaded()) {
@@ -75,11 +72,7 @@ Template.modal.helpers({
         };
         return mapOptions;
       }
-<<<<<<< HEAD
-    }
-=======
     },
->>>>>>> 666c7c1d0a37969b8c3cf7a1b477eae115ba74f6
 });
 
 Template.modal.events({

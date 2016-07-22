@@ -63,7 +63,7 @@
                     <div class="css-entries-data">
                       <ul>
 
-                      {{#each tasks}}
+                      {{#each entries}}
 
                       <a class="js-detail-entry" href="#">
                         <li>
@@ -113,18 +113,18 @@
                         {{defaultDisplay.title}} -->
 
                       <div class="css-detailed-entry">
-                        <h3> {{detailedGoal.title}} </h3>
-                        <h4>Priority: </h4>
-                        <h4>Time: {{detailedGoal.start_date}} </h4>
-                        <h4> {{detailedGoal.finish_date}} </h4>
-                        <h5>Group: </h5>
+                        <h3> {{detailed.title}} </h3>
+                        <h4>Priority: {{{detailed.priority}}}</h4>
+                        <h4>Complete Time: {{detailed.time}} </h4>
+                        <h4>Complete Date: {{detailed.date}} </h4>
+                        <div class="css-tag-color" style="background-color: #{{detailed.tagColor}}"></div>{{detailed.tag}}
                       </div>
                       <br>
                       <button class="btn pull-right" type="button">Edit</button>
                       <br>
                       <hr>
                       <h5>Notes:</h5>
-                      <textarea class="form-control" rows="15" cols="40">{{detailedGoal.note}}</textarea>
+                      <textarea class="form-control" rows="15" cols="40">{{detailed.note}}</textarea>
                     </div>
                 </div>
 

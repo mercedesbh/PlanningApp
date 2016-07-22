@@ -12,7 +12,7 @@ Template.events.helpers({
     // console.dir(user);
     return user.categories
   },
-  tasks: function() {
+  entries: function() {
     // console.log(Tasks.find({createdBy: Meteor.userId()}).fetch());
     var y = Tasks.find({createdBy: Meteor.userId()}).fetch();
     // console.log(y);
@@ -32,7 +32,7 @@ Template.events.helpers({
   showCategoryInput: function() {
     return Template.instance().showCategoryInput.get();
   },
-  detailedGoal: function() {
+  detailed: function() {
     //return Goals.findOne({_id:this._id});
     return Template.instance().detailedGoal.get();
   },
@@ -89,20 +89,28 @@ Template.events.events({
     },
     "click .js-detail-entry": function(event, template) {
       event.preventDefault();
-          const d = Goals.findOne({_id: this._id});
-          // console.dir(this);
-          template.detailedGoal.set(d);
-    }
+          const goal = Goals.findOne({_id: this._id});
+          const task = Tasks.findOne({_id: this._id});
+          const text = Texts.findOne({_id: this._id});
+
+          if (goal) {
+            template.detailedGoal.set(goal);
+            console.log("goal");
+          } else if (task) {
+            template.detailedGoal.set(task);
+            console.log("task");
+          } else if (text) {
+            template.detailedGoal.set(text);
+            console.log("text");
+          }
+    },
 
 });
 
 Template.events.onCreated(function() {
     this.showCategoryInput = new ReactiveVar(false);
 
-    const x = Goals.findOne({createdBy: Meteor.userId()});
-    // const x = Goals.findOne({createdBy: Meteor.userId()}, {sort: {createdAt: -1, limit: 1}});
-
-    this.detailedGoal = new ReactiveVar(x);
+    this.detailedGoal = new ReactiveVar();
 });
 
 // Template.detailed.onCreated(function() {

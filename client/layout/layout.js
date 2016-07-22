@@ -29,7 +29,7 @@ Template.layout.helpers({
 
 Template.layout.events({
     "click #mapTrigger": function(event) {
-
+      console.log("what is this for?");
     },
     "click .js-logout": function(event) {
         event.preventDefault();
@@ -115,11 +115,11 @@ Template.modal.events({
             if (tTag && tTagName) {
                 alert("Create new tag or use existing one?");
                 return;
-            } else if (tTagName.length > 0 || tTagName != null) {
-                console.log("here");
+            } else if (tTagName != null || tTagName.length > 0) {
                 tTag = tTagName;
-                // console.log(tTag);
             }
+
+            console.log(tTag);
 
             if (tTag.length > 0) {
               var tTagColor = intToRGB(hashCode(tTag));
@@ -166,7 +166,9 @@ Template.modal.events({
               else {
                 var lastEntry = Tasks.findOne({}, {sort: {createdAt: -1, limit: 1}})._id;
                 Meteor.call("linkTask", lastEntry, tCategory);
-                Meteor.call("addTag", tCategory, tTagObj);
+                if (tTag.length > 0) {
+                  Meteor.call("linkTag", tCategory, tTagObj);
+                }
 
                 // console.log("Did it work?");
                 $(".js-task-title").val("");

@@ -1,14 +1,10 @@
+Deps.autorun(function() {
+    Meteor.subscribe("theUsers");
+});
 Meteor.subscribe("theTasks");
 Meteor.subscribe("theGoals");
 Meteor.subscribe("theTexts");
 Meteor.subscribe("theCategories");
-
-// MUST BE REMOVED BEFORE PRODUCTION STAGE
-Deps.autorun(function () {
-  Meteor.subscribe("theUsers");
-});
-// END
-
 
 if (Meteor.isClient) {
   Meteor.startup(function() {
@@ -24,19 +20,11 @@ Template.layout.helpers({
             _id: liveUser
         });
     },
-    highlightUpcoming: function() {
-      return Template.instance().upcoming.get();
+    highlight: function(template) {
+      var currentRoute = Router.current().route.getName();
+      console.log(currentRoute);
+      return currentRoute && template === currentRoute ? 'css-side-nav-highlight' : '';
     },
-    highlightEvents: function() {
-      return Template.instance().events.get();
-    },
-    highlightCalendar: function() {
-      return Template.instance().calendar.get();
-    },
-    highlightSearch: function() {
-      return Template.instance().search.get();
-    },
-
 });
 
 Template.layout.events({
@@ -47,33 +35,7 @@ Template.layout.events({
         event.preventDefault();
 
         Meteor.logout();
-        // Router.go('/');
     },
-    "click .css-sidenav-upcoming": function(event, template) {
-      template.upcoming.set("css-side-nav-highlight");
-      template.events.set("");
-      template.calendar.set("");
-      template.search.set("");
-    },
-    "click .css-sidenav-events": function(event, template) {
-      template.upcoming.set("");
-      template.events.set("css-side-nav-highlight");
-      template.calendar.set("");
-      template.search.set("");
-    },
-    "click .css-sidenav-calendar": function(event, template) {
-      template.upcoming.set("");
-      template.events.set("");
-      template.calendar.set("css-side-nav-highlight");
-      template.search.set("");
-    },
-    "click .css-sidenav-search": function(event, template) {
-      template.upcoming.set("");
-      template.events.set("");
-      template.calendar.set("");
-      template.search.set("css-side-nav-highlight");
-    },
-
 });
 
 Template.modal.helpers({
@@ -87,15 +49,11 @@ Template.modal.helpers({
         return Template.instance().textChosen.get();
     },
     map: function() {
-      return Template.instance().map.get();
+        return Template.instance().map.get();
     },
     selectCategory: function() {
-      // const user = Meteor.users.findOne(Meteor.userId()); //
-      // return Meteor.users.find({_id: Meteor.userId()}).fetch()[0];
-      const user = Meteor.users.findOne(Meteor.userId()); //
-      // console.dir(user);
-      // console.log(user);
-      return user.categories
+        const user = Meteor.users.findOne(Meteor.userId());
+        return user.categories
     },
     tags: function() {
       return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories[0].tags;
@@ -151,35 +109,20 @@ Template.modal.events({
             var tNote = $(".js-task-note").val();
             const tPriority = $(".js-select-task-priority").val();
             const tCategory = $(".js-select-category").val();
-
             var tTag = $(".js-select-task-tag").val();
+            var tTagName = $(".js-new-tag-name").val();
 
-            if (tTag && $(".js-new-tag-name").val().length >= 1) {
-              alert("Do u want to create a tag or tag it with an existing one?");
-              return;
-            } else if ($(".js-new-tag-name").val().length >= 1) {
-              tTag = $(".js-new-tag-name").val();
-            } else {
-              tTag = null;
-            }
-            // console.log("here");
-
-            var tTagColor = intToRGB(hashCode(tTag));
-
-            function hashCode(str) { // java String#hashCode
-              var hash = 0;
-              for (var i = 0; i < str.length; i++) {
-              hash = str.charCodeAt(i) + ((hash << 5) - hash);
-            }
-              return hash;
+            if (tTag && tTagName) {
+                alert("Create new tag or use existing one?");
+                return;
+            } else if (tTagName.length > 0 || tTagName != null) {
+                console.log("here");
+                tTag = tTagName;
+                // console.log(tTag);
             }
 
-            function intToRGB(i){
-              var c = (i & 0x00FFFFFF)
-              .toString(16)
-              .toUpperCase();
-
-              return "00000".substring(0, 6 - c.length) + c;
+            if (tTag.length > 0) {
+              var tTagColor = intToRGB(hashCode(tTag));
             }
 
             tTime = moment(tTime).format('h:mm A');
@@ -192,8 +135,6 @@ Template.modal.events({
                 tNote = null;
             }
 
-            // alert(tDate);
-
             const newTask = {
                 task: "task",
                 title: tTitle,
@@ -205,20 +146,18 @@ Template.modal.events({
                 createdBy: Meteor.userId(),
                 modified: new Date(),
                 completed: false,
-                    // isGoal: ???
-                    // reminder: ???
                 tag: tTag,
                 tagColor: tTagColor,
                 priority: tPriority
-                    // repeat: ???
+                // isGoal: ???
+                // reminder: ???
+                // repeat: ???
             }
 
             const tTagObj = {
-              tTagName: tTag,
-              tTagColor: tTagColor
+                tTagName: tTag,
+                tTagColor: tTagColor
             }
-
-            // alert("task");
 
             Meteor.call("createTask", newTask,function(error, result){
               if (error) {
@@ -268,14 +207,12 @@ Template.modal.events({
                 modified: new Date(),
                 completed: false,
                 tasks: [],
-                    // isGoal: ???
-                    // reminder: ???
-                    // tag: ???
-                priority: gPriority
-                    // repeat: ???
+                priority: gPriority,
+                // isGoal: ???
+                // reminder: ???
+                // tag: ???
+                // repeat: ???
             }
-
-            //alert("goal");
 
             Meteor.call("createGoal", newGoal);
 
@@ -297,8 +234,8 @@ Template.modal.events({
                 createdBy: Meteor.userId(),
                 modified_time: moment(new Date()).format('h:mm A'),
                 modified_date: moment(new Date()).format('MMM Do YY'),
-                    // reminder: ???
-                    // notes [???]
+                // reminder: ???
+                // notes [???]
             }
 
             alert("text");
@@ -311,46 +248,76 @@ Template.modal.events({
         $('.modal').modal('hide');
     },
     "click .js-submit-location": function(event) {
-      event.preventDefault();
-      const origin = $(".js-task-origin").val();
-      const destination = $(".js-task-destination").val();
-      console.log(origin);
-      console.log(destination);
-      calculateRoute(origin, destination);
-    },
+        event.preventDefault();
+        const origin = $(".js-start").val();
+        const destination = $(".js-end").val();
+        console.log(origin);
+        console.log(destination);
+        calculateRoute(origin, destination);
+    }
 });
 
-Template.layout.onCreated(function() {
+function calculateRoute(from, to) {
+    var directionsService = new google.maps.DirectionsService();
+    var directionsRequest = {
+        origin: from,
+        destination: to,
+        travelMode: google.maps.DirectionsTravelMode.DRIVING,
+    };
+    console.log("sending request");
+    // console.dir(directionsRequest);
+    directionsService.route(
+        directionsRequest,
+        function(response, status) {
+            console.dir([status, response, new Date()]);
+            if (status == google.maps.DirectionsStatus.OK) {
+                console.log("routing");
+                new google.maps.DirectionsRenderer({
+                    map: GoogleMaps.maps.initMap.instance,
+                    directions: response
+                });
+            } else
+                $("#error").append("Unable to retrieve your route<br />");
+        }
+    );
+}
 
-    this.upcoming = new ReactiveVar("");
-    this.events = new ReactiveVar("");
-    this.calendar = new ReactiveVar("");
-    this.search = new ReactiveVar("");
-
-    if (Router.current().route.getName() == "upcoming") {
-      this.upcoming = new ReactiveVar("css-side-nav-highlight");
-      this.events = new ReactiveVar("");
-      this.calendar = new ReactiveVar("");
-      this.search = new ReactiveVar("");
-
-    } else if (Router.current().route.getName() == "events") {
-      this.events = new ReactiveVar("");
-      this.events = new ReactiveVar("css-side-nav-highlight");
-      this.calendar = new ReactiveVar("");
-      this.search = new ReactiveVar("");
-
-    } else if (Router.current().route.getName() == "calendar") {
-      this.calendar = new ReactiveVar("");
-      this.events = new ReactiveVar("");
-      this.calendar = new ReactiveVar("css-side-nav-highlight");
-      this.search = new ReactiveVar("");
-
-    } else if (Router.current().route.getName() == "search") {
-      this.search = new ReactiveVar("");
-      this.events = new ReactiveVar("");
-      this.calendar = new ReactiveVar("");
-      this.search = new ReactiveVar("css-side-nav-highlight");
+$(document).ready(function() {
+    // If the browser supports the Geolocation API
+    if (typeof navigator.geolocation == "undefined") {
+        $("#error").text("Your browser doesn't support the Geolocation API");
+        return;
     }
+
+    $("#from-link, #to-link").click(function(event) {
+        event.preventDefault();
+        var addressId = this.id.substring(0, this.id.indexOf("-"));
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({
+                        "location": new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+                    },
+                    function(results, status) {
+                        if (status == google.maps.GeocoderStatus.OK)
+                            $("#" + addressId).val(results[0].formatted_address);
+                        else
+                            $("#error").append("Unable to retrieve your address<br />");
+                    });
+            },
+            function(positionError) {
+                $("#error").append("Error: " + positionError.message + "<br />");
+            }, {
+                enableHighAccuracy: true,
+                timeout: 10 * 1000 // 10 seconds
+            });
+    });
+
+    $("#calculate-route").submit(function(event) {
+        event.preventDefault();
+        calculateRoute($("#from").val(), $("#to").val());
+    });
+
 });
 
 Template.modal.onCreated(function() {
@@ -358,16 +325,14 @@ Template.modal.onCreated(function() {
     this.goalChosen = new ReactiveVar(false);
     this.textChosen = new ReactiveVar(false);
     this.map = new ReactiveVar(false);
-    //Map onCreated
+    // Map onCreated
     // We can use the `ready` callback to interact with the map API once the map is ready.
     GoogleMaps.ready('initMap', function(map) {
-
-
-      // Add a marker to the map once it's ready
-      // var marker = new google.maps.Marker({
-      //   position: map.options.center,
-      //   map: map.instance
-      // });
+        // Add a marker to the map once it's ready
+        // var marker = new google.maps.Marker({
+        //   position: map.options.center,
+        //   map: map.instance
+        // });
     });
 });
 
@@ -376,7 +341,11 @@ Template.modal.onRendered(function() {
     this.$('.datetimepicker6').datetimepicker();
 
     // Map onRendered
-    GoogleMaps.load({ v: '3', key: 'AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M', libraries: 'places' });
+    GoogleMaps.load({
+        v: '3',
+        key: 'AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M',
+        libraries: 'places'
+    });
 
     var lat;
     var lng;
@@ -406,12 +375,11 @@ Template.modal.onRendered(function() {
           var input = document.getElementById('end');
           var autocomplete = new google.maps.places.Autocomplete(input);
 
-          // When the user selects an address from the dropdown,
-          google.maps.event.addListener(autocomplete, 'place_changed', function() {
+        // When the user selects an address from the dropdown,
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
 
-               // Get the place details from the autocomplete object.
-               var place = autocomplete.getPlace();
-
+            // Get the place details from the autocomplete object.
+            var place = autocomplete.getPlace();
 
               //  console.log("place: " + JSON.stringify(place) );
           });
@@ -425,7 +393,6 @@ Template.modal.onRendered(function() {
             };
 
       };
-
 });
 function calculateRoute(origin, destination) {
         var directionsService = new google.maps.DirectionsService();

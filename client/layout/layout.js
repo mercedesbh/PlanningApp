@@ -9,6 +9,14 @@ Deps.autorun(function () {
 });
 // END
 
+
+if (Meteor.isClient) {
+  Meteor.startup(function() {
+    GoogleMaps.load({ v: '3', key: 'AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M', libraries: 'places' });
+
+  });
+}
+
 Template.layout.helpers({
     userName: function() {
         const liveUser = Meteor.userId();
@@ -32,6 +40,9 @@ Template.layout.helpers({
 });
 
 Template.layout.events({
+    "click #mapTrigger": function(event) {
+
+    },
     "click .js-logout": function(event) {
         event.preventDefault();
 
@@ -78,7 +89,6 @@ Template.modal.helpers({
     map: function() {
       return Template.instance().map.get();
     },
-<<<<<<< HEAD
     selectCategory: function() {
       // const user = Meteor.users.findOne(Meteor.userId()); //
       // return Meteor.users.find({_id: Meteor.userId()}).fetch()[0];
@@ -89,9 +99,7 @@ Template.modal.helpers({
     },
     tags: function() {
       return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories[0].tags;
-=======
-
-    //Map helpers
+    },
     exampleMapOptions: function() {
       // Make sure the maps API has loaded
       if (GoogleMaps.loaded()) {
@@ -104,10 +112,8 @@ Template.modal.helpers({
         };
         return mapOptions;
       }
->>>>>>> f604d8ada926d58aedc2f3802bd042b9fbbb5a49
-    }
+    },
 });
-
 
 Template.modal.events({
     "change .js-modal-select": function(event, template) {
@@ -125,11 +131,11 @@ Template.modal.events({
             template.textChosen.set(true);
         }
     },
-    // "keypress .js-task-location": function(event, template){
+    // "keypress .js-task-destination": function(event, template){
     //   template.map.set(true);
     // },
-    // "blur .js-task-location": function(event, template){
-    //   if ($(".js-task-location").val() == 0){
+    // "blur .js-task-destination": function(event, template){
+    //   if ($(".js-task-destination").val() == 0){
     //     template.map.set(false);
     //   }
     // },
@@ -141,7 +147,7 @@ Template.modal.events({
             const tTitle = $(".js-task-title").val();
             var tTime = $(".js-task-date").val();
             var tDate = $(".js-task-date").val();
-            var tLocation = $(".js-task-location").val();
+            var tLocation = $(".js-task-destination").val();
             var tNote = $(".js-task-note").val();
             const tPriority = $(".js-select-task-priority").val();
             const tCategory = $(".js-select-category").val();
@@ -226,11 +232,10 @@ Template.modal.events({
                 // console.log("Did it work?");
                 $(".js-task-title").val("");
                 $(".js-task-date").val("");
-                $(".js-task-location").val("");
+                $(".js-task-destination").val("");
                 $(".js-task-note").val("");
               }
             });
-
 
         } else if ($(".js-modal-select").val() == "goal") {
 
@@ -312,26 +317,143 @@ Template.modal.events({
 
         $('.modal').modal('hide');
     },
-    //Map event
     "click .js-submit-location": function(event) {
       event.preventDefault();
-      const origin = $(".js-start").val();
-      const destination = $(".js-end").val();
+      const origin = $(".js-task-origin").val();
+      const destination = $(".js-task-destination").val();
       console.log(origin);
       console.log(destination);
       calculateRoute(origin, destination);
+    },
+});
+
+Template.layout.onCreated(function() {
+
+    this.upcoming = new ReactiveVar("");
+    this.events = new ReactiveVar("");
+    this.calendar = new ReactiveVar("");
+    this.search = new ReactiveVar("");
+
+    if (Router.current().route.getName() == "upcoming") {
+      this.upcoming = new ReactiveVar("css-side-nav-highlight");
+      this.events = new ReactiveVar("");
+      this.calendar = new ReactiveVar("");
+      this.search = new ReactiveVar("");
+
+    } else if (Router.current().route.getName() == "events") {
+      this.events = new ReactiveVar("");
+      this.events = new ReactiveVar("css-side-nav-highlight");
+      this.calendar = new ReactiveVar("");
+      this.search = new ReactiveVar("");
+
+    } else if (Router.current().route.getName() == "calendar") {
+      this.calendar = new ReactiveVar("");
+      this.events = new ReactiveVar("");
+      this.calendar = new ReactiveVar("css-side-nav-highlight");
+      this.search = new ReactiveVar("");
+
+    } else if (Router.current().route.getName() == "search") {
+      this.search = new ReactiveVar("");
+      this.events = new ReactiveVar("");
+      this.calendar = new ReactiveVar("");
+      this.search = new ReactiveVar("css-side-nav-highlight");
     }
 });
 
-function calculateRoute(from, to) {
+Template.modal.onCreated(function() {
+    this.taskChosen = new ReactiveVar(true);
+    this.goalChosen = new ReactiveVar(false);
+    this.textChosen = new ReactiveVar(false);
+    this.map = new ReactiveVar(false);
+    //Map onCreated
+    // We can use the `ready` callback to interact with the map API once the map is ready.
+    GoogleMaps.ready('initMap', function(map) {
+
+
+      // Add a marker to the map once it's ready
+      // var marker = new google.maps.Marker({
+      //   position: map.options.center,
+      //   map: map.instance
+      // });
+    });
+});
+
+Template.modal.onRendered(function() {
+    this.$('.datetimepicker5').datetimepicker();
+    this.$('.datetimepicker6').datetimepicker();
+
+    // Map onRendered
+    GoogleMaps.load({ v: '3', key: 'AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M', libraries: 'places' });
+
+    var lat;
+    var lng;
+    window.onload = function() {
+
+      var latlng;
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            lat = pos.lat;
+            lng = pos.lng;
+            latlng = new google.maps.LatLng(pos.lat, pos.lng);
+
+            //Set start field to current location
+            document.getElementById('start').defaultValue = lat +", " +lng;
+
+            var map = GoogleMaps.maps.initMap.instance;
+            console.log("clicked");
+            var center = map.getCenter();
+              console.log("triggered");
+               google.maps.event.trigger(map, 'resize');
+               map.setCenter(center)
+          });
+          var input = document.getElementById('end');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+
+          // When the user selects an address from the dropdown,
+          google.maps.event.addListener(autocomplete, 'place_changed', function() {
+
+               // Get the place details from the autocomplete object.
+               var place = autocomplete.getPlace();
+
+
+               console.log("place: " + JSON.stringify(place) );
+          });
+      } else {
+            //  latlng = new google.maps.LatLng(42.358970, -71.066093);
+      }
+      return {
+              zoom: 10,
+              center: latlng,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+          // var input = document.getElementById('end');
+          // var autocomplete = new google.maps.places.Autocomplete(input);
+          //
+          // // When the user selects an address from the dropdown,
+          // google.maps.event.addListener(autocomplete, 'place_changed', function() {
+          //
+          //      // Get the place details from the autocomplete object.
+          //      var place = autocomplete.getPlace();
+          //
+          //
+          //     //  console.log("place: " + JSON.stringify(place) );
+          // });
+      };
+
+});
+function calculateRoute(origin, destination) {
         var directionsService = new google.maps.DirectionsService();
         var directionsRequest = {
-          origin: from,
-          destination: to,
+          origin: origin,
+          destination: destination,
           travelMode: google.maps.DirectionsTravelMode.DRIVING,
         };
         console.log("sending request");
-        // console.dir(directionsRequest);
+        console.dir(directionsRequest);
         directionsService.route(
           directionsRequest,
           function(response, status)
@@ -343,6 +465,7 @@ function calculateRoute(from, to) {
                 map: GoogleMaps.maps.initMap.instance,
                 directions: response
               });
+              console.log("complete");
             }
             else
               $("#error").append("Unable to retrieve your route<br />");
@@ -386,105 +509,4 @@ function calculateRoute(from, to) {
           event.preventDefault();
           calculateRoute($("#from").val(), $("#to").val());
         });
-
-});
-
-Template.layout.onCreated(function() {
-  if (Meteor.isClient) {
-    Meteor.startup(function() {
-      GoogleMaps.load({ v: '3', key: 'AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M', libraries: 'places' });
-    });
-  }
-
-    this.upcoming = new ReactiveVar("");
-    this.events = new ReactiveVar("");
-    this.calendar = new ReactiveVar("");
-    this.search = new ReactiveVar("");
-
-    if (Router.current().route.getName() == "upcoming") {
-      this.upcoming = new ReactiveVar("css-side-nav-highlight");
-      this.events = new ReactiveVar("");
-      this.calendar = new ReactiveVar("");
-      this.search = new ReactiveVar("");
-
-    } else if (Router.current().route.getName() == "events") {
-      this.events = new ReactiveVar("");
-      this.events = new ReactiveVar("css-side-nav-highlight");
-      this.calendar = new ReactiveVar("");
-      this.search = new ReactiveVar("");
-
-    } else if (Router.current().route.getName() == "calendar") {
-      this.calendar = new ReactiveVar("");
-      this.events = new ReactiveVar("");
-      this.calendar = new ReactiveVar("css-side-nav-highlight");
-      this.search = new ReactiveVar("");
-
-    } else if (Router.current().route.getName() == "search") {
-      this.search = new ReactiveVar("");
-      this.events = new ReactiveVar("");
-      this.calendar = new ReactiveVar("");
-      this.search = new ReactiveVar("css-side-nav-highlight");
-    }
-});
-
-Template.modal.onCreated(function() {
-    this.taskChosen = new ReactiveVar(true);
-    this.goalChosen = new ReactiveVar(false);
-    this.textChosen = new ReactiveVar(false);
-    this.map = new ReactiveVar(false);
-
-    //Map onCreated
-    GoogleMaps.ready('initMap', function(map) {
-      // Add a marker to the map once it's ready
-      // var marker = new google.maps.Marker({
-      //   position: map.options.center,
-      //   map: map.instance
-      // });
-    });
-
-});
-
-Template.modal.onRendered(function() {
-    this.$('.datetimepicker5').datetimepicker();
-    this.$('.datetimepicker6').datetimepicker();
-
-    // Map onRendered
-    GoogleMaps.load({ v: '3', key: 'AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M', libraries: 'places' });
-
-    var lat;
-    var lng;
-    window.onload = function() {
-      var latlng;
-      if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-            lat = pos.lat;
-            lng = pos.lng;
-            latlng = new google.maps.LatLng(pos.lat, pos.lng);
-
-            //Set start field to current location
-            document.getElementById('start').defaultValue = lat +", " +lng;
-            console.log(lat +", " +lng);
-
-          });
-      } else {
-          console.log("never reaches");
-             latlng = new google.maps.LatLng(42.358970, -71.066093);
-      }
-          var input = document.getElementById('end');
-          var autocomplete = new google.maps.places.Autocomplete(input);
-
-          // When the user selects an address from the dropdown,
-          google.maps.event.addListener(autocomplete, 'place_changed', function() {
-
-               // Get the place details from the autocomplete object.
-               var place = autocomplete.getPlace();
-
-
-              //  console.log("place: " + JSON.stringify(place) );
-          });
-      };
-});
+      });

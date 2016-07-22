@@ -89,14 +89,14 @@ Template.modal.events({
             template.textChosen.set(true);
         }
     },
-    // "keypress .js-task-destination": function(event, template){
-    //   template.map.set(true);
-    // },
-    // "blur .js-task-destination": function(event, template){
-    //   if ($(".js-task-destination").val() == 0){
-    //     template.map.set(false);
-    //   }
-    // },
+    "keypress .js-task-destination": function(event, template){
+      template.map.set(true);
+    },
+    "blur .js-task-destination": function(event, template){
+      if ($(".js-task-destination").val() == 0){
+        template.map.set(false);
+      }
+    },
     "click .js-add-entry": function(event) {
         event.preventDefault();
 
@@ -184,7 +184,6 @@ Template.modal.events({
             const gDateS = $(".js-goal-date-s").val();
             const gDateF = $(".js-goal-date-f").val();
             const gPriority = $(".js-select-goal-priority").val();
-            var gLocation = $(".js-goal-location").val();
             var gNote = $(".js-goal-note").val();
 
             gDateST = moment(gDateS).format('h:mm A');
@@ -193,10 +192,6 @@ Template.modal.events({
             gDateFT = moment(gDateF).format('h:mm A');
             gDateFD = moment(gDateF).format('MMM Do YY');
 
-
-            if (gLocation == "") {
-                gLocation = null;
-            }
             if (gNote == "") {
                 gNote = null;
             }
@@ -208,7 +203,6 @@ Template.modal.events({
                 start_time: gDateST,
                 finish_date: gDateFD,
                 finish_time: gDateFT,
-                location: gLocation,
                 note: gNote,
                 createdAt: new Date(),
                 createdBy: Meteor.userId(),
@@ -227,7 +221,6 @@ Template.modal.events({
             $(".js-goal-title").val("");
             $(".js-goal-date-s").val("");
             $(".js-goal-date-f").val("");
-            $(".js-goal-location").val("");
             $(".js-goal-note").val("");
 
         } else if ($(".js-modal-select").val() == "text") {
@@ -258,8 +251,8 @@ Template.modal.events({
     },
     "click .js-submit-location": function(event) {
         event.preventDefault();
-        const origin = $(".js-start").val();
-        const destination = $(".js-end").val();
+        const origin = $(".js-task-origin").val();
+        const destination = $(".js-task-destination").val();
         console.log(origin);
         console.log(destination);
         calculateRoute(origin, destination);
@@ -390,7 +383,7 @@ Template.modal.onRendered(function() {
             // Get the place details from the autocomplete object.
             var place = autocomplete.getPlace();
 
-               console.log("place: " + JSON.stringify(place) );
+              //  console.log("place: " + JSON.stringify(place) );
           });
       } else {
             //  latlng = new google.maps.LatLng(42.358970, -71.066093);
@@ -400,18 +393,7 @@ Template.modal.onRendered(function() {
               center: latlng,
               mapTypeId: google.maps.MapTypeId.ROADMAP
             };
-          // var input = document.getElementById('end');
-          // var autocomplete = new google.maps.places.Autocomplete(input);
-          //
-          // // When the user selects an address from the dropdown,
-          // google.maps.event.addListener(autocomplete, 'place_changed', function() {
-          //
-          //      // Get the place details from the autocomplete object.
-          //      var place = autocomplete.getPlace();
-          //
-          //
-          //     //  console.log("place: " + JSON.stringify(place) );
-          // });
+
       };
 });
 function calculateRoute(origin, destination) {

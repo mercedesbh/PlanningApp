@@ -164,25 +164,24 @@
 							</script>
 						</div>
 					</div>
-					<!-- <br> -->
-					<!-- <input class="js-task-location form-control" type="text" placeholder="Location">
-					<br> -->
-					<!-- {{# if map}} -->
 					<div class="js-task-map">
-						<!-- <div id="floating-panel"> -->
-							<!-- <form class="js-location"> -->
+						<!-- <form class="js-task-path"> -->
+							<div class="css-task-origin">
 								<b>Start Location: </b>
 								<input id="start" class="js-task-origin form-control" type="text" placeholder="Start">
+							</div>
 								<b>End Destination: </b>
 								<input id="end" class="js-task-destination form-control" type="text" placeholder="Enter a location">
 								<input class="js-submit-location btn" type="submit" value="Get Path">
-							<!-- </form> -->
-						<!-- </div> -->
+						<!-- </form> -->
+								{{#if map}}
+
 							<div class="map-container">
+
 								{{> googleMap name="initMap" options=exampleMapOptions}}
 						</div>
+						{{/if}}
 					</div>
-					<!-- {{/if}} -->
 					<br>
 					<span><input class="js-task-goal" type="radio" value="other"> Check to make it a part of a Goal.</span>
 					<br>
@@ -278,8 +277,6 @@
 						<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
 						<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
 					</select>
-					<br>
-					<input class="js-goal-location form-control" type="text" placeholder="Location">
 					<br>
 					<textarea class="js-goal-note form-control" style="height: 150px" placeholder="Add note..."></textarea>
 					<br>

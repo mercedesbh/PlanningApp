@@ -78,7 +78,6 @@ Template.modal.helpers({
     map: function() {
       return Template.instance().map.get();
     },
-<<<<<<< HEAD
     selectCategory: function() {
       // const user = Meteor.users.findOne(Meteor.userId()); //
       // return Meteor.users.find({_id: Meteor.userId()}).fetch()[0];
@@ -89,7 +88,7 @@ Template.modal.helpers({
     },
     tags: function() {
       return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories[0].tags;
-=======
+    },
 
     //Map helpers
     exampleMapOptions: function() {
@@ -104,7 +103,6 @@ Template.modal.helpers({
         };
         return mapOptions;
       }
->>>>>>> f604d8ada926d58aedc2f3802bd042b9fbbb5a49
     }
 });
 

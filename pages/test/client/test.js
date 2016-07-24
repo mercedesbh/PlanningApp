@@ -83,7 +83,7 @@
 //       calculateRoute(origin, destination);
 //     }
 // });
-// 
+//
 // function calculateRoute(origin, destination) {
 //         var directionsService = new google.maps.DirectionsService();
 //         var directionsRequest = {
@@ -92,11 +92,11 @@
 //           travelMode: google.maps.DirectionsTravelMode.DRIVING,
 //         };
 //         console.log("sending request");
-//         console.dir(directionsRequest);
+//         // console.dir(directionsRequest);
 //         directionsService.route(
 //           directionsRequest,
 //           function(response, status)
-//           { console.dir([status,response, new Date()]);
+//           { console.dir([status,response]);
 //             if (status == google.maps.DirectionsStatus.OK)
 //             {
 //               console.log("routing");
@@ -104,25 +104,37 @@
 //                 map: GoogleMaps.maps.initMap.instance,
 //                 directions: response
 //               });
+//               getLatlong();
 //               console.log("complete");
 //             }
 //             else
 //               $("#error").append("Unable to retrieve your route<br />");
 //           }
 //         );
+//
 //       }
+//   function getLatlong(){
+//       var geocoder = new google.maps.Geocoder();
+//       var address = document.getElementById('end').value;
+//
+//       geocoder.geocode({ 'address': address }, function (results, status) {
+//
+//           if (status == google.maps.GeocoderStatus.OK) {
+//               var latitude = results[0].geometry.location.lat();
+//               var longitude = results[0].geometry.location.lng();
+//               console.log([latitude, longitude]);
+//
+//           }
+//       });
+//
+// }
+//
 //
 //       $(document).ready(function() {
-//         // If the browser supports the Geolocation API
-//         if (typeof navigator.geolocation == "undefined") {
-//           $("#error").text("Your browser doesn't support the Geolocation API");
-//           return;
-//         }
 //
 //         $("#from-link, #to-link").click(function(event) {
 //           event.preventDefault();
 //           var addressId = this.id.substring(0, this.id.indexOf("-"));
-//
 //           navigator.geolocation.getCurrentPosition(function(position) {
 //             var geocoder = new google.maps.Geocoder();
 //             geocoder.geocode({

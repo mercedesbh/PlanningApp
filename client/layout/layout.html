@@ -77,13 +77,20 @@
 				</a>
 			</ul>
 
+			<div class="container">
+				<!-- <input id="speech" type="text"> -->
+				<button id="rec" class="btn">Speak</button>
+				<div id="spokenResponse" class="spoken-response">
+				<div class="spoken-response__text"></div>
+			</div>
+		</div>
+
 		</div>
 		<div class="css-container-fluid">
 			<!-- where other templates will be rendered -->
 			{{> yield}} {{> modal}}
 			<!-- end -->
 		</div>
-
 
 	</div>
 
@@ -108,7 +115,7 @@
 
 </template>
 
-<template name="modal">
+<template name="modal" id="userModal">
 	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -303,5 +310,182 @@
 			</div>
 		</div>
 	</div>
+
+
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+ <script type="text/javascript">
+	 var accessToken = "f739f02cd2164ac288d09ff30730d3b8",
+		 subscriptionKey = "ab4aa0de-5fd2-49a5-8820-97a4705d7411",
+		 baseUrl = "https://api.api.ai/v1/",
+		 $speechInput,
+		 $recBtn,
+		 recognition,
+		 messageRecording = "Recording...",
+		 messageCouldntHear = "Repeat yourself",
+		 messageInternalError = "Internal server error",
+		 messageSorry = "I'm stuck";
+	 $(document).ready(function() {
+		 $speechInput = $("#speech");
+		 $recBtn = $("#rec");
+		 $speechInput.keypress(function(event) {
+			 if (event.which == 13) {
+				 event.preventDefault();
+				 console.log("pressed it")
+
+			 }
+		 });
+		 $recBtn.on("click", function(event) {
+			 switchRecognition();
+			 console.log("clicked it.")
+		 });
+	 });
+	 function startRecognition() {
+		 recognition = new webkitSpeechRecognition();
+		 recognition.continuous = false;
+				 recognition.interimResults = false;
+		 recognition.onstart = function(event) {
+			 respond(messageRecording);
+			 updateRec();
+		 };
+		 recognition.onresult = function(event) {
+			 recognition.onend = null;
+			 console.log(event.results)
+
+			 var text = "";
+				 for (var i = event.resultIndex; i < event.results.length; ++i) {
+					 text += event.results[i][0].transcript;
+				 }
+				 //Use variable text for if statements on rerouting
+				 send(text);
+				 console.log(text);
+				//  $('#userModal').modal({ show: false});
+				 if (text == "event" || text == "events") {
+					 Router.go('/events');
+				 }
+				 if (text == "upcoming" || text == "what is coming up") {
+					 Router.go('/upcoming');
+				 }
+				 if (text == "entry" || text == "new entry") {
+					 $('#userModal').modal('show');
+				 }
+				 if (text == "settings" || text == "setting") {
+					 Router.go('/settings');
+				 }
+			 stopRecognition();
+		 };
+		 recognition.onend = function() {
+			 respond(messageCouldntHear);
+			 stopRecognition();
+		 };
+		 recognition.lang = "en-US";
+		 recognition.start();
+	 }
+
+	 function stopRecognition() {
+		 if (recognition) {
+			 recognition.stop();
+			 recognition = null;
+		 }
+		 updateRec();
+	 }
+	 function switchRecognition() {
+		 if (recognition) {
+			 stopRecognition();
+		 } else {
+			 startRecognition();
+		 }
+	 }
+	 function updateRec() {
+		 $recBtn.text(recognition ? "Stop" : "Speak");
+	 }
+	 function send(text) {
+		 console.log(text);
+		 $.ajax({
+			 type: "POST",
+			 url: baseUrl + "query/",
+			 contentType: "application/json; charset=utf-8",
+			 dataType: "json",
+			 headers: {
+				 "Authorization": "Bearer " + accessToken,
+				 "ocp-apim-subscription-key": subscriptionKey
+			 },
+			 data: JSON.stringify({q: text, lang: "en"}),
+			 success: function(data) {
+				 prepareResponse(data);
+			 },
+			 error: function() {
+				 respond(messageInternalError);
+			 }
+		 });
+	 }
+	 function prepareResponse(val) {
+		 var debugJSON = JSON.stringify(val, undefined, 2),
+			 spokenResponse = val.result.speech;
+		 if (val.result.action == "sleepHours") {
+			 requestSleepData(val.result.parameters.sleep);
+		 } else {
+			 respond(spokenResponse);
+		 }
+		 debugRespond(debugJSON);
+	 }
+	 function debugRespond(val) {
+		 $("#response").text(val);
+	 }
+	 function respond(val) {
+		 if (val == "") {
+			 val = messageSorry;
+		 }
+		 if (val !== messageRecording) {
+			 var msg = new SpeechSynthesisUtterance();
+			 msg.voiceURI = "native";
+			 msg.text = val;
+			 msg.lang = "en-US";
+			 window.speechSynthesis.speak(msg);
+		 }
+		 $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(val);
+	 }
+	 function requestSleepData(type) {
+		 $.ajax({
+			 type: "GET",
+			 url: "/sleep_data/",
+			 contentType: "application/json; charset=utf-8",
+			 dataType: "json",
+			 success: function(data) {
+				 console.log("Sleep data!", data);
+				 if (data.error) {
+					 respond(data.error);
+					 window.location.replace("/login/jawbone");
+				 }
+				//  switch (type) {
+				//    case "REM sleep":
+				//      respond("You had " + toHours(data.items[0].details.rem) + " of REM sleep.");
+				//      break;
+				//    case "deep sleep":
+				//      respond("You had " + toHours(data.items[0].details.sound) + " of deep sleep.");
+				//      break;
+				//    case "light sleep":
+				//      respond("You had " + toHours(data.items[0].details.light) + " of light sleep.");
+				//      break;
+				//    case "sleep":
+				//      respond("You had " + toHours(data.items[0].details.duration) + " of sleep last night. That includes " + toHours(data.items[0].details.rem) + " of REM sleep, " + toHours(data.items[0].details.sound) + " of deep sleep and " + toHours(data.items[0].details.light) + " of light sleep.");
+				//      break;
+				//  }
+			 },
+			 error: function() {
+				 respond(messageInternalError);
+			 }
+		 });
+	 }
+	//  function toHours(secs) {
+	//    hours = Math.floor(secs / 3600),
+	//    minutes = Math.floor((secs - (hours * 3600)) / 60),
+	//    seconds = secs - (hours * 3600) - (minutes * 60);
+	//    hourText = hours + (hours > 1 ? " hours, " : " hour, ");
+	//    minuteText = minutes + (minutes > 1 ? " minutes " : " minute ");
+	//    secondText = seconds + (seconds > 1 ? " seconds" : " second");
+	//    return hourText + minuteText + "and " + secondText;
+	//  }
+ </script>
 
 </template>

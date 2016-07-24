@@ -31,3 +31,31 @@
     width: 100%;
     /*background-color: green;*/
 }
+.css-upcoming-data-days {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  /*background-color: red;*/
+}
+.css-upcoming-days {
+  position: relative;
+  width: 70%;
+  height: auto;
+  height: auto;
+  margin: 10px auto;
+  border-bottom: 1px solid #f0f0f0;
+  /*background-color: blue;*/
+}
+.css-upcoming-days h2 {
+  text-align: center;
+}
+.css-upcoming-tag-color {
+  position: relative;
+  display: inline-block;
+  height: 10px;
+  width: 75px;
+  margin-right: 7px; 
+  border-radius: 5px;
+  text-align: center;
+}

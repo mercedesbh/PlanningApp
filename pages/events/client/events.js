@@ -17,33 +17,26 @@ Template.events.helpers({
     var y = Tasks.find({createdBy: Meteor.userId()}).fetch();
     // console.log(y);
     var p = y.concat(Goals.find({createdBy: Meteor.userId()}).fetch(), Texts.find({createdBy: Meteor.userId()}).fetch());
-    // var v = p.concat(Texts.find({createdBy: Meteor.userId()}).fetch());
-    // console.log(p);
-    return p;
+    var x = p.sort(function(a, b) {
+      if (a.createdAt > b.createdAt) {
+        return -1;
+      }
+      if (a.createdAt < b.createdAt) {
+        return 1;
+      }
+      return 0;
+    });
+    // console.log(x);
+    return x;
   },
-  // goals: function() {
-  //   // console.log(Goals.find({createdBy: Meteor.userId()}).fetch());
-  //   return Goals.find({createdBy: Meteor.userId()}).fetch(); //
-  // },
-  // texts: function() {
-  //   // console.log(Texts.find({createdBy: Meteor.userId()}).fetch());
-  //   return Texts.find({createdBy: Meteor.userId()}).fetch(); //
-  // },
   showCategoryInput: function() {
     return Template.instance().showCategoryInput.get();
   },
   detailed: function() {
     //return Goals.findOne({_id:this._id});
-    return Template.instance().detailedGoal.get();
+    return Template.instance().detailed.get();
   },
 });
-
-// Template.detailed.helpers({
-//   detailedGoal: function() {
-//     //return Goals.findOne({_id:this._id});
-//     return Template.instance().detailedGoal.get();
-//   }
-// });
 
 Template.events.events({
     "click .css-new-category": function(event, template) {
@@ -94,13 +87,13 @@ Template.events.events({
           const text = Texts.findOne({_id: this._id});
 
           if (goal) {
-            template.detailedGoal.set(goal);
+            template.detailed.set(goal);
             console.log("goal");
           } else if (task) {
-            template.detailedGoal.set(task);
+            template.detailed.set(task);
             console.log("task");
           } else if (text) {
-            template.detailedGoal.set(text);
+            template.detailed.set(text);
             console.log("text");
           }
     },
@@ -109,10 +102,6 @@ Template.events.events({
 
 Template.events.onCreated(function() {
     this.showCategoryInput = new ReactiveVar(false);
+    this.detailed = new ReactiveVar();
 
-    this.detailedGoal = new ReactiveVar();
 });
-
-// Template.detailed.onCreated(function() {
-//     this.detailedGoal = new ReactiveVar(null);
-// });

@@ -147,6 +147,7 @@
 						<div class="row">
 							<div class='col-sm-6'>
 								<div class="form-group">
+									<h5>Do by:</h5>
 									<div class='input-group date' id='datetimepicker5'>
 										<input type='text' class="js-task-date form-control" placeholder="Date & Time"/>
 										<span class="input-group-addon">
@@ -197,7 +198,7 @@
 					<select class="js-select-task-tag form-control">
 						<option value="">Select tag</option>
 						{{#each tags}}
-						<option value="{{tTagName}}">{{tTagName}}</option>
+						<option value="{{tagName}}">{{tagName}}</option>
 						{{/each}}
 					</select>
 					{{/if}}
@@ -217,12 +218,11 @@
 					<input class="js-goal-title form-control" type="text" placeholder="Title">
 					<br>
 
-					<!-- <select class="">
-						<option value=""><a href="#">Select its category</a></option>
+					<select class="js-select-category form-control">
 						{{#each selectCategory}}
-						<option value=""><a href="#">{{selectCategory.name}}</a></option>
+						<option value="{{name}}">{{name}}</option>
 						{{/each}}
-					</select> -->
+					</select>
 
 					<!-- start goal by... -->
 					<div class="container">
@@ -278,6 +278,19 @@
 						<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
 					</select>
 					<br>
+					{{#with tags}}
+					{{#if this.length}}
+					<select class="js-select-goal-tag form-control">
+						<option value="">Select tag</option>
+						{{#each tags}}
+						<option value="{{tagName}}">{{tagName}}</option>
+						{{/each}}
+					</select>
+					{{/if}}
+					{{/with}}
+					<br>
+					<input class="js-new-tag-name form-control" type="text" name="name" placeholder="New tag">
+					<br>
 					<textarea class="js-goal-note form-control" style="height: 150px" placeholder="Add note..."></textarea>
 					<br>
 				</form>
@@ -288,6 +301,25 @@
 				<form class="js-new-text" action="index.html" method="post">
 					<br>
 					<input class="js-text-title form-control" type="text" placeholder="Title">
+					<br>
+					<select class="js-select-category form-control">
+						{{#each selectCategory}}
+						<option value="{{name}}">{{name}}</option>
+						{{/each}}
+					</select>
+					<br>
+					{{#with tags}}
+					{{#if this.length}}
+					<select class="js-select-text-tag form-control">
+						<option value="">Select tag</option>
+						{{#each tags}}
+						<option value="{{tagName}}">{{tagName}}</option>
+						{{/each}}
+					</select>
+					{{/if}}
+					{{/with}}
+					<br>
+					<input class="js-new-tag-name form-control" type="text" name="name" placeholder="New tag">
 					<br>
 					<textarea class="js-text-text form-control" style="height: 300px" placeholder="Write text..."></textarea>
 					<br>

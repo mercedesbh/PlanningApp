@@ -7,13 +7,80 @@
 
 			<div class="css-tab-container">
 				<ul class="css-upcoming-tabs nav nav-justified">
-					<li role="presentation"><a href="#">Today</a></li>
-					<li role="presentation"><a href="#">Tomorrow</a></li>
+					<li class="js-today-tab" role="presentation"><a href="#">Today</a></li>
+					<li class="js-tomorrow-tab" role="presentation"><a href="#">Tomorrow</a></li>
 				</ul>
 			</div>
 
 			<div class="css-upcoming-data">
+				{{#if today}}
+					<div class="css-upcoming-data-days">
+						<!-- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter -->
+						<!-- 86400000ms == a day -->
+						{{#if todoToday}}
+							{{#each todoToday}}
 
+							<a href="#">
+								<div class="css-upcoming-days">
+									<h2>{{title}}</h2>
+									<span>
+										<h4>
+											{{time}}
+										<span class="pull-right"> {{date}} </span>
+										</h4>
+									</span>
+									<span>
+										<div class="css-upcoming-tag-color" style="background-color: #{{tagColor}}"></div> {{tag}}
+										<span class="pull-right"> <h4> {{{priority}}} </h4> </span>
+									</span>
+									{{#if task}}
+										<h4>Task</h4>
+									{{/if}}
+									{{#if goal}}
+										<h4>Goal</h4>
+									{{/if}}
+								</div>
+							</a>
+
+							{{/each}}
+						{{else}}
+							<h3>Nothing for today.</h3>
+						{{/if}}
+					</div>
+				{{/if}}
+				{{#if tomorrow}}
+					<div class="css-upcoming-data-days">
+						{{#if todoTomorrow}}
+							{{#each todoTomorrow}}
+
+									<a href="#">
+										<div class="css-upcoming-days">
+											<h2>{{title}}</h2>
+											<span>
+												<h4>
+													{{time}}
+												<span class="pull-right"> {{date}} </span>
+												</h4>
+											</span>
+											<span>
+												<div class="css-upcoming-tag-color" style="background-color: #{{tagColor}}"></div> {{tag}}
+												<span class="pull-right"> <h4> {{{priority}}} </h4> </span>
+											</span>
+											{{#if task}}
+												<h4>Task</h4>
+											{{/if}}
+											{{#if goal}}
+												<h4>Goal</h4>
+											{{/if}}
+										</div>
+									</a>
+
+							{{/each}}
+						{{else}}
+							<h3>Nothing for tomorrow.</h3>
+						{{/if}}
+					</div>
+				{{/if}}
 			</div>
 
 		</div>

@@ -22,7 +22,6 @@ Template.layout.helpers({
     },
     highlight: function(template) {
       var currentRoute = Router.current().route.getName();
-      console.log(currentRoute);
       return currentRoute && template === currentRoute ? 'css-side-nav-highlight' : '';
     },
 });
@@ -119,8 +118,6 @@ Template.modal.events({
                 tTag = tTagName;
             }
 
-            console.log(tTag);
-
             if (tTag.length > 0) {
               var tTagColor = intToRGB(hashCode(tTag));
             }
@@ -139,6 +136,7 @@ Template.modal.events({
                 task: "task",
                 title: tTitle,
                 date: tDate,
+                category: tCategory,
                 time: tTime,
                 location: tLocation,
                 note: tNote,
@@ -155,11 +153,11 @@ Template.modal.events({
             }
 
             const tTagObj = {
-                tTagName: tTag,
-                tTagColor: tTagColor
+                tagName: tTag,
+                tagColor: tTagColor
             }
 
-            Meteor.call("createTask", newTask,function(error, result){
+            Meteor.call("createTask", newTask,function(error, result) {
               if (error) {
                 console.log(error);
               }
@@ -185,12 +183,26 @@ Template.modal.events({
             const gDateF = $(".js-goal-date-f").val();
             const gPriority = $(".js-select-goal-priority").val();
             var gNote = $(".js-goal-note").val();
+            const gCategory = $(".js-select-category").val();
+            var gTag = $(".js-select-goal-tag").val();
+            var gTagName = $(".js-new-tag-name").val();
 
             gDateST = moment(gDateS).format('h:mm A');
             gDateSD = moment(gDateS).format('MMM Do YY');
 
             gDateFT = moment(gDateF).format('h:mm A');
             gDateFD = moment(gDateF).format('MMM Do YY');
+
+            if (gTag && gTagName) {
+                alert("Create new tag or use existing one?");
+                return;
+            } else if (gTagName != null || gTagName.length > 0) {
+                gTag = gTagName;
+            }
+
+            if (gTag.length > 0) {
+              var gTagColor = intToRGB(hashCode(gTag));
+            }
 
             if (gNote == "") {
                 gNote = null;
@@ -199,8 +211,9 @@ Template.modal.events({
             const newGoal = {
                 goal: "goal",
                 title: gTitle,
-                start_date: gDateSD,
-                start_time: gDateST,
+                category: gCategory,
+                date: gDateSD,
+                time: gDateST,
                 finish_date: gDateFD,
                 finish_time: gDateFT,
                 note: gNote,
@@ -210,27 +223,60 @@ Template.modal.events({
                 completed: false,
                 tasks: [],
                 priority: gPriority,
+                tag: gTag,
+                tagColor: gTagColor
                 // isGoal: ???
                 // reminder: ???
-                // tag: ???
                 // repeat: ???
             }
 
-            Meteor.call("createGoal", newGoal);
+            const gTagObj = {
+                tagName: gTag,
+                tagColor: gTagColor
+            }
 
-            $(".js-goal-title").val("");
-            $(".js-goal-date-s").val("");
-            $(".js-goal-date-f").val("");
-            $(".js-goal-note").val("");
+            Meteor.call("createGoal", newGoal, function(error, result) {
+              if (error) {
+                console.log(error);
+              }
+              else {
+                var lastEntry = Goals.findOne({}, {sort: {createdAt: -1, limit: 1}})._id;
+                Meteor.call("linkGoal", lastEntry, gCategory);
+                if (gTag.length > 0) {
+                  Meteor.call("linkTag", gCategory, gTagObj);
+                }
 
+                // console.log("Did it work?");
+                $(".js-goal-title").val("");
+                $(".js-goal-date-s").val("");
+                $(".js-goal-date-f").val("");
+                $(".js-goal-note").val("");
+              }
+
+          });
         } else if ($(".js-modal-select").val() == "text") {
 
             const txtTitle = $(".js-text-title").val();
             const txtText = $(".js-text-text").val();
+            const txtCategory = $(".js-select-category").val();
+            var txtTag = $(".js-select-text-tag").val();
+            var txtTagName = $(".js-new-tag-name").val();
+
+            if (txtTag && txtTagName) {
+                alert("Create new tag or use existing one?");
+                return;
+            } else if (txtTagName != null || txtTagName.length > 0) {
+                txtTag = txtTagName;
+            }
+
+            if (txtTag.length > 0) {
+              var txtTagColor = intToRGB(hashCode(txtTag));
+            }
 
             const newText = {
                 text: "text",
                 title: txtTitle,
+                category: txtCategory,
                 text: txtText,
                 createdAt: new Date(),
                 createdBy: Meteor.userId(),
@@ -240,11 +286,28 @@ Template.modal.events({
                 // notes [???]
             }
 
-            alert("text");
-            Meteor.call("createText", newText);
+            const txtTagObj = {
+                tagName: txtTag,
+                tagColor: txtTagColor
+            }
 
-            $(".js-text-title").val("");
-            $(".js-text-text").val("");
+            Meteor.call("createText", newText, function(error, result) {
+              if (error) {
+                console.log(error);
+              }
+              else {
+                var lastEntry = Texts.findOne({}, {sort: {createdAt: -1, limit: 1}})._id;
+                Meteor.call("linkText", lastEntry, txtCategory);
+                if (txtTag.length > 0) {
+                  Meteor.call("linkTag", txtCategory, txtTagObj);
+                }
+
+                $(".js-text-title").val("");
+                $(".js-text-text").val("");
+              }
+
+          });
+
         }
 
         $('.modal').modal('hide');

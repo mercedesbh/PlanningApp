@@ -36,7 +36,7 @@
 .css-events {
   position: relative;
   height: 100% !important;
-  overflow-y: hidden;
+  overflow: hidden;
   margin: 0;
   padding: 0px;
   /*background-color: orange;*/
@@ -80,7 +80,7 @@
 }
 .css-entry-detail {
   position: relative;
-  height: 100%;
+  height: 500px;
   /*background-color: blue;*/
   /*padding: 0px;*/
 }
@@ -91,6 +91,7 @@
   margin: 0 auto;
   margin-top: 20px;
   border-right: 1px solid #e6e6e6;
+  overflow-y: scroll;
   /*background-color: orange;*/
 }
 .css-category-data ul {
@@ -118,19 +119,47 @@
 }
 .css-entries-data {
   position: relative;
-  width: 260px;
+  width: 95%;
   height: 500px;
   margin: 0 auto;
   margin-top: 20px;
   border-right: 1px solid #e6e6e6;
+  overflow-y: scroll;
+  padding-right: 20px;
+  /*background-color: purple;*/
+}
+.css-entries-data ul {
+  position: relative;
+  margin: auto;
+  list-style: none;
+  text-align: left;
+  padding: 5px;
+  font-size: 16px;
+  /*background-color: green;*/
+}
+.css-entries-data li {
+  padding: 0px;
+  height: auto;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e6e6e6;
+  border-left: 3px solid transparent;
   /*background-color: orange;*/
+}
+.css-tag-color {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  display: inline-block;
+  margin-right: 10px;
 }
 .css-entry-detail-data {
   position: relative;
-  width: 630px;
+  width: 100%;
   height: 100%;
   margin: 0 auto;
   margin-top: 20px;
+  overflow-y: scroll;
   /*background-color: orange;*/
 }
 /* end */

@@ -13,15 +13,26 @@
 			</div>
 			<div class="css-live-user col-sm-4">
 
-				<a class="css-notify" href="#">[N]</a>
+				<!-- <a class="css-notify" href="#">[N]</a> -->
+				<div class="css-notify dropdown">
+					<a class=" dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> [N] </a>
+					<ul class="css-notify-dropdown dropdown-menu" aria-labelledby="dropdownMenu1">
+						<li><a href="#">?????</a></li>
+						<li><a href="#">!!!!!</a></li>
+						<li><a href="#">XOXOX</a></li>
+						<!-- <li role="separator" class="divider"></li> -->
+						<li><a href="#">AVAVA</a></li>
+					</ul>
+				</div>
 
 				<div role="presentation" class="dropdown">
 					<a class="css-username dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> {{userName.profile.first}} {{userName.profile.last}} <span class="caret"></span> </a>
 					<ul class="dropdown-menu">
 						<li><a href="{{pathFor 'events'}}">Events</a></li>
 						<li><a href="{{pathFor 'upcoming'}}">Upcoming</a></li>
-						<li role="separator" class="divider"></li>
 						<li><a href="#">Calendar</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="{{pathFor 'settings'}}">Settings</a></li>
 						<li role="separator" class="divider"></li>
 						<li class="js-logout"><a href="#">Logout</a></li>
 					</ul>
@@ -34,37 +45,45 @@
 		<div class="css-side-nav">
 
 			<ul class="css-stacked-nav nav nav-pills nav-stacked">
-				<a class="js-modal" data-toggle="modal" data-target=".bd-example-modal-lg" href="#">
+				<a id="mapTrigger" class="js-modal" data-toggle="modal" data-target=".bd-example-modal-lg" href="#">
 					<li>
 						<span class="glyphicon glyphicon-plus"></span>
 						<p>New Entry</p>
 					</li>
 				</a>
 				<a href="{{pathFor 'upcoming'}}">
-					<li class="css-sidenav-upcoming {{highlightUpcoming}}">
+					<li class="css-sidenav-upcoming {{highlight 'upcoming'}}">
 						<span class="glyphicon glyphicon-th-list"></span>
 						<p> Upcoming </p>
 					</li>
 				</a>
 				<a href="{{pathFor 'events'}}">
-					<li class="css-sidenav-events {{highlightEvents}}">
+					<li class="css-sidenav-events {{highlight 'events'}}">
 						<span class="glyphicon glyphicon-th-large"></span>
 						<p> Events </p>
 					</li>
 				</a>
 				<a href="#">
-					<li class="css-sidenav-calendar {{highlightCalendar}}">
+					<li class="css-sidenav-calendar {{highlight 'calendar'}}">
 						<span class="glyphicon glyphicon-calendar"></span>
 						<p>Calendar</p>
 					</li>
 				</a>
 				<a href="#">
-					<li class="css-sidenav-search {{highlightSearch}}">
+					<li class="css-sidenav-search {{highlight 'search'}}">
 						<span class="glyphicon glyphicon-search"></span>
 						<p>Search</p>
 					</li>
 				</a>
 			</ul>
+
+			<div class="container">
+				<!-- <input id="speech" type="text"> -->
+				<button id="rec" class="btn">Speak</button>
+				<div id="spokenResponse" class="spoken-response">
+				<div class="spoken-response__text"></div>
+			</div>
+		</div>
 
 		</div>
 		<div class="css-container-fluid">
@@ -72,7 +91,6 @@
 			{{> yield}} {{> modal}}
 			<!-- end -->
 		</div>
-
 
 	</div>
 
@@ -97,7 +115,7 @@
 
 </template>
 
-<template name="modal">
+<template name="modal" id="userModal">
 	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -126,10 +144,17 @@
 					<br>
 					<input class="js-task-title form-control" type="text" placeholder="Title">
 					<br>
-					<div class="container">
+					<select class="js-select-category form-control">
+						{{#each selectCategory}}
+						<option value="{{name}}">{{name}}</option>
+						{{/each}}
+					</select>
+					<br>
+					<!-- <div class="container"> -->
 						<div class="row">
 							<div class='col-sm-6'>
 								<div class="form-group">
+									<h5>Do by:</h5>
 									<div class='input-group date' id='datetimepicker5'>
 										<input type='text' class="js-task-date form-control" placeholder="Date & Time"/>
 										<span class="input-group-addon">
@@ -137,7 +162,7 @@
 										</span>
 									</div>
 								</div>
-							</div>
+							<!-- </div> -->
 							<script type="text/javascript">
 								$(function() {
 									$('#datetimepicker5').datetimepicker({
@@ -147,85 +172,46 @@
 							</script>
 						</div>
 					</div>
-					<br>
-					<input class="js-task-location form-control" type="text" placeholder="Location">
-					<br>
-					{{# if map}}
 					<div class="js-task-map">
-						<head>
-							<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-							<meta charset="utf-8">
-							<style>
-								html, body {
-									height: 100%;
-									margin: 0;
-									padding: 0;
-								}
-								#map {
-									height: 100%;
-								}
-							</style>
-						</head>
-						<body>
-							<div id="map" style="width:810px;height:400px;"></div>
-							<div id="capture"></div>
-							<script>
+						<!-- <form class="js-task-path"> -->
+							<div class="css-task-origin">
+								<b>Start Location: </b>
+								<input id="start" class="js-task-origin form-control" type="text" placeholder="Start">
+							</div>
+								<b>End Destination: </b>
+								<input id="end" class="js-task-destination form-control" type="text" placeholder="Enter a location">
+								<input class="js-submit-location btn" type="submit" value="Get Path">
+						<!-- </form> -->
+								{{#if map}}
 
-								// Note: This example requires that you consent to location sharing when
-								// prompted by your browser. If you see the error "The Geolocation service
-								// failed.", it means you probably did not give permission for the browser to
-								// locate you.
+							<div class="map-container">
 
-								function initMap() {
-									var latlng = new google.maps.LatLng(42.358970, -71.066093);
-									var myOptions = {
-									    zoom: 10,
-									    center: latlng,
-									    mapTypeId: google.maps.MapTypeId.ROADMAP
-									};
-									map = new google.maps.Map(document.getElementById("map"), myOptions);
-									// var map = new google.maps.Map(document.getElementById('map'), {
-									// 	center: {lat: 42.3601, lng: -71.0589},
-									// 	zoom: 3
-									// });
-									var infoWindow = new google.maps.InfoWindow({map: map});
-
-									// Try HTML5 geolocation.
-									if (navigator.geolocation) {
-										navigator.geolocation.getCurrentPosition(function(position) {
-											var pos = {
-												lat: position.coords.latitude,
-												lng: position.coords.longitude
-											};
-
-											infoWindow.setPosition(pos);
-											infoWindow.setContent('Location found.');
-											map.setCenter(pos);
-										}, function() {
-											handleLocationError(true, infoWindow, map.getCenter());
-										});
-									} else {
-										// Browser doesn't support Geolocation
-										handleLocationError(false, infoWindow, map.getCenter());
-									}
-								}
-
-								function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-									infoWindow.setPosition(pos);
-									infoWindow.setContent(browserHasGeolocation ?
-																				'Error: The Geolocation service failed.' :
-																				'Error: Your browser doesn\'t support geolocation.');
-								}
-							</script>
-							<script async defer
-							src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M&callback=initMap">
-							</script>
-						</body>
+								{{> googleMap name="initMap" options=exampleMapOptions}}
+						</div>
+						{{/if}}
 					</div>
-					{{/if}}
 					<br>
 					<span><input class="js-task-goal" type="radio" value="other"> Check to make it a part of a Goal.</span>
 					<br>
+					<select class="js-select-task-priority form-control">
+						<!-- the html in the values must be removed because i might be hackable -->
+						<option value="<span style='color: #666666'>Neutral</span>">Neutral</option>
+						<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
+						<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
+					</select>
+					<br>
+					{{#with tags}}
+					{{#if this.length}}
+					<select class="js-select-task-tag form-control">
+						<option value="">Select tag</option>
+						{{#each tags}}
+						<option value="{{tagName}}">{{tagName}}</option>
+						{{/each}}
+					</select>
+					{{/if}}
+					{{/with}}
+					<br>
+					<input class="js-new-tag-name form-control" type="text" name="name" placeholder="New tag">
 					<br>
 					<textarea class="js-task-note form-control" placeholder="Add note..."></textarea>
 					<br>
@@ -238,6 +224,12 @@
 					<br>
 					<input class="js-goal-title form-control" type="text" placeholder="Title">
 					<br>
+
+					<select class="js-select-category form-control">
+						{{#each selectCategory}}
+						<option value="{{name}}">{{name}}</option>
+						{{/each}}
+					</select>
 
 					<!-- start goal by... -->
 					<div class="container">
@@ -286,9 +278,25 @@
 							</script>
 						</div>
 					</div>
-
+					<select class="js-select-goal-priority form-control">
+						<!-- the html in the values must be removed because i might be hackable -->
+						<option value="<span style='color: #666666'>Neutral</span>">Neutral</option>
+						<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
+						<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
+					</select>
 					<br>
-					<input class="js-goal-location form-control" type="text" placeholder="Location">
+					{{#with tags}}
+					{{#if this.length}}
+					<select class="js-select-goal-tag form-control">
+						<option value="">Select tag</option>
+						{{#each tags}}
+						<option value="{{tagName}}">{{tagName}}</option>
+						{{/each}}
+					</select>
+					{{/if}}
+					{{/with}}
+					<br>
+					<input class="js-new-tag-name form-control" type="text" name="name" placeholder="New tag">
 					<br>
 					<textarea class="js-goal-note form-control" style="height: 150px" placeholder="Add note..."></textarea>
 					<br>
@@ -300,6 +308,25 @@
 				<form class="js-new-text" action="index.html" method="post">
 					<br>
 					<input class="js-text-title form-control" type="text" placeholder="Title">
+					<br>
+					<select class="js-select-category form-control">
+						{{#each selectCategory}}
+						<option value="{{name}}">{{name}}</option>
+						{{/each}}
+					</select>
+					<br>
+					{{#with tags}}
+					{{#if this.length}}
+					<select class="js-select-text-tag form-control">
+						<option value="">Select tag</option>
+						{{#each tags}}
+						<option value="{{tagName}}">{{tagName}}</option>
+						{{/each}}
+					</select>
+					{{/if}}
+					{{/with}}
+					<br>
+					<input class="js-new-tag-name form-control" type="text" name="name" placeholder="New tag">
 					<br>
 					<textarea class="js-text-text form-control" style="height: 300px" placeholder="Write text..."></textarea>
 					<br>
@@ -315,5 +342,182 @@
 			</div>
 		</div>
 	</div>
+
+
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+ <script type="text/javascript">
+	 var accessToken = "f739f02cd2164ac288d09ff30730d3b8",
+		 subscriptionKey = "ab4aa0de-5fd2-49a5-8820-97a4705d7411",
+		 baseUrl = "https://api.api.ai/v1/",
+		 $speechInput,
+		 $recBtn,
+		 recognition,
+		 messageRecording = "Recording...",
+		 messageCouldntHear = "Repeat yourself",
+		 messageInternalError = "Internal server error",
+		 messageSorry = "I'm stuck";
+	 $(document).ready(function() {
+		 $speechInput = $("#speech");
+		 $recBtn = $("#rec");
+		 $speechInput.keypress(function(event) {
+			 if (event.which == 13) {
+				 event.preventDefault();
+				 console.log("pressed it")
+
+			 }
+		 });
+		 $recBtn.on("click", function(event) {
+			 switchRecognition();
+			 console.log("clicked it.")
+		 });
+	 });
+	 function startRecognition() {
+		 recognition = new webkitSpeechRecognition();
+		 recognition.continuous = false;
+				 recognition.interimResults = false;
+		 recognition.onstart = function(event) {
+			 respond(messageRecording);
+			 updateRec();
+		 };
+		 recognition.onresult = function(event) {
+			 recognition.onend = null;
+			 console.log(event.results)
+
+			 var text = "";
+				 for (var i = event.resultIndex; i < event.results.length; ++i) {
+					 text += event.results[i][0].transcript;
+				 }
+				 //Use variable text for if statements on rerouting
+				 send(text);
+				 console.log(text);
+				//  $('#userModal').modal({ show: false});
+				 if (text == "event" || text == "events") {
+					 Router.go('/events');
+				 }
+				 if (text == "upcoming" || text == "what is coming up") {
+					 Router.go('/upcoming');
+				 }
+				 if (text == "entry" || text == "new entry") {
+					 $('#userModal').modal('show');
+				 }
+				 if (text == "settings" || text == "setting") {
+					 Router.go('/settings');
+				 }
+			 stopRecognition();
+		 };
+		 recognition.onend = function() {
+			 respond(messageCouldntHear);
+			 stopRecognition();
+		 };
+		 recognition.lang = "en-US";
+		 recognition.start();
+	 }
+
+	 function stopRecognition() {
+		 if (recognition) {
+			 recognition.stop();
+			 recognition = null;
+		 }
+		 updateRec();
+	 }
+	 function switchRecognition() {
+		 if (recognition) {
+			 stopRecognition();
+		 } else {
+			 startRecognition();
+		 }
+	 }
+	 function updateRec() {
+		 $recBtn.text(recognition ? "Stop" : "Speak");
+	 }
+	 function send(text) {
+		 console.log(text);
+		 $.ajax({
+			 type: "POST",
+			 url: baseUrl + "query/",
+			 contentType: "application/json; charset=utf-8",
+			 dataType: "json",
+			 headers: {
+				 "Authorization": "Bearer " + accessToken,
+				 "ocp-apim-subscription-key": subscriptionKey
+			 },
+			 data: JSON.stringify({q: text, lang: "en"}),
+			 success: function(data) {
+				 prepareResponse(data);
+			 },
+			 error: function() {
+				 respond(messageInternalError);
+			 }
+		 });
+	 }
+	 function prepareResponse(val) {
+		 var debugJSON = JSON.stringify(val, undefined, 2),
+			 spokenResponse = val.result.speech;
+		 if (val.result.action == "sleepHours") {
+			 requestSleepData(val.result.parameters.sleep);
+		 } else {
+			 respond(spokenResponse);
+		 }
+		 debugRespond(debugJSON);
+	 }
+	 function debugRespond(val) {
+		 $("#response").text(val);
+	 }
+	 function respond(val) {
+		 if (val == "") {
+			 val = messageSorry;
+		 }
+		 if (val !== messageRecording) {
+			 var msg = new SpeechSynthesisUtterance();
+			 msg.voiceURI = "native";
+			 msg.text = val;
+			 msg.lang = "en-US";
+			 window.speechSynthesis.speak(msg);
+		 }
+		 $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(val);
+	 }
+	 function requestSleepData(type) {
+		 $.ajax({
+			 type: "GET",
+			 url: "/sleep_data/",
+			 contentType: "application/json; charset=utf-8",
+			 dataType: "json",
+			 success: function(data) {
+				 console.log("Sleep data!", data);
+				 if (data.error) {
+					 respond(data.error);
+					 window.location.replace("/login/jawbone");
+				 }
+				//  switch (type) {
+				//    case "REM sleep":
+				//      respond("You had " + toHours(data.items[0].details.rem) + " of REM sleep.");
+				//      break;
+				//    case "deep sleep":
+				//      respond("You had " + toHours(data.items[0].details.sound) + " of deep sleep.");
+				//      break;
+				//    case "light sleep":
+				//      respond("You had " + toHours(data.items[0].details.light) + " of light sleep.");
+				//      break;
+				//    case "sleep":
+				//      respond("You had " + toHours(data.items[0].details.duration) + " of sleep last night. That includes " + toHours(data.items[0].details.rem) + " of REM sleep, " + toHours(data.items[0].details.sound) + " of deep sleep and " + toHours(data.items[0].details.light) + " of light sleep.");
+				//      break;
+				//  }
+			 },
+			 error: function() {
+				 respond(messageInternalError);
+			 }
+		 });
+	 }
+	//  function toHours(secs) {
+	//    hours = Math.floor(secs / 3600),
+	//    minutes = Math.floor((secs - (hours * 3600)) / 60),
+	//    seconds = secs - (hours * 3600) - (minutes * 60);
+	//    hourText = hours + (hours > 1 ? " hours, " : " hour, ");
+	//    minuteText = minutes + (minutes > 1 ? " minutes " : " minute ");
+	//    secondText = seconds + (seconds > 1 ? " seconds" : " second");
+	//    return hourText + minuteText + "and " + secondText;
+	//  }
+ </script>
 
 </template>

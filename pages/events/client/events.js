@@ -1,4 +1,4 @@
-Meteor.subscribe("theUsers");
+// Meteor.subscribe("theUsers");
 Meteor.subscribe("theTasks");
 Meteor.subscribe("theGoals");
 Meteor.subscribe("theTexts");
@@ -6,24 +6,36 @@ Meteor.subscribe("theTexts");
 Template.events.helpers({
   categories: function() {
     // console.log(Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories);
-    return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories; //
+    // console.log("finding categories");
+    // console.dir(Meteor.userId());
+    const user = Meteor.users.findOne(Meteor.userId()); //
+    // console.dir(user);
+    return user.categories
   },
-  tasks: function() {
+  entries: function() {
     // console.log(Tasks.find({createdBy: Meteor.userId()}).fetch());
-    return Tasks.find({createdBy: Meteor.userId()}).fetch(); //
-  },
-  goals: function() {
-    // console.log(Goals.find({createdBy: Meteor.userId()}).fetch());
-    return Goals.find({createdBy: Meteor.userId()}).fetch(); //
-  },
-  texts: function() {
-    // console.log(Texts.find({createdBy: Meteor.userId()}).fetch());
-    return Texts.find({createdBy: Meteor.userId()}).fetch(); //
+    var y = Tasks.find({createdBy: Meteor.userId()}).fetch();
+    // console.log(y);
+    var p = y.concat(Goals.find({createdBy: Meteor.userId()}).fetch(), Texts.find({createdBy: Meteor.userId()}).fetch());
+    var x = p.sort(function(a, b) {
+      if (a.createdAt > b.createdAt) {
+        return -1;
+      }
+      if (a.createdAt < b.createdAt) {
+        return 1;
+      }
+      return 0;
+    });
+    // console.log(x);
+    return x;
   },
   showCategoryInput: function() {
     return Template.instance().showCategoryInput.get();
   },
-
+  detailed: function() {
+    //return Goals.findOne({_id:this._id});
+    return Template.instance().detailed.get();
+  },
 });
 
 Template.events.events({
@@ -57,7 +69,8 @@ Template.events.events({
         texts: [],
         createdAt: new Date(),
         owner: Meteor.userId(),
-        modified: new Date()
+        modified: new Date(),
+        tags: []
       }
 
       // alert("add code for new category creation");
@@ -67,9 +80,28 @@ Template.events.events({
 
       template.showCategoryInput.set(false);
     },
+    "click .js-detail-entry": function(event, template) {
+      event.preventDefault();
+          const goal = Goals.findOne({_id: this._id});
+          const task = Tasks.findOne({_id: this._id});
+          const text = Texts.findOne({_id: this._id});
+
+          if (goal) {
+            template.detailed.set(goal);
+            console.log("goal");
+          } else if (task) {
+            template.detailed.set(task);
+            console.log("task");
+          } else if (text) {
+            template.detailed.set(text);
+            console.log("text");
+          }
+    },
 
 });
 
 Template.events.onCreated(function() {
     this.showCategoryInput = new ReactiveVar(false);
+    this.detailed = new ReactiveVar();
+
 });

@@ -87,7 +87,15 @@ a:focus {
     /*background-color: purple;*/
 }
 .css-live-user .css-notify {
+    position: relative;
+    float: left;
     margin-left: 40px;
+}
+.css-notify-dropdown {
+  position: absolute;
+  width: 300px;
+  left: -130px;
+  border: 1px solid #fe5a5a;
 }
 .css-live-user .css-username {
     position: relative;
@@ -138,7 +146,7 @@ a:focus {
     text-align: center;
     padding-top: 10px;
     color: #ffffff;
-    font-size: 12px
+    font-size: 12px;
 }
 .css-stacked-nav a span {
     /*color: #ffffff;*/
@@ -160,6 +168,8 @@ a:focus {
     position: relative;
     height: 100%;
     width: 100%;
+    padding: 0px;
+    margin: 0px;
     overflow-x: hidden;
     /*background-color: purple;*/
 }
@@ -190,4 +200,19 @@ textarea {
 /* map */
 .css-map {
   display: none;
+}
+.css-task-origin {
+  visibility: hidden;
+  position: absolute;
+}
+
+.map-container {
+  width: 800px;
+  max-width: 100%;
+  height: 500px;
+
+}
+
+.pac-container {
+    z-index: 1051 !important;
 }

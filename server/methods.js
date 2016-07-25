@@ -57,4 +57,7 @@ Meteor.methods({
       }
     }
   },
+  addNotification: function(notification) {
+    Meteor.users.update({_id: this.userId}, {$push: {"notifications": notification}});
+  },
 });

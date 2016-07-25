@@ -103,5 +103,4 @@ Template.events.events({
 Template.events.onCreated(function() {
     this.showCategoryInput = new ReactiveVar(false);
     this.detailed = new ReactiveVar();
-
 });

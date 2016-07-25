@@ -491,3 +491,5 @@ function calculateRoute(origin, destination) {
           event.preventDefault();
           calculateRoute($("#from").val(), $("#to").val());
         });
+
+      });

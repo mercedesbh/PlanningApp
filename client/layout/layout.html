@@ -30,7 +30,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="{{pathFor 'events'}}">Events</a></li>
 						<li><a href="{{pathFor 'upcoming'}}">Upcoming</a></li>
-						<li><a href="#">Calendar</a></li>
+						<li><a href="{{pathFor 'calendar'}}">Calendar</a></li>
 						<li role="separator" class="divider"></li>
 						<li><a href="{{pathFor 'settings'}}">Settings</a></li>
 						<li role="separator" class="divider"></li>
@@ -63,7 +63,7 @@
 						<p> Events </p>
 					</li>
 				</a>
-				<a href="#">
+				<a href="{{pathFor 'calendar'}}">
 					<li class="css-sidenav-calendar {{highlight 'calendar'}}">
 						<span class="glyphicon glyphicon-calendar"></span>
 						<p>Calendar</p>
@@ -115,8 +115,8 @@
 
 </template>
 
-<template name="modal" id="userModal">
-	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<template name="modal">
+	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="userModal">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -382,6 +382,12 @@
 		 };
 		 recognition.onresult = function(event) {
 			 recognition.onend = null;
+				 send(text);
+				 console.log(text);
+				//  $('#userModal').modal({ show: false});
+				 if (text == "event" || text == "events") {
+					 Router.go('/events');
+				 }
 			 console.log(event.results)
 
 			 var text = "";
@@ -389,12 +395,6 @@
 					 text += event.results[i][0].transcript;
 				 }
 				 //Use variable text for if statements on rerouting
-				 send(text);
-				 console.log(text);
-				//  $('#userModal').modal({ show: false});
-				 if (text == "event" || text == "events") {
-					 Router.go('/events');
-				 }
 				 if (text == "upcoming" || text == "what is coming up") {
 					 Router.go('/upcoming');
 				 }

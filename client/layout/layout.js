@@ -512,3 +512,14 @@ function calculateRoute(origin, destination) {
           calculateRoute($("#from").val(), $("#to").val());
         });
       });
+
+
+
+      Template.calendar.onRendered( function() {
+        $( '#calendar' ).fullCalendar({
+          dayClick: function() {
+            $('#userModal').modal('show');
+          }
+        });
+      });
+

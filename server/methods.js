@@ -64,7 +64,7 @@ addEvent( event ) {
           start: String,
           end: String,
           type: String,
-          guests: Number
+          guests: String
       });
 
       try {
@@ -82,7 +82,7 @@ addEvent( event ) {
           start: String,
           end: String,
           type: Match.Optional( String ),
-          guests: Match.Optional( Number )
+          guests: Match.Optional( String )
       });
     try {
       return Events.update( event._id, {

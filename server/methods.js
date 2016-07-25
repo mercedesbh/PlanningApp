@@ -57,4 +57,8 @@ Meteor.methods({
       }
     }
   },
+  saveCoor: function(coordinates){
+
+     Meteor.users.update({_id: this.userId}, {$addToSet: {"locations": coordinates}});
+  },
 });

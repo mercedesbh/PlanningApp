@@ -175,6 +175,14 @@ Template.modal.events({
                 $(".js-task-date").val("");
                 $(".js-task-destination").val("");
                 $(".js-task-note").val("");
+                console.log("reloading");
+                var map = GoogleMaps.maps.initMap.instance;
+                var center = map.getCenter();
+                   google.maps.event.trigger(map, 'resize');
+                   map.setCenter(center)
+                // });
+                console.log("complete");
+
               }
             });
 
@@ -311,8 +319,8 @@ Template.modal.events({
           });
 
         }
-
         $('.modal').modal('hide');
+        location.reload();
     },
     "click .js-submit-location": function(event) {
         event.preventDefault();
@@ -323,36 +331,6 @@ Template.modal.events({
         calculateRoute(origin, destination);
     }
 });
-
-function calculateRoute(from, to) {
-    var directionsService = new google.maps.DirectionsService();
-    var directionsRequest = {
-        origin: from,
-        destination: to,
-        travelMode: google.maps.DirectionsTravelMode.DRIVING,
-    };
-    console.log("sending request");
-    // console.dir(directionsRequest);
-    directionsService.route(
-        directionsRequest,
-        function(response, status) {
-            console.dir([status, response, new Date()]);
-            if (status == google.maps.DirectionsStatus.OK) {
-                console.log("routing");
-                new google.maps.DirectionsRenderer({
-                    map: GoogleMaps.maps.initMap,
-                    directions: response
-                });
-            } else
-                $("#error").append("Unable to retrieve your route<br />");
-        }
-    );
-}
-
-    $("#calculate-route").submit(function(event) {
-        event.preventDefault();
-        calculateRoute($("#from").val(), $("#to").val());
-    });
 
 
 Template.modal.onCreated(function() {
@@ -403,9 +381,9 @@ Template.modal.onRendered(function() {
             var map = GoogleMaps.maps.initMap.instance;
             console.log("clicked");
             var center = map.getCenter();
-              console.log("triggered");
+              console.log("map loaded with geolocation");
                google.maps.event.trigger(map, 'resize');
-               map.setCenter(center)
+               map.setCenter(center);
           });
           var input = document.getElementById('end');
           var autocomplete = new google.maps.places.Autocomplete(input);
@@ -415,8 +393,6 @@ Template.modal.onRendered(function() {
 
             // Get the place details from the autocomplete object.
             var place = autocomplete.getPlace();
-
-              //  console.log("place: " + JSON.stringify(place) );
           });
       } else {
             //  latlng = new google.maps.LatLng(42.358970, -71.066093);
@@ -429,6 +405,8 @@ Template.modal.onRendered(function() {
 
       };
 });
+
+//************* MAP CALCULATE ROUTE ***************//
 function calculateRoute(origin, destination) {
         var directionsService = new google.maps.DirectionsService();
         var directionsRequest = {
@@ -450,6 +428,8 @@ function calculateRoute(origin, destination) {
                 directions: response
               });
               getLatlong();
+              calculateDistanceDuration(origin, destination);
+
 
               console.log("complete");
             }
@@ -458,57 +438,56 @@ function calculateRoute(origin, destination) {
           }
         );
       }
+
+      //************* MAP DESTINATION COORDINATES ***************//
       function getLatlong(){
           var geocoder = new google.maps.Geocoder();
           var address = document.getElementById('end').value;
-
           geocoder.geocode({ 'address': address }, function (results, status) {
-
               if (status == google.maps.GeocoderStatus.OK) {
-                  var latitude = results[0].geometry.location.lat();
-                  var longitude = results[0].geometry.location.lng();
-                  console.log([latitude, longitude]);
+                const coordinates = {
+                    address: address,
+                    lat: results[0].geometry.location.lat(),
+                    lng: results[0].geometry.location.lng()
+                  }
+                  // console.log([newLocation.lat, newLocation.lng]);
+                  // console.log(coordinates);
+                  Meteor.call("saveCoor", coordinates);
+                }
 
               }
-          });
+        );
 
       }
 
-
-      $(document).ready(function() {
-        // If the browser supports the Geolocation API
-        if (typeof navigator.geolocation == "undefined") {
-          $("#error").text("Your browser doesn't support the Geolocation API");
-          return;
+      //************* MAP DISTANCE AND DURATION ***************//
+      function calculateDistanceDuration(origin, destination) {
+      var service = new google.maps.DistanceMatrixService();
+          service.getDistanceMatrix({
+              origins: [origin],
+              destinations: [destination],
+              travelMode: google.maps.TravelMode.DRIVING,
+              unitSystem: google.maps.UnitSystem.METRIC,
+              avoidHighways: false,
+              avoidTolls: false
+          }, function (response, status) {
+              if (status == google.maps.DistanceMatrixStatus.OK && response.rows[0].elements[0].status != "ZERO_RESULTS") {
+                  var distance = response.rows[0].elements[0].distance.text;
+                  var duration = response.rows[0].elements[0].duration.text;
+                  var dvDistance = document.getElementById("dvDistance");
+                 dvDistance.innerHTML = "";
+                  dvDistance.innerHTML += "Distance: " + distance + "<br />";
+                  dvDistance.innerHTML += "Duration:" + duration;
+                  console.log("Distance: " + distance);
+                  console.log("Duration:" + duration);
+              } else {
+                  alert("Unable to find the distance via road.");
+              }
+          });
         }
 
-        $("#from-link, #to-link").click(function(event) {
-          event.preventDefault();
-          var addressId = this.id.substring(0, this.id.indexOf("-"));
-
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var geocoder = new google.maps.Geocoder();
-            geocoder.geocode({
-              "location": new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-            },
-            function(results, status) {
-              if (status == google.maps.GeocoderStatus.OK)
-                $("#" + addressId).val(results[0].formatted_address);
-              else
-                $("#error").append("Unable to retrieve your address<br />");
-            });
-          },
-          function(positionError){
-            $("#error").append("Error: " + positionError.message + "<br />");
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10 * 1000 // 10 seconds
-          });
-        });
 
         $("#calculate-route").submit(function(event) {
           event.preventDefault();
           calculateRoute($("#from").val(), $("#to").val());
         });
-      });

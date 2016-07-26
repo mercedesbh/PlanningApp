@@ -63,21 +63,24 @@ Meteor.methods({
   saveCoor: function(coordinates){
     Meteor.users.update({_id: this.userId}, {$addToSet: {"locations": coordinates}});
   },
-  // addEvent( event ) {
-  //     check( event, {
-  //         title: String,
-  //         start: String,
-  //         end: String,
-  //         type: String,
-  //         guests: String
-  //     });
-  //
-  //     try {
-  //         return Events.insert( event );
-  //     } catch ( exception ) {
-  //         throw new Meteor.Error( '500', `${ exception }` );
-  //     }
-  // },
+
+
+  
+  addEvent( event ) {
+      check( event, {
+          title: String,
+          start: String,
+          end: String,
+          type: String,
+          guests: String
+      });
+  
+      try {
+          return Events.insert( event );
+      } catch ( exception ) {
+          throw new Meteor.Error( '500', `${ exception }` );
+      }
+  },
   // editEvent( event ) {
   //     check( event, {
   //         _id: String,

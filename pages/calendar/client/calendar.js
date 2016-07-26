@@ -29,6 +29,23 @@ Template.calendar.onRendered( function() {
       } else {
         sAlert.error("Choose a day that is not in the past.");
       }
+
+
+      $('.js-add-entry').click(function() {
+     console.log("clicked!");
+     // var events = Tasks.find({createdBy: Meteor.userId()}).fetch();
+     // // console.log(events);
+     //  for(var i =0; i<events.length ;i++){
+
+     //  }
+                 // $('#calendar').fullCalendar( 'rerenderEvents' );
+
+
+  });
+
+  $( '#calendar' ).fullCalendar( 'refetchEvents' );
+
+
     },
     header: {
       left:   'title',
@@ -37,5 +54,77 @@ Template.calendar.onRendered( function() {
     },
     height: 700,
 
+    events: _.map(Tasks.find().fetch(), function(x) {
+      // console.dir(x.date);
+      const z = {title: x.title, start: new Date(x.date)};
+      // console.dir(z);
+      return z;
+    }),
   });
+
+
+
+
+  // $('#calendar').fullCalendar( 'rerenderEvents' );
+
 });
+
+
+
+Template.calendar.onCreated( function(){
+  // Tasks.find().fetch();
+  //   $( '#calendar' ).fullCalendar( 'refetchEvents' );
+  //   $('#calendar').fullCalendar( 'rerenderEvents');
+    // $('#calendar').fullCalendar('renderEvent', newEvent);
+
+//   var events = Tasks.find({createdBy: Meteor.userId()}).fetch();
+//      // console.log(events);
+//       for(var i =0; i<events.length ;i++){
+
+//         var newEvent = {
+//           title: events[i].title,
+//           start: moment(new Date())
+//         };
+//         $('#calendar').fullCalendar( 'renderEvent', newEvent, true);
+//         console.log(events[i].date);
+//       }
+
+//   $('#calendar').fullCalendar( 'rerenderEvents' );
+
+});
+
+// $('.js-add-entry').click(function() {
+//      console.log("clicked!");
+//      // var events = Tasks.find({createdBy: Meteor.userId()}).fetch();
+//      // // console.log(events);
+//      //  for(var i =0; i<events.length ;i++){
+
+//         var newEvent = {
+//           title: "HEy",
+//           start: new Date()
+//         };
+//         // Meteor.call('createTask', newEvent);
+//         $('#calendar').fullCalendar('renderEvent', newEvent);
+//         // console.log(newEvent);
+//      //  }
+//                  // $('#calendar').fullCalendar( 'rerenderEvents' );
+
+
+//   });
+
+
+
+
+
+// Tracker.autorun( () => {
+//     var newEvent = {
+//           title: "HEy",
+//           start: new Date()
+//         };
+//         // Meteor.call('createTask', newEvent);
+//         $('#calendar').fullCalendar('renderEvent', newEvent);
+//     // Tasks.find().fetch();
+//     // $( '#calendar' ).fullCalendar( 'refetchEvents' );
+//     // $('#calendar').fullCalendar( 'rerenderEvents');
+//     console.log("running autorun");
+// });

@@ -13,17 +13,17 @@
 //   };
 
 
-  // $( '#events-calendar' ).fullCalendar({
-  //     events( start, end, timezone, callback ) {
-  //         let data = Events.find().fetch().map( ( event ) => {
-  //           event.editable = !isPast( event.start );
-  //           return event;
-  //         });
+//   $( '#events-calendar' ).fullCalendar({
+//       events( start, end, timezone, callback ) {
+//           let data = Events.find().fetch().map( ( event ) => {
+//             event.editable = !isPast( event.start );
+//             return event;
+//           });
 
-  //         if ( data ) {
-  //           callback( data );
-  //         }
-  //     },
+//           if ( data ) {
+//             callback( data );
+//           }
+//       },
 
 //   eventRender( event, element ) {
 //       element.find( '.fc-content' ).html(
@@ -38,25 +38,25 @@
 //     // <p class="guest-count">${ event.guests } Guests</p>
 
 
-//     eventDrop( event, delta, revert ) {
-//       let date = event.start.format();
-//       if ( !isPast( date ) ) {
-//         let update = {
-//           _id: event._id,
-//           start: date,
-//           end: date
-//         };
+//     // eventDrop( event, delta, revert ) {
+//     //   let date = event.start.format();
+//     //   if ( !isPast( date ) ) {
+//     //     let update = {
+//     //       _id: event._id,
+//     //       start: date,
+//     //       end: date
+//     //     };
 
-//         Meteor.call( 'editEvent', update, ( error ) => {
-//           if ( error ) {
-//             Bert.alert( error.reason, 'danger' );
-//           }
-//         });
-//       } else {
-//         revert();
-//         Bert.alert( 'Sorry, you can\'t move items to the past!', 'danger' );
-//       }
-//     },
+//     //     Meteor.call( 'editEvent', update, ( error ) => {
+//     //       if ( error ) {
+//     //         Bert.alert( error.reason, 'danger' );
+//     //       }
+//     //     });
+//     //   } else {
+//     //     revert();
+//     //     Bert.alert( 'Sorry, you can\'t move items to the past!', 'danger' );
+//     //   }
+//     // },
 
 
 //     dayClick( date ) {
@@ -176,19 +176,19 @@
 //   };
 //   },
 
-//   'click .delete-event' ( event, template ) {
-//     let eventModal = Session.get( 'eventModal' );
-//     if ( confirm( 'Are you sure? This is permanent.' ) ) {
-//       Meteor.call( 'removeEvent', eventModal.event, ( error ) => {
-//           if ( error ) {
-//               Bert.alert( error.reason, 'danger' );
-//           } else {
-//               Bert.alert( 'Event deleted!', 'success' );
-//               closeModal();
-//           }
-//       });
-//     }
-//   }
+//   // 'click .delete-event' ( event, template ) {
+//   //   let eventModal = Session.get( 'eventModal' );
+//   //   if ( confirm( 'Are you sure? This is permanent.' ) ) {
+//   //     Meteor.call( 'removeEvent', eventModal.event, ( error ) => {
+//   //         if ( error ) {
+//   //             Bert.alert( error.reason, 'danger' );
+//   //         } else {
+//   //             Bert.alert( 'Event deleted!', 'success' );
+//   //             closeModal();
+//   //         }
+//   //     });
+//   //   }
+//   // }
 
 // });
 

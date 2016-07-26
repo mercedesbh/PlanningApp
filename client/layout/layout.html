@@ -83,10 +83,10 @@
 
 			<div class="container">
 				<!-- <input id="speech" type="text"> -->
-				<button id="rec" class="btn">Speak</button>
-				<div id="spokenResponse" class="spoken-response">
+				<button id="rec" class="css-rec btn">Speak</button>
+				<!-- <div id="spokenResponse" class="spoken-response">
 				<div class="spoken-response__text"></div>
-			</div>
+			</div> -->
 		</div>
 
 		</div>
@@ -132,7 +132,7 @@
 					<h3 class="modal-title" id="myModalLabel">
 						<div class="css-select-container dropdown pull-left">
 							<div role="presentation">
-								<select class="css-modal-select js-modal-select form-control">
+								<select id="entryType" class="css-modal-select js-modal-select form-control">
 									<option value="task"><a href="#">Task</a></option>
 									<option value="goal"><a href="#">Goal</a></option>
 									<option value="text"><a href="#">Text</a></option>
@@ -146,7 +146,7 @@
 				{{# if taskChosen}}
 				<form class="js-new-task" action="layout.html" method="post">
 					<br>
-					<input class="js-task-title form-control" type="text" placeholder="Title">
+					<input class="js-task-title form-control" id="task-title" type="text" placeholder="Title">
 					<br>
 					<select class="js-select-category form-control">
 						{{#each selectCategory}}
@@ -339,6 +339,8 @@
 
 
 					<div class="modal-footer">
+
+						<button class="css-rec btn2">Speak</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						<button type="button" class="js-add-entry btn btn-primary">Add to schedule</button>
 					</div>
@@ -363,7 +365,7 @@
 		 messageSorry = "I'm stuck";
 	 $(document).ready(function() {
 		 $speechInput = $("#speech");
-		 $recBtn = $("#rec");
+		 $recBtn = $(".css-rec");
 		 $speechInput.keypress(function(event) {
 			 if (event.which == 13) {
 				 event.preventDefault();
@@ -386,7 +388,8 @@
 		 };
 		 recognition.onresult = function(event) {
 			 recognition.onend = null;
-				 send(text);
+			 //console.log("this is what we see from API-ai");
+				 //send(text);
 				 console.log(text);
 				//  $('#userModal').modal({ show: false});
 				 if (text == "event" || text == "events") {
@@ -399,6 +402,13 @@
 					 text += event.results[i][0].transcript;
 				 }
 				 //Use variable text for if statements on rerouting
+				 send(text);
+				 console.log(text);
+				 $('#userModal').modal({ show: false});
+				 //For rerouting
+				 if (text == "event" || text == "events") {
+					 Router.go('/events');
+				 }
 				 if (text == "upcoming" || text == "what is coming up") {
 					 Router.go('/upcoming');
 				 }
@@ -408,6 +418,30 @@
 				 if (text == "settings" || text == "setting") {
 					 Router.go('/settings');
 				 }
+				 //End
+
+				 //For Entry Type in Modal
+				 if (text == "go" || text == "gold" || text == "goal" ) {
+					 	$("#entryType").val("goal");
+				 }
+				 if (text == "test" || text == "task") {
+						$("#entryType").val("task");
+				 }
+				 if (text == "text") {
+						$("#entryType").val("text");
+				 }
+				 //End
+
+				//  if (text.includes("title") && $("#entryType").val("goal")) {
+				// 	 console.log("print message");
+				// 	 $('.js-goal-title').val(text);
+				//  }
+
+				if (text.includes("called") && $("#entryType").val("task")) {
+					console.log("print message");
+					$('.js-task-title').val(text);
+				}
+
 			 stopRecognition();
 		 };
 		 recognition.onend = function() {
@@ -436,7 +470,7 @@
 		 $recBtn.text(recognition ? "Stop" : "Speak");
 	 }
 	 function send(text) {
-		 console.log(text);
+		 console.log("hello");
 		 $.ajax({
 			 type: "POST",
 			 url: baseUrl + "query/",
@@ -448,6 +482,7 @@
 			 },
 			 data: JSON.stringify({q: text, lang: "en"}),
 			 success: function(data) {
+				 console.log(data);
 				 prepareResponse(data);
 			 },
 			 error: function() {
@@ -457,7 +492,9 @@
 	 }
 	 function prepareResponse(val) {
 		 var debugJSON = JSON.stringify(val, undefined, 2),
+		//  console.log(degugJSON);
 			 spokenResponse = val.result.speech;
+			 //console.log("this is the val" + val);
 		 if (val.result.action == "sleepHours") {
 			 requestSleepData(val.result.parameters.sleep);
 		 } else {
@@ -488,7 +525,7 @@
 			 contentType: "application/json; charset=utf-8",
 			 dataType: "json",
 			 success: function(data) {
-				 console.log("Sleep data!", data);
+				 //console.log("Sleep data!", data);
 				 if (data.error) {
 					 respond(data.error);
 					 window.location.replace("/login/jawbone");

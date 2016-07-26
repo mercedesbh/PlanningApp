@@ -16,10 +16,9 @@ Template.calendar.events({
 });
 
 Template.calendar.onRendered( function() {
-
   $( '#calendar' ).fullCalendar({
 
-  	dayClick: function(date) {
+    dayClick: function(date) {
       const xDate = date.format();
       const minDate = moment().format("YYYY-MM-DD");
       const minDateAfter = moment().add(1, 'days').format("YYYY-MM-DD");
@@ -30,12 +29,8 @@ Template.calendar.onRendered( function() {
       } else {
         sAlert.error("Choose a day that is not in the past.");
       }
-
     },
     header: false,
-    // contentHeight: 510,
-
-
 
   });
 });

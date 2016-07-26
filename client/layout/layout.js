@@ -262,6 +262,7 @@ Template.modal.events({
                   Meteor.call("linkTag", gCategory, gTagObj);
                 }
 
+                
                 sAlert.success('Success! New goal created.');
                 $(".js-goal-title").val("");
                 $(".js-goal-date-s").val("");

@@ -1,16 +1,19 @@
 .css-calendar-row {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: auto;
   background-color: #ffffff;
 }
 .css-calendar-container {
-
+  position: relative;
+  height: auto;
+  background-color: #ffffff;
 }
-.css-calendar {
-
-}
-#calendar tbody td {
+.css-calendar tbody td {
   color: #fe5a5a;
   font-size: 18px;
+}
+.css-calendar .fc-left h2 {
+  display: inline;
+  float: left !important;
 }

@@ -30,7 +30,12 @@ Template.calendar.onRendered( function() {
         sAlert.error("Choose a day that is not in the past.");
       }
     },
-    header: false,
+    header: {
+      left:   'title',
+      center: '',
+      right:  ''
+    },
+    height: 700,
 
   });
 });

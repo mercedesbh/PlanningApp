@@ -115,20 +115,20 @@ Template.modal.events({
 
             var tTagColor;
 
-            if (tTag && tTagName) {
-                sAlert.warning('Entries should only have a single tag.', {position: "top-right"});
-                return;
-            } else if (tTagName.length > 0) {
-                tTag = tTagName;
-                tTagColor = intToRGB(hashCode(tTag));
-            } else if (tTag.length > 0) {
-                tTagColor = intToRGB(hashCode(tTag));
-            } else if (tTag.length == 0 && tTagName.length == 0) {
-                tTag = null;
-            }
+            // if (tTag && tTagName) {
+            //     sAlert.warning('Entries should only have a single tag.', {position: "top-right"});
+            //     return;
+            // } else if (tTagName.length > 0) {
+            //     tTag = tTagName;
+            //     tTagColor = intToRGB(hashCode(tTag));
+            // } else if (tTag.length > 0) {
+            //     tTagColor = intToRGB(hashCode(tTag));
+            // } else if (tTag.length == 0 && tTagName.length == 0) {
+            //     tTag = null;
+            // }
 
             tTime = moment(tTime).format('h:mm A');
-            tDate = moment(tDate).format('MMM Do YY');
+            // tDate = moment(tDate).format('MMM Do YY');
 
             if (tLocation == "") {
                 tLocation = null;
@@ -169,9 +169,9 @@ Template.modal.events({
               else {
                 var lastEntry = Tasks.findOne({}, {sort: {createdAt: -1, limit: 1}})._id;
                 Meteor.call("linkTask", lastEntry, tCategory);
-                if (tTag.length > 0) {
-                  Meteor.call("linkTag", tCategory, tTagObj);
-                }
+                // if (tTag.length > 0) {
+                //   Meteor.call("linkTag", tCategory, tTagObj);
+                // }
 
                 sAlert.success('Success! New task created.');
                 $(".js-task-title").val("");

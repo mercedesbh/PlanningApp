@@ -24,6 +24,7 @@ Template.home.events({
             return;
           } else {
             Router.go('/upcoming'); // else go to upcoming page
+            sAlert.info("Welcome to PlanningApp");
           }
         });
       },

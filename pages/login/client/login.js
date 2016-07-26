@@ -12,10 +12,13 @@ Template.login.events({
         Meteor.loginWithPassword(e, p, function(error) {
             if (error) {
                 event.preventDefault();
+
                 console.log(error.reason); // // console log reason [show display error to user]
                 return;
             } else {
                 Router.go("/upcoming");
+                notification();
+                // sAlert.info('Welcome back!');
             }
         });
     },

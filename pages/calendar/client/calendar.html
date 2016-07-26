@@ -1,16 +1,20 @@
 <template name="calendar">
-<div class="calendar-row">  
+
+<div class="css-calendar-row calendar-row">
   <div class="col-sm-1"></div>
-  <div class="col-sm-11">
-    <div id="calendar">
-    <!-- {{> modal}} -->
+  <div class="css-calendar-container col-sm-11">
 
+    <br>
+
+    <div class="css-calendar-btns pull-right">
+      <button class="btn css-calendar-prev" type="button">Previous</button>
+      <button class="btn css-calendar-next" type="button">Next</button>
     </div>
+    <br>
+    <br>
+    <div class="css-calendar" id="calendar"></div>
+
   </div>
-  
 </div>
-  
+
 </template>
-
-
-

@@ -83,7 +83,23 @@
 //       calculateRoute(origin, destination);
 //     }
 // });
+// //********* MAP NAVIGATION.GEOLOCATION.WATCHPOSITION ***********//
+// window.onload =   getLocation();
+// var x = document.getElementById("start");
+// function getLocation() {
+//     if (navigator.geolocation) {
+//         navigator.geolocation.watchPosition(showPosition);
+//         console.log(showPosition);
+//     } else {
+//         x.innerHTML = "Geolocation is not supported by this browser.";
+//     }
+// }
+// function showPosition(position) {
+//     x.innerHTML = "Latitude: " + position.coords.latitude +
+//     "<br>Longitude: " + position.coords.longitude;
+// }
 //
+// //************* MAP CALCULATE ROUTE ***************//
 // function calculateRoute(origin, destination) {
 //         var directionsService = new google.maps.DirectionsService();
 //         var directionsRequest = {
@@ -92,11 +108,11 @@
 //           travelMode: google.maps.DirectionsTravelMode.DRIVING,
 //         };
 //         console.log("sending request");
-//         // console.dir(directionsRequest);
+//         console.dir(directionsRequest);
 //         directionsService.route(
 //           directionsRequest,
 //           function(response, status)
-//           { console.dir([status,response]);
+//           { console.dir([status,response, new Date()]);
 //             if (status == google.maps.DirectionsStatus.OK)
 //             {
 //               console.log("routing");
@@ -105,59 +121,66 @@
 //                 directions: response
 //               });
 //               getLatlong();
+//               calculateDistanceDuration(origin, destination);
+//
+//
 //               console.log("complete");
 //             }
 //             else
 //               $("#error").append("Unable to retrieve your route<br />");
 //           }
 //         );
+//       }
+//
+//       //************* MAP DESTINATION COORDINATES ***************//
+//       function getLatlong(){
+//           var geocoder = new google.maps.Geocoder();
+//           var address = document.getElementById('end').value;
+//           geocoder.geocode({ 'address': address }, function (results, status) {
+//               if (status == google.maps.GeocoderStatus.OK) {
+//                 const coordinates = {
+//                     address: address,
+//                     lat: results[0].geometry.location.lat(),
+//                     lng: results[0].geometry.location.lng()
+//                   }
+//                   // console.log([newLocation.lat, newLocation.lng]);
+//                   // console.log(coordinates);
+//                   Meteor.call("saveCoor", coordinates);
+//                 }
+//
+//               }
+//         );
 //
 //       }
-//   function getLatlong(){
-//       var geocoder = new google.maps.Geocoder();
-//       var address = document.getElementById('end').value;
 //
-//       geocoder.geocode({ 'address': address }, function (results, status) {
-//
-//           if (status == google.maps.GeocoderStatus.OK) {
-//               var latitude = results[0].geometry.location.lat();
-//               var longitude = results[0].geometry.location.lng();
-//               console.log([latitude, longitude]);
-//
-//           }
-//       });
-//
-// }
-//
-//
-//       $(document).ready(function() {
-//
-//         $("#from-link, #to-link").click(function(event) {
-//           event.preventDefault();
-//           var addressId = this.id.substring(0, this.id.indexOf("-"));
-//           navigator.geolocation.getCurrentPosition(function(position) {
-//             var geocoder = new google.maps.Geocoder();
-//             geocoder.geocode({
-//               "location": new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-//             },
-//             function(results, status) {
-//               if (status == google.maps.GeocoderStatus.OK)
-//                 $("#" + addressId).val(results[0].formatted_address);
-//               else
-//                 $("#error").append("Unable to retrieve your address<br />");
-//             });
-//           },
-//           function(positionError){
-//             $("#error").append("Error: " + positionError.message + "<br />");
-//           },
-//           {
-//             enableHighAccuracy: true,
-//             timeout: 10 * 1000 // 10 seconds
+//       //************* MAP DISTANCE AND DURATION ***************//
+//       function calculateDistanceDuration(origin, destination) {
+//       var service = new google.maps.DistanceMatrixService();
+//           service.getDistanceMatrix({
+//               origins: [origin],
+//               destinations: [destination],
+//               travelMode: google.maps.TravelMode.DRIVING,
+//               unitSystem: google.maps.UnitSystem.METRIC,
+//               avoidHighways: false,
+//               avoidTolls: false
+//           }, function (response, status) {
+//               if (status == google.maps.DistanceMatrixStatus.OK && response.rows[0].elements[0].status != "ZERO_RESULTS") {
+//                   var distance = response.rows[0].elements[0].distance.text;
+//                   var duration = response.rows[0].elements[0].duration.text;
+//                   var dvDistance = document.getElementById("dvDistance");
+//                 //  dvDistance.innerHTML = "";
+//                 //   dvDistance.innerHTML += "Distance: " + distance + "<br />";
+//                 //   dvDistance.innerHTML += "Duration:" + duration;
+//                   console.log("Distance: " + distance);
+//                   console.log("Duration:" + duration);
+//               } else {
+//                   alert("Unable to find the distance via road.");
+//               }
 //           });
-//         });
+//         }
+//
 //
 //         $("#calculate-route").submit(function(event) {
 //           event.preventDefault();
 //           calculateRoute($("#from").val(), $("#to").val());
 //         });
-//       });

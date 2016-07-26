@@ -1,40 +1,36 @@
-Template.calendar.onRendered( function() {
+Template.calendar.helpers({
 
-	// $('#calendar').fullCalendar('next'){
+});
+
+Template.calendar.events({
+  "click .css-calendar-prev": function(event) {
+    event.preventDefault();
+
+    $('#calendar').fullCalendar('prev');
+  },
+  "click .css-calendar-next": function(event) {
+    event.preventDefault();
+
+    $('#calendar').fullCalendar('next');
+  },
+});
+
+Template.calendar.onRendered( function() {
   $( '#calendar' ).fullCalendar({
 
-
-  	
-  	dayClick: function(date) {
-  		console.log(date);
-  		console.log("fullCalendar is " date);
-  		console.log("date format is " +date.format());
-  		console.log("new Date is "+ new Date());
-  		if(new Date()==date.format()){
-console.log("true");
-  		}else{
-  			console.log("false");
-  		}
-  		if(new Date() == date){
-  			$('#userModal').modal('show');
-  		}
-  		else if(new Date() > date){
-  			Bert.alert( "Not this day!", 'danger' );
-  		}else{
-  			
-  			$('#userModal').modal('show');
-  		}
-
+    dayClick: function(date) {
+      const xDate = date.format();
+      const minDate = moment().format("YYYY-MM-DD");
+      const minDateAfter = moment().add(1, 'days').format("YYYY-MM-DD");
+      // console.log(xDate + " " + minDate);
+      // if ((xDate === minDate) || date > moment(new Date())) {
+      if (xDate === minDateAfter || xDate === minDate || date > moment(new Date())) {
+        $('#userModal').modal('show');
+      } else {
+        sAlert.error("Choose a day that is not in the past.");
+      }
     },
-
-    // dayRender:function(date,cell){
-    // 	console.log(date);
-    // 	if(date < new Date()){
-    // 		$(cell).addClass('disabled');
-    // 	}
-    // }
-
-
+    header: false,
 
   });
 });

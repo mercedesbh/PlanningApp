@@ -8,12 +8,13 @@ Accounts.onCreateUser(function(options, user) {
   // console.log(rID);
   // user._id = rID;
 
+  user.notifications = [];
   user.categories = [];
   user.profile = {
     first: options.first,
     last: options.last
   };
-
+  user.locations = [];
   const userCategories = [{
     name: "To-Do",
     tasks: [],

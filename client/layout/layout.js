@@ -16,20 +16,20 @@ if (Meteor.isClient) {
 Template.layout.helpers({
     userName: function() {
         const liveUser = Meteor.userId();
-        return Meteor.users.findOne({
-            _id: liveUser
-        });
+        return Meteor.users.findOne({_id: liveUser});
     },
     highlight: function(template) {
       var currentRoute = Router.current().route.getName();
       return currentRoute && template === currentRoute ? 'css-side-nav-highlight' : '';
     },
+    notification: function() {
+      var n = Meteor.users.find({_id: Meteor.userId()}).fetch()[0].notifications;
+      // console.log(n);
+      return n;
+    },
 });
 
 Template.layout.events({
-    "click #mapTrigger": function(event) {
-      console.log("what is this for?");
-    },
     "click .js-logout": function(event) {
         event.preventDefault();
 
@@ -113,15 +113,18 @@ Template.modal.events({
             var tTag = $(".js-select-task-tag").val();
             var tTagName = $(".js-new-tag-name").val();
 
-            if (tTag && tTagName) {
-                alert("Create new tag or use existing one?");
-                return;
-            } else if (tTagName != null || tTagName.length > 0) {
-                tTag = tTagName;
-            }
+            var tTagColor;
 
-            if (tTag.length > 0) {
-              var tTagColor = intToRGB(hashCode(tTag));
+            if (tTag && tTagName) {
+                sAlert.warning('Entries should only have a single tag.', {position: "top-right"});
+                return;
+            } else if (tTagName.length > 0) {
+                tTag = tTagName;
+                tTagColor = intToRGB(hashCode(tTag));
+            } else if (tTag.length > 0) {
+                tTagColor = intToRGB(hashCode(tTag));
+            } else if (tTag.length == 0 && tTagName.length == 0) {
+                tTag = null;
             }
 
             tTime = moment(tTime).format('h:mm A');
@@ -170,11 +173,19 @@ Template.modal.events({
                   Meteor.call("linkTag", tCategory, tTagObj);
                 }
 
-                // console.log("Did it work?");
+                sAlert.success('Success! New task created.');
                 $(".js-task-title").val("");
                 $(".js-task-date").val("");
                 $(".js-task-destination").val("");
                 $(".js-task-note").val("");
+                console.log("reloading");
+                var map = GoogleMaps.maps.initMap.instance;
+                var center = map.getCenter();
+                   google.maps.event.trigger(map, 'resize');
+                   map.setCenter(center)
+                // });
+                console.log("complete");
+
               }
             });
 
@@ -195,15 +206,18 @@ Template.modal.events({
             gDateFT = moment(gDateF).format('h:mm A');
             gDateFD = moment(gDateF).format('MMM Do YY');
 
-            if (gTag && gTagName) {
-                alert("Create new tag or use existing one?");
-                return;
-            } else if (gTagName != null || gTagName.length > 0) {
-                gTag = gTagName;
-            }
+            var gTagColor;
 
-            if (gTag.length > 0) {
-              var gTagColor = intToRGB(hashCode(gTag));
+            if (gTag && gTagName) {
+                sAlert.warning('Entries should only have a single tag.', {position: "top-right"});
+                return;
+            } else if (gTagName.length > 0) {
+                gTag = gTagName;
+                gTagColor = intToRGB(hashCode(gTag));
+            } else if (gTag.length > 0) {
+                gTagColor = intToRGB(hashCode(gTag));
+            } else if (gTag.length == 0 && gTagName.length == 0) {
+                gTag = null;
             }
 
             if (gNote == "") {
@@ -248,7 +262,7 @@ Template.modal.events({
                   Meteor.call("linkTag", gCategory, gTagObj);
                 }
 
-                // console.log("Did it work?");
+                sAlert.success('Success! New goal created.');
                 $(".js-goal-title").val("");
                 $(".js-goal-date-s").val("");
                 $(".js-goal-date-f").val("");
@@ -304,6 +318,7 @@ Template.modal.events({
                   Meteor.call("linkTag", txtCategory, txtTagObj);
                 }
 
+                sAlert.success('Success! New text created.');
                 $(".js-text-title").val("");
                 $(".js-text-text").val("");
               }
@@ -311,8 +326,8 @@ Template.modal.events({
           });
 
         }
-
         $('.modal').modal('hide');
+        location.reload();
     },
     "click .js-submit-location": function(event) {
         event.preventDefault();
@@ -322,6 +337,22 @@ Template.modal.events({
         console.log(destination);
         calculateRoute(origin, destination);
     }
+});
+
+Meteor.startup(function () {
+
+    sAlert.config({
+        effect: 'flip',
+        position: 'bottom',
+        timeout: 4000,
+        html: false,
+        onRouteClose: true,
+        stack: false,
+        offset: 0,
+        beep: false,
+        onClose: _.noop //
+    });
+
 });
 
 function calculateRoute(from, to) {
@@ -349,11 +380,10 @@ function calculateRoute(from, to) {
     );
 }
 
-    $("#calculate-route").submit(function(event) {
-        event.preventDefault();
-        calculateRoute($("#from").val(), $("#to").val());
-    });
-
+$("#calculate-route").submit(function(event) {
+    event.preventDefault();
+    calculateRoute($("#from").val(), $("#to").val());
+});
 
 Template.modal.onCreated(function() {
     this.taskChosen = new ReactiveVar(true);
@@ -403,9 +433,9 @@ Template.modal.onRendered(function() {
             var map = GoogleMaps.maps.initMap.instance;
             console.log("clicked");
             var center = map.getCenter();
-              console.log("triggered");
+              console.log("map loaded with geolocation");
                google.maps.event.trigger(map, 'resize');
-               map.setCenter(center)
+               map.setCenter(center);
           });
           var input = document.getElementById('end');
           var autocomplete = new google.maps.places.Autocomplete(input);
@@ -415,8 +445,6 @@ Template.modal.onRendered(function() {
 
             // Get the place details from the autocomplete object.
             var place = autocomplete.getPlace();
-
-              //  console.log("place: " + JSON.stringify(place) );
           });
       } else {
             //  latlng = new google.maps.LatLng(42.358970, -71.066093);
@@ -429,6 +457,50 @@ Template.modal.onRendered(function() {
 
       };
 });
+Meteor.setInterval(function() {
+  var x = Tasks.find().fetch();
+  for (var i = 0; i < x.length; i++) {
+    if ((x[i].date == moment(new Date()).format("MMM Do YY")) && (x[i].time == moment(new Date()).format("h:mm A"))) {
+
+      const notification = {
+        title: x[i].title,
+        date_time: new Date(),
+        priority: x[i].priority
+      }
+
+      if (Notification.permission === "granted") {
+        const theTitle = "Remember:";
+        const options = {
+          body: x[i].title,
+          icon: "/images/size64.png",
+        }
+
+        var notify = new Notification(theTitle, options);
+      } else {
+
+        const configOverwrite = {
+          effect: 'flip',
+          position: 'top-right',
+          timeout: 4000,
+          html: true,
+          onRouteClose: true,
+          stack: false,
+          offset: 0,
+          beep: false,
+          onClose: _.noop
+        }
+        sAlert.warning('Remember: <br>' + x[i].title, configOverwrite);
+      }
+
+
+      Meteor.call("addNotification", notification);
+
+      // console.log("Hey");
+    }
+  }
+}, 40000);
+
+//************* MAP CALCULATE ROUTE ***************//
 function calculateRoute(origin, destination) {
         var directionsService = new google.maps.DirectionsService();
         var directionsRequest = {
@@ -450,6 +522,8 @@ function calculateRoute(origin, destination) {
                 directions: response
               });
               getLatlong();
+              calculateDistanceDuration(origin, destination);
+
 
               console.log("complete");
             }
@@ -458,68 +532,56 @@ function calculateRoute(origin, destination) {
           }
         );
       }
+
+      //************* MAP DESTINATION COORDINATES ***************//
       function getLatlong(){
           var geocoder = new google.maps.Geocoder();
           var address = document.getElementById('end').value;
-
           geocoder.geocode({ 'address': address }, function (results, status) {
-
               if (status == google.maps.GeocoderStatus.OK) {
-                  var latitude = results[0].geometry.location.lat();
-                  var longitude = results[0].geometry.location.lng();
-                  console.log([latitude, longitude]);
+                const coordinates = {
+                    address: address,
+                    lat: results[0].geometry.location.lat(),
+                    lng: results[0].geometry.location.lng()
+                  }
+                  // console.log([newLocation.lat, newLocation.lng]);
+                  // console.log(coordinates);
+                  Meteor.call("saveCoor", coordinates);
+                }
 
               }
-          });
+        );
 
       }
 
-
-      $(document).ready(function() {
-        // If the browser supports the Geolocation API
-        if (typeof navigator.geolocation == "undefined") {
-          $("#error").text("Your browser doesn't support the Geolocation API");
-          return;
+      //************* MAP DISTANCE AND DURATION ***************//
+      function calculateDistanceDuration(origin, destination) {
+      var service = new google.maps.DistanceMatrixService();
+          service.getDistanceMatrix({
+              origins: [origin],
+              destinations: [destination],
+              travelMode: google.maps.TravelMode.DRIVING,
+              unitSystem: google.maps.UnitSystem.METRIC,
+              avoidHighways: false,
+              avoidTolls: false
+          }, function (response, status) {
+              if (status == google.maps.DistanceMatrixStatus.OK && response.rows[0].elements[0].status != "ZERO_RESULTS") {
+                  var distance = response.rows[0].elements[0].distance.text;
+                  var duration = response.rows[0].elements[0].duration.text;
+                  var dvDistance = document.getElementById("dvDistance");
+                 dvDistance.innerHTML = "";
+                  dvDistance.innerHTML += "Distance: " + distance + "<br />";
+                  dvDistance.innerHTML += "Duration:" + duration;
+                  console.log("Distance: " + distance);
+                  console.log("Duration:" + duration);
+              } else {
+                  alert("Unable to find the distance via road.");
+              }
+          });
         }
 
-        $("#from-link, #to-link").click(function(event) {
-          event.preventDefault();
-          var addressId = this.id.substring(0, this.id.indexOf("-"));
-
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var geocoder = new google.maps.Geocoder();
-            geocoder.geocode({
-              "location": new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-            },
-            function(results, status) {
-              if (status == google.maps.GeocoderStatus.OK)
-                $("#" + addressId).val(results[0].formatted_address);
-              else
-                $("#error").append("Unable to retrieve your address<br />");
-            });
-          },
-          function(positionError){
-            $("#error").append("Error: " + positionError.message + "<br />");
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10 * 1000 // 10 seconds
-          });
-        });
 
         $("#calculate-route").submit(function(event) {
           event.preventDefault();
           calculateRoute($("#from").val(), $("#to").val());
         });
-      });
-
-
-
-      Template.calendar.onRendered( function() {
-        $( '#calendar' ).fullCalendar({
-          dayClick: function() {
-            $('#userModal').modal('show');
-          }
-        });
-      });
-

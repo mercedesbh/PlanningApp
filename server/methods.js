@@ -57,6 +57,14 @@ Meteor.methods({
       }
     }
   },
+  sendRequest: function(u) {
+    const m = {
+      notification: u.profile.first + " " + u.profile.last + " wants to be a collaborator",
+      date_time: new Date(),
+      sender: u.sender
+    }
+    var x = Meteor.users.update({_id: u._id}, {$push: {notifications: m}});
+  },
   addNotification: function(notification) {
     Meteor.users.update({_id: this.userId}, {$push: {"notifications": notification}});
   },
@@ -65,22 +73,22 @@ Meteor.methods({
   },
 
 
-  
-  addEvent( event ) {
-      check( event, {
-          title: String,
-          start: String,
-          end: String,
-          type: String,
-          guests: String
-      });
-  
-      try {
-          return Events.insert( event );
-      } catch ( exception ) {
-          throw new Meteor.Error( '500', `${ exception }` );
-      }
-  },
+
+  // addEvent( event ) {
+  //     check( event, {
+  //         title: String,
+  //         start: String,
+  //         end: String,
+  //         type: String,
+  //         guests: String
+  //     });
+  //
+  //     try {
+  //         return Events.insert( event );
+  //     } catch ( exception ) {
+  //         throw new Meteor.Error( '500', `${ exception }` );
+  //     }
+  // },
   // editEvent( event ) {
   //     check( event, {
   //         _id: String,

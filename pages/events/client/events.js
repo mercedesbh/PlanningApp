@@ -14,14 +14,23 @@ Template.events.helpers({
   },
   entries: function() {
     // console.log(Tasks.find({createdBy: Meteor.userId()}).fetch());
-    var y = Tasks.find({createdBy: Meteor.userId()}).fetch();
-    // console.log(y);
-    var p = y.concat(Goals.find({createdBy: Meteor.userId()}).fetch(), Texts.find({createdBy: Meteor.userId()}).fetch());
+    var k = Template.instance().currentCategory.get();
+    if (k) {
+      console.log("something");
+      var o = Template.instance().currentCategory.get();
+      var y = Tasks.find({createdBy: Meteor.userId(), category: o}).fetch();
+      var p = y.concat(Goals.find({createdBy: Meteor.userId(), category: o}).fetch(), Texts.find({createdBy: Meteor.userId(), category: o}).fetch());
+    } else {
+      var y = Tasks.find({createdBy: Meteor.userId()}).fetch();
+      // console.log(y);
+      var p = y.concat(Goals.find({createdBy: Meteor.userId()}).fetch(), Texts.find({createdBy: Meteor.userId()}).fetch());
+    }
+
     var x = p.sort(function(a, b) {
-      if (a.createdAt > b.createdAt) {
+      if (a.createdAt < b.createdAt) {
         return -1;
       }
-      if (a.createdAt < b.createdAt) {
+      if (a.createdAt > b.createdAt) {
         return 1;
       }
       return 0;
@@ -97,10 +106,18 @@ Template.events.events({
             console.log("text");
           }
     },
+    "click #js-event-category": function(event, template) {
+      event.preventDefault();
+
+      var f = $(this).val($(this).text())[0].name;
+      // console.log(f);
+      template.currentCategory.set(f);
+    },
 
 });
 
 Template.events.onCreated(function() {
     this.showCategoryInput = new ReactiveVar(false);
-    this.detailed = new ReactiveVar();
+    this.detailed = new ReactiveVar(firstEntry());
+    this.currentCategory = new ReactiveVar();
 });

@@ -14,6 +14,7 @@ Accounts.onCreateUser(function(options, user) {
     first: options.first,
     last: options.last
   };
+  user.collaborators = [];
   user.locations = [];
   const userCategories = [{
     name: "To-Do",

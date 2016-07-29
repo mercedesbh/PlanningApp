@@ -439,7 +439,11 @@
 
 				if (text.includes("called") && $("#entryType").val("task")) {
 					console.log("print message");
-					$('.js-task-title').val(text);
+					//$('.js-task-title').val(text);
+					console.dir(text.length);
+					//var yourSpeechFromAPI = text.result.resolvedQuery;
+					//console.log(data.result.resolvedQuery.substring(lastIndexOf(data.result.parameters.starttitlereco), data.result.resolvedQuery.length)
+					console.log("");
 				}
 
 			 stopRecognition();
@@ -482,8 +486,23 @@
 			 },
 			 data: JSON.stringify({q: text, lang: "en"}),
 			 success: function(data) {
-				 console.log(data);
-				 prepareResponse(data);
+				 if (text.includes("called") && $("#entryType").val("task")) {
+ 					console.log("print message");
+					console.log(data);
+					var actualspeech = data.result.resolvedQuery;
+					//var lengthOfActualSpeech
+					var lengthOfTitleReco = data.result.parameters.starttitlereco.length
+					console.log(lengthOfTitleReco);
+					var beginrec = actualspeech.lastIndexOf(data.result.parameters.starttitlereco)
+					var final = beginrec + lengthOfTitleReco + 1
+					var finalfinal = (actualspeech.substring(final,actualspeech.length));
+					console.log(finalfinal);
+					$('.js-task-title').val(finalfinal);
+					//console.log(beginrec)
+					//console.log(lets.substring(2,14))
+					//console.log(lets.substring(lastIndexOf(data.result.parameters.starttitlereco), data.result.resolvedQuery.length)
+					prepareResponse(data);
+ 				}
 			 },
 			 error: function() {
 				 respond(messageInternalError);

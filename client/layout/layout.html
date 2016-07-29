@@ -352,7 +352,7 @@
 
 						<button class="css-rec btn2 btn pull-left">Speak</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-						<button type="button" class="js-add-entry btn">Add to schedule</button>
+						<button type="button" class="js-add-entry btn btn-primary" id="buttonpress">Add to schedule</button>
 					</div>
 
 			</div>
@@ -372,7 +372,7 @@
 		 messageRecording = "Recording...",
 		 messageCouldntHear = "Repeat yourself",
 		 messageInternalError = "Internal server error",
-		 messageSorry = "I'm stuck";
+		 messageSorry = "Sorry. I don't know how to respond to that yet";
 	 $(document).ready(function() {
 		 $speechInput = $("#speech");
 		 $recBtn = $(".css-rec");
@@ -400,11 +400,7 @@
 			 recognition.onend = null;
 			 //console.log("this is what we see from API-ai");
 				 //send(text);
-				 console.log(text);
-				//  $('#userModal').modal({ show: false});
-				 if (text == "event" || text == "events") {
-					 Router.go('/events');
-				 }
+			 console.log(text);
 			 console.log(event.results)
 
 			 var text = "";
@@ -416,45 +412,76 @@
 				 console.log(text);
 				 $('#userModal').modal({ show: false});
 				 //For rerouting
-				 if (text == "event" || text == "events") {
+				 if (text.includes("event") || text.includes("events")) {
+					 $('#userModal').modal('hide');
 					 Router.go('/events');
 				 }
-				 if (text == "upcoming" || text == "what is coming up") {
+				 if (text.includes("upcoming") || text.includes("what is coming up")) {
+					 $('#userModal').modal('hide');
 					 Router.go('/upcoming');
 				 }
-				 if (text == "entry" || text == "new entry") {
-					 $('#userModal').modal('show');
-				 }
-				 if (text == "settings" || text == "setting") {
+				 if (text.includes("settings") || text.includes("setting")) {
+					 $('#userModal').modal('hide');
 					 Router.go('/settings');
+				 }
+				 if (text.includes("calendar")) {
+					 $('#userModal').modal('hide');
+					 Router.go('/calendar');
+				 }
+
+
+				 if (text.includes("entry") || text.includes("new entry")) {
+					 $('#userModal').modal('show');
 				 }
 				 //End
 
 				 //For Entry Type in Modal
-				 if (text == "go" || text == "gold" || text == "goal" ) {
-					 	$("#entryType").val("goal");
+				 if (text.includes("go") || text.includes("gold") || text.includes("goal") || text.includes("girl") ) {
+						//$('#userModal').modal('show');
+						$("#entryType").val("goal");
+						$("#entryType").trigger('change');
 				 }
-				 if (text == "test" || text == "task") {
+				 if (text.includes("test") || text.includes("task")) {
+						//$('#userModal').modal('show');
 						$("#entryType").val("task");
+						$("#entryType").trigger('change');
 				 }
-				 if (text == "text") {
+				 if (text.includes("text")) {
+						//$('#userModal').modal('show');
 						$("#entryType").val("text");
+						$("#entryType").trigger('change');
+						// console.log("message" + text);
 				 }
-				 //End
+				 //End naviagtion
+
+				//  //For Entry Type in Modal
+				//  if (text.includes("go") || text.includes("gold") || text.includes("goal") ) {
+				// 	  $('#userModal').modal('show');
+				// 	 	$("#entryType").val("goal");
+				//  }
+				//  if (text.includes("test") || text.includes("task")) {
+				// 	  $('#userModal').modal('show');
+				// 		$("#entryType").val("task");
+				//  }
+				//  if (text.includes("text")) {
+				// 	  $('#userModal').modal('show');
+				// 		$("#entryType").val("text");
+				//  }
+				//  //End
 
 				//  if (text.includes("title") && $("#entryType").val("goal")) {
 				// 	 console.log("print message");
 				// 	 $('.js-goal-title').val(text);
 				//  }
 
-				if (text.includes("called") && $("#entryType").val("task")) {
-					console.log("print message");
-					//$('.js-task-title').val(text);
-					console.dir(text.length);
-					//var yourSpeechFromAPI = text.result.resolvedQuery;
-					//console.log(data.result.resolvedQuery.substring(lastIndexOf(data.result.parameters.starttitlereco), data.result.resolvedQuery.length)
-					console.log("");
-				}
+				// if (text.includes("called") && $("#entryType").val("task")) {
+				// 	console.log("print message");
+				// 	//$('.js-task-title').val(text);
+				// 	console.dir(text.length);
+				// 	//var yourSpeechFromAPI = text.result.resolvedQuery;
+				// 	//console.log(data.result.resolvedQuery.substring(lastIndexOf(data.result.parameters.starttitlereco), data.result.resolvedQuery.length)
+				// 	console.log("");
+				// }
 
 			 stopRecognition();
 		 };
@@ -496,28 +523,59 @@
 			 },
 			 data: JSON.stringify({q: text, lang: "en"}),
 			 success: function(data) {
-				 if (text.includes("called") && $("#entryType").val("task")) {
+
+				 //For priority
+				//  if (text.includes("neutral") && $("#entryType").val("task")) {
+				// 		$(".js-select-task-priority").val("Neutral");
+				//  }
+
+				 //End Priority
+				 console.log(data);
+				 if (text.includes(data.result.parameters.starttitlereco)) {
  					console.log("print message");
 					console.log(data);
+					//The user's speech from the data object (which I think is form API.ai)
 					var actualspeech = data.result.resolvedQuery;
-					//var lengthOfActualSpeech
+					//Length of the string that is the start title recognition word
 					var lengthOfTitleReco = data.result.parameters.starttitlereco.length
 					console.log(lengthOfTitleReco);
+					//index of the first letter in the starttitlereco word
 					var beginrec = actualspeech.lastIndexOf(data.result.parameters.starttitlereco)
+					//in total, it's the length of all of the words said before the actual title is grabbed
 					var final = beginrec + lengthOfTitleReco + 1
-					var finalfinal = (actualspeech.substring(final,actualspeech.length));
+					var finalf = (actualspeech.substring(final,actualspeech.length));
+					var finalfinal = finalf.charAt(0).toUpperCase() + finalf.substring(1,actualspeech.length)
+					//var finalfinalfinal = capitalizeFirstLetter(finalfinal)
 					console.log(finalfinal);
-
-					$('.js-task-title').val(finalfinal);
+					//console.log(finalfinalfinal);
+					if ($("#entryType").val = ("task") ) {
+						$('.js-task-title').val(finalfinal);
+					}
+					if ($("#entryType").val = ("goal")) {
+						$('.js-goal-title').val(finalfinal);
+					}
+					if ($("#entryType").val = ("text")) {
+						$('.js-text-title').val(finalfinal);
+					}
 					//console.log(beginrec)
 					//console.log(lets.substring(2,14))
 					//console.log(lets.substring(lastIndexOf(data.result.parameters.starttitlereco), data.result.resolvedQuery.length)
+				}
+				console.log(data.result.parameters.exit);
+				if (text.includes(data.result.parameters.exit)) {
+					console.log("entered exit");
+					//var btnPress = document.getElementById("#buttonpress");
+    			// Programmatically click the submit button
+    			$("#buttonpress").trigger('click');
 				}
 					prepareResponse(data);
 			 },
 			 error: function() {
 				 respond(messageInternalError);
 			 }
+			//  function capitalizeFirstLetter(finalfinal) {
+    	//  		return finalfinal.charAt(0).toUpperCase() + finalfinal.slice(1);
+			//  }
 		 });
 	 }
 	 function prepareResponse(val) {

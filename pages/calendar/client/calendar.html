@@ -1,24 +1,54 @@
 <template name="calendar">
 
-<div class="css-calendar-row calendar-row">
-  <div class="col-sm-1"></div>
-  <div class="css-calendar-container col-sm-11">
+  <div class="css-calendar-row calendar-row">
+    <div class="col-sm-1"></div>
+    <div class="css-calendar-container col-sm-11">
 
-    <br>
+      <br>
+      <div class="css-calendar-btns pull-right">
+        <button class="btn css-calendar-prev" type="button">Previous</button>
+        <button class="btn css-calendar-next" type="button">Next</button>
+      </div>
 
-    <div class="css-calendar-btns pull-right">
-      <button class="btn css-calendar-prev" type="button">Previous</button>
-      <button class="btn css-calendar-next" type="button">Next</button>
+      <br>
+      <br>
+      <div class="css-calendar" id="calendar"></div>
+      <br>
+
     </div>
-
-    <br>
-    <br>
-    <div class="css-calendar" id="calendar"></div>
-    <br>
-    <br>
-    <br>
-
   </div>
-</div>
 
+  {{> entryInfo}}
+
+</template>
+
+<template name="entryInfo">
+  <!-- calendarItem -->
+  <div id="js-calendar-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">{{calendarItem.title}}</h3>
+        </div>
+        <div class="modal-body">
+
+          <p> Date: {{calendarItem.date}} <span class="pull-right"> Time: {{calendarItem.time}} </span></p>
+          <p> {{calendarItem.category}} <span class="pull-right"> {{{calendarItem.priority}}} </span></p>
+          <p> <div class="css-calendar-info-tag" style="background-color: #{{calendarItem.tagColor}};"></div> {{calendarItem.tag}} </p>
+
+        </div>
+        <div class="modal-footer">
+          <span class="pull-left">
+            {{#if calendarItem.completed}}
+              <span>Completed</span>
+            {{else}}
+              <span>Not completed</span>
+            {{/if}}
+          </span>
+          <button type="button" class="btn" data-dismiss="modal">Got it.</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 </template>

@@ -1,130 +1,101 @@
 Template.calendar.helpers({
+  // calendarItem: function() {
+  //   console.log(Session.get("info"));
+  //   return Session.get("info");
+  // },
 
+});
+
+Template.entryInfo.helpers({
+  calendarItem: function() {
+    // console.log(Session.get("info"));
+    return Session.get("info");
+  },
 });
 
 Template.calendar.events({
-  "click .css-calendar-prev": function(event) {
-    event.preventDefault();
+    "click .css-calendar-prev": function(event) {
+        event.preventDefault();
 
-    $('#calendar').fullCalendar('prev');
-  },
-  "click .css-calendar-next": function(event) {
-    event.preventDefault();
-
-    $('#calendar').fullCalendar('next');
-  },
-});
-
-Template.calendar.onRendered( function() {
-  $( '#calendar' ).fullCalendar({
-
-    dayClick: function(date) {
-      const xDate = date.format();
-      const minDate = moment().format("YYYY-MM-DD");
-      const minDateAfter = moment().add(1, 'days').format("YYYY-MM-DD");
-      // console.log(xDate + " " + minDate);
-      // if ((xDate === minDate) || date > moment(new Date())) {
-      if (xDate === minDateAfter || xDate === minDate || date > moment(new Date())) {
-        $('#userModal').modal('show');
-      } else {
-        sAlert.error("Choose a day that is not in the past.");
-      }
-
-
-      $('.js-add-entry').click(function() {
-     console.log("clicked!");
-     // var events = Tasks.find({createdBy: Meteor.userId()}).fetch();
-     // // console.log(events);
-     //  for(var i =0; i<events.length ;i++){
-
-     //  }
-                 // $('#calendar').fullCalendar( 'rerenderEvents' );
-
-
-  });
-
-  $( '#calendar' ).fullCalendar( 'refetchEvents' );
-
-
+        $('#calendar').fullCalendar('prev');
     },
-    header: {
-      left:   'title',
-      center: '',
-      right:  ''
+    "click .css-calendar-next": function(event) {
+        event.preventDefault();
+
+        $('#calendar').fullCalendar('next');
     },
-    height: 700,
-
-    events: _.map(Tasks.find().fetch(), function(x) {
-      // console.dir(x.date);
-      const z = {title: x.title, start: new Date(x.date)};
-      // console.dir(z);
-      return z;
-    }),
-  });
-
-
-
-
-  // $('#calendar').fullCalendar( 'rerenderEvents' );
-
 });
 
+Template.calendar.onRendered(function(event, template) {
+  this.autorun(function(event, template) {
+    $('#calendar').fullCalendar({
+        dayClick: function(date) {
+            const xDate = date.format();
+            const minDate = moment().format("YYYY-MM-DD");
+            const minDateAfter = moment().add(1, 'days').format("YYYY-MM-DD");
+            // console.log(xDate + " " + minDate);
+            if (xDate === minDateAfter || xDate === minDate || date > moment(new Date())) {
+                $('#userModal').modal('show');
+            } else {
+                sAlert.error("Choose a day that is not in the past.");
+            }
+        },
+        eventClick: function(calEvent, jsEvent, view) {
+
+          const infoObj = {
+            id: calEvent._id,
+            title: calEvent.title,
+            tag: calEvent.tag,
+            tagColor: calEvent.tagColor,
+            priority: calEvent.priority,
+            time: calEvent.time,
+            date: calEvent.date,
+            category: calEvent.category,
+            completed: calEvent.completed,
+          }
+
+          // console.log(infoObj);
+
+          Session.set("info", infoObj);
+          // console.log(calEvent);
+          // console.log(jsEvent);
+          // console.log(view);
+          $('#js-calendar-modal').modal('show');
 
 
-Template.calendar.onCreated( function(){
-  // Tasks.find().fetch();
-  //   $( '#calendar' ).fullCalendar( 'refetchEvents' );
-  //   $('#calendar').fullCalendar( 'rerenderEvents');
-    // $('#calendar').fullCalendar('renderEvent', newEvent);
+        },
+        header: {
+            left: 'title',
+            center: '',
+            right: ''
+        },
+        events: _.map(Tasks.find().fetch(), function(x) {
+            // console.dir(x.date);
+            const z = {
+                title: x.title,
+                start: new Date(x.start),
+                _id: x._id,
+                tag: x.tag,
+                tagColor: x.tagColor,
+                priority: x.priority,
+                time: x.time,
+                date: x.date,
+                category: x.category,
+                completed: x.completed
+            };
+            // console.dir(z);
+            return z;
+        }),
+        height: 700,
 
-//   var events = Tasks.find({createdBy: Meteor.userId()}).fetch();
-//      // console.log(events);
-//       for(var i =0; i<events.length ;i++){
+    });
 
-//         var newEvent = {
-//           title: events[i].title,
-//           start: moment(new Date())
-//         };
-//         $('#calendar').fullCalendar( 'renderEvent', newEvent, true);
-//         console.log(events[i].date);
-//       }
-
-//   $('#calendar').fullCalendar( 'rerenderEvents' );
-
+  }); // this
 });
 
-// $('.js-add-entry').click(function() {
-//      console.log("clicked!");
-//      // var events = Tasks.find({createdBy: Meteor.userId()}).fetch();
-//      // // console.log(events);
-//      //  for(var i =0; i<events.length ;i++){
+Tracker.autorun(function() {
+  var x = Tasks.find().fetch();
 
-//         var newEvent = {
-//           title: "HEy",
-//           start: new Date()
-//         };
-//         // Meteor.call('createTask', newEvent);
-//         $('#calendar').fullCalendar('renderEvent', newEvent);
-//         // console.log(newEvent);
-//      //  }
-//                  // $('#calendar').fullCalendar( 'rerenderEvents' );
-
-
-//   });
-
-
-
-
-
-// Tracker.autorun( () => {
-//     var newEvent = {
-//           title: "HEy",
-//           start: new Date()
-//         };
-//         // Meteor.call('createTask', newEvent);
-//         $('#calendar').fullCalendar('renderEvent', newEvent);
-//     // Tasks.find().fetch();
-//     // $( '#calendar' ).fullCalendar( 'refetchEvents' );
-//     // $('#calendar').fullCalendar( 'rerenderEvents');
-//     console.log("running autorun");
-// });
+  $('#calendar').fullCalendar('refetchEvents');
+  $('#calendar').fullCalendar('rerenderEvents');
+});

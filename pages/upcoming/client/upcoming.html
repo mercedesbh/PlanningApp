@@ -7,22 +7,19 @@
 
 			<div class="css-tab-container">
 				<ul class="css-upcoming-tabs nav nav-justified">
-					<li class="js-today-tab" role="presentation"><a href="#">Today</a></li>
-					<li class="js-tomorrow-tab" role="presentation"><a href="#">Tomorrow</a></li>
+					<li class="js-today-tab"><a href="#">Today</a></li>
+					<li class="js-tomorrow-tab"><a href="#">Tomorrow</a></li>
 				</ul>
 			</div>
 
 			<div class="css-upcoming-data">
 				{{#if today}}
 					<div class="css-upcoming-data-days">
-						<!-- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter -->
-						<!-- 86400000ms == a day -->
 						{{#if todoToday}}
 							{{#each todoToday}}
 
-							<a href="#">
 								<div class="css-upcoming-days">
-									<h2>{{title}}</h2>
+									<a href="#"><h2>{{title}}</h2></a>
 									<span>
 										<h4>
 											{{time}}
@@ -40,7 +37,6 @@
 										<h4>Goal</h4>
 									{{/if}}
 								</div>
-							</a>
 
 							{{/each}}
 						{{else}}
@@ -82,6 +78,8 @@
 					</div>
 				{{/if}}
 			</div>
+
+			<!-- <br><br><br> -->
 
 		</div>
 		<div class="css-upcoming-right col-sm-1"></div>

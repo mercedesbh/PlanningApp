@@ -9,11 +9,34 @@
   height: auto;
   background-color: #ffffff;
 }
+.css-calendar-btns {
+  position: relative;
+  z-index: 2;
+}
+.css-calendar {
+  position: relative;
+  bottom: 45px;
+}
 .css-calendar tbody td {
-  color: #fe5a5a;
+  color: #666666;
   font-size: 18px;
 }
-.css-calendar .fc-left h2 {
-  display: inline;
-  float: left !important;
+.fc-h-event {
+  background-color: #fe5a5a;
+  border: none;
+}
+.fc-today {
+  background-color: #fbc3c3!important;
+}
+.fc-content span {
+  font-size: 12px;
+  vertical-align: middle;
+}
+.css-calendar-info-tag {
+  position: relative;
+  height: 10px;
+  width: 30px;
+  border-radius: 5px;
+  display: inline-block;
+  margin-right: 5px;
 }

@@ -23,7 +23,7 @@ tsega:bootstrap3-datetimepicker
 momentjs:moment
 npm-bcrypt
 accounts-password@1.2.12
-session@1.1.6
+session
 dburles:google-maps
 mdg:geolocation
 juliancwirko:s-alert

@@ -22,9 +22,10 @@ Template.layout.helpers({
       var currentRoute = Router.current().route.getName();
       return currentRoute && template === currentRoute ? 'css-side-nav-highlight' : '';
     },
-    notification: function() {
+    notifications: function() {
       var n = Meteor.users.find({_id: Meteor.userId()}).fetch()[0].notifications;
       // console.log(n);
+      // checkForNew();
       return n;
     },
 });
@@ -110,25 +111,32 @@ Template.modal.events({
             var tNote = $(".js-task-note").val();
             const tPriority = $(".js-select-task-priority").val();
             const tCategory = $(".js-select-category").val();
-            var tTag = $(".js-select-task-tag").val();
-            var tTagName = $(".js-new-tag-name").val();
+            var tTagSelect = $(".js-select-task-tag").val();
+            var tTagNew = $(".js-new-tag-name").val();
 
+            var tTag;
             var tTagColor;
 
-            // if (tTag && tTagName) {
-            //     sAlert.warning('Entries should only have a single tag.', {position: "top-right"});
-            //     return;
-            // } else if (tTagName.length > 0) {
-            //     tTag = tTagName;
-            //     tTagColor = intToRGB(hashCode(tTag));
-            // } else if (tTag.length > 0) {
-            //     tTagColor = intToRGB(hashCode(tTag));
-            // } else if (tTag.length == 0 && tTagName.length == 0) {
-            //     tTag = null;
-            // }
+            console.log(tTagNew);
+            console.log("selected tag: [" + tTagSelect + "]");
 
+            if ((tTagSelect !== "null" && tTagSelect !== undefined) && tTagNew !== "") {
+              sAlert.warning("Select an existing tag or create one.", {position: "top-right"});
+              return;
+            } else if (tTagSelect !== "null" && tTagNew === "") {
+              tTag = tTagSelect;
+              tTagColor = intToRGB(hashCode(tTag));
+            } else if ((tTagSelect === "null" || tTagSelect === undefined) && tTagNew !== "") {
+              tTag = tTagNew;
+              tTagColor = intToRGB(hashCode(tTag));
+            } else {
+              tTag = null;
+              tTagColor = null;
+            }
+
+            const tStart = tDate;
             tTime = moment(tTime).format('h:mm A');
-            // tDate = moment(tDate).format('MMM Do YY');
+            tDate = moment(tDate).format('MMM Do YY');
 
             if (tLocation == "") {
                 tLocation = null;
@@ -141,6 +149,7 @@ Template.modal.events({
                 task: "task",
                 title: tTitle,
                 date: tDate,
+                start: tStart,
                 category: tCategory,
                 time: tTime,
                 location: tLocation,
@@ -161,32 +170,40 @@ Template.modal.events({
                 tagName: tTag,
                 tagColor: tTagColor
             }
-
-            Meteor.call("createTask", newTask,function(error, result) {
+            console.log("+:" + tTag);
+            Meteor.call("createTask", newTask, function(error, result) {
               if (error) {
                 console.log(error);
-              }
-              else {
-                var lastEntry = Tasks.findOne({}, {sort: {createdAt: -1, limit: 1}})._id;
-                Meteor.call("linkTask", lastEntry, tCategory);
-                // if (tTag.length > 0) {
-                //   Meteor.call("linkTag", tCategory, tTagObj);
-                // }
+              } else {
+                var lastEntry = Tasks.findOne({}, {sort: {createdAt: -1, limit: 1}});
+                // console.log(lastEntry._id);
+                $('#calendar').fullCalendar( 'renderEvent', lastEntry, 'stick');
+                Meteor.call("linkTask", lastEntry._id, tCategory);
+                if (tTag !== null || tTag !== "" || tTag !== "null") {
+
+                  var existing = checkTag(tTag);
+                  console.log("so..." + existing);
+
+                  if (existing.length <= 0) {
+                    Meteor.call("linkTag", tCategory, tTagObj);
+                  }
+
+                }
 
                 sAlert.success('Success! New task created.');
                 $(".js-task-title").val("");
                 $(".js-task-date").val("");
                 $(".js-task-destination").val("");
                 $(".js-task-note").val("");
-                console.log("reloading");
+                // console.log("reloading");
                 var map = GoogleMaps.maps.initMap.instance;
                 var center = map.getCenter();
                    google.maps.event.trigger(map, 'resize');
-                   map.setCenter(center)
-                // });
+                   map.setCenter(center);
                 console.log("complete");
 
               }
+
             });
 
         } else if ($(".js-modal-select").val() == "goal") {
@@ -197,28 +214,34 @@ Template.modal.events({
             const gPriority = $(".js-select-goal-priority").val();
             var gNote = $(".js-goal-note").val();
             const gCategory = $(".js-select-category").val();
-            var gTag = $(".js-select-goal-tag").val();
-            var gTagName = $(".js-new-tag-name").val();
+            var gTagSelect = $(".js-select-goal-tag").val();
+            var gTagNew = $(".js-new-tag-name").val();
+
+            var gTag;
+            var gTagColor;
+
+            console.log(gTagNew);
+            console.log("selected tag: [" + gTagSelect + "]");
+
+            if ((gTagSelect !== "null" && gTagSelect !== undefined) && gTagNew !== "") {
+              sAlert.warning("Select an existing tag or create one.", {position: "top-right"});
+              return;
+            } else if (gTagSelect !== "null" && gTagNew === "") {
+              gTag = gTagSelect;
+              gTagColor = intToRGB(hashCode(gTag));
+            } else if ((gTagSelect === "null" || gTagSelect === undefined) && gTagNew !== "") {
+              gTag = gTagNew;
+              gTagColor = intToRGB(hashCode(gTag));
+            } else {
+              gTag = null;
+              gTagColor = null;
+            }
 
             gDateST = moment(gDateS).format('h:mm A');
             gDateSD = moment(gDateS).format('MMM Do YY');
 
             gDateFT = moment(gDateF).format('h:mm A');
             gDateFD = moment(gDateF).format('MMM Do YY');
-
-            var gTagColor;
-
-            if (gTag && gTagName) {
-                sAlert.warning('Entries should only have a single tag.', {position: "top-right"});
-                return;
-            } else if (gTagName.length > 0) {
-                gTag = gTagName;
-                gTagColor = intToRGB(hashCode(gTag));
-            } else if (gTag.length > 0) {
-                gTagColor = intToRGB(hashCode(gTag));
-            } else if (gTag.length == 0 && gTagName.length == 0) {
-                gTag = null;
-            }
 
             if (gNote == "") {
                 gNote = null;
@@ -228,7 +251,7 @@ Template.modal.events({
                 goal: "goal",
                 title: gTitle,
                 category: gCategory,
-                date: gDateSD,
+                start: gDateSD,
                 time: gDateST,
                 finish_date: gDateFD,
                 finish_time: gDateFT,
@@ -251,18 +274,27 @@ Template.modal.events({
                 tagColor: gTagColor
             }
 
+            $('#calendar').fullCalendar( 'renderEvent', newGoal , 'stick');
+
             Meteor.call("createGoal", newGoal, function(error, result) {
               if (error) {
                 console.log(error);
               }
               else {
-                var lastEntry = Goals.findOne({}, {sort: {createdAt: -1, limit: 1}})._id;
-                Meteor.call("linkGoal", lastEntry, gCategory);
-                if (gTag.length > 0) {
-                  Meteor.call("linkTag", gCategory, gTagObj);
+                var lastEntry = Goals.findOne({}, {sort: {createdAt: -1, limit: 1}});
+                $('#calendar').fullCalendar( 'renderEvent', lastEntry, 'stick');
+                Meteor.call("linkGoal", lastEntry._id, gCategory);
+                if (gTag !== null || gTag !== "" || gTag !== "null") {
+
+                  var existing = checkTag(gTag);
+                  console.log(existing);
+
+                  if (existing.length <= 0) {
+                    Meteor.call("linkTag", gCategory, gTagObj);
+                  }
+
                 }
 
-                
                 sAlert.success('Success! New goal created.');
                 $(".js-goal-title").val("");
                 $(".js-goal-date-s").val("");
@@ -328,7 +360,8 @@ Template.modal.events({
 
         }
         $('.modal').modal('hide');
-        location.reload();
+        // location.reload();
+
     },
     "click .js-submit-location": function(event) {
         event.preventDefault();
@@ -458,6 +491,7 @@ Template.modal.onRendered(function() {
 
       };
 });
+
 Meteor.setInterval(function() {
   var x = Tasks.find().fetch();
   for (var i = 0; i < x.length; i++) {
@@ -495,7 +529,7 @@ Meteor.setInterval(function() {
 
 
       Meteor.call("addNotification", notification);
-
+      return;
       // console.log("Hey");
     }
   }

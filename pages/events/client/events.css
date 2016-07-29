@@ -80,14 +80,14 @@
 }
 .css-entry-detail {
   position: relative;
-  height: 500px;
+  height: 80%;
   /*background-color: blue;*/
   /*padding: 0px;*/
 }
 .css-category-data {
   position: relative;
   width: 100%;
-  height: 500px;
+  height: 80%;
   margin: 0 auto;
   margin-top: 20px;
   border-right: 1px solid #e6e6e6;
@@ -120,7 +120,7 @@
 .css-entries-data {
   position: relative;
   width: 95%;
-  height: 500px;
+  height: 80%;
   margin: 0 auto;
   margin-top: 20px;
   border-right: 1px solid #e6e6e6;
@@ -160,6 +160,7 @@
   margin: 0 auto;
   margin-top: 20px;
   overflow-y: scroll;
+  padding-right: 15px;
   /*background-color: orange;*/
 }
 /* end */

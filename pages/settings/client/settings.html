@@ -26,6 +26,25 @@
         <hr>
         <br>
         <form class="">
+          <h2>Collaborators</h2>
+          <input class="js-collaborator-email form-control" type="email" placeholder="Enter collaborator email">
+          <h6>Email must be exact.</h6>
+          <br>
+
+          <div class="">
+            {{#if collaborator}}
+              {{#with collaborator}}
+                {{profile.first}} {{profile.last}} <input class="css-request js-request btn" type="button" value="Request {{profile.first}} {{profile.last}}">
+              {{/with}}
+            {{else}}
+
+            {{/if}}
+          </div>
+
+          <input class="js-look-collaborator btn pull-right" type="button" name="name" value="Look up">
+          <br>
+        </form>
+        <form class="">
           <h2>Account Photo</h2>
           <input class="form-control" type="file" name="name" placeholder="Upload a photo">
           <br>

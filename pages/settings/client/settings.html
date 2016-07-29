@@ -34,11 +34,12 @@
           <div class="">
             {{#if collaborator}}
               {{#with collaborator}}
-                {{profile.first}} {{profile.last}} <input class="css-request js-request btn" type="button" value="Request {{profile.first}} {{profile.last}}">
+                {{profile.first}} {{profile.last}} <input class="css-request js-request btn" type="button" value="Send {{profile.first}} a request">
               {{/with}}
             {{else}}
 
             {{/if}}
+            <!-- display existing colaborators here -->
           </div>
 
           <input class="js-look-collaborator btn pull-right" type="button" name="name" value="Look up">

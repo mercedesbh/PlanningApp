@@ -15,15 +15,16 @@ Template.settings.events({
     if (c === undefined || c === null) {
       sAlert.error("We couldn't find that email, try again.", {position: "top-right"});
       return;
-    } else if (c._id === Meteor.userId()) {
-      sAlert.warning("Interesting... so you want to be your own collaborator.", {position: "top-right"});
-      return;
     } else {
       c.sender = Meteor.userId();
       template.collaborator.set(c);
       console.log(c);
     }
 
+    // else if (c._id === Meteor.userId()) {
+    //   sAlert.warning("Interesting... so you want to be your own collaborator.", {position: "top-right"});
+    //   return;
+    // }
 
   },
   "click .js-request": function(event, template) {

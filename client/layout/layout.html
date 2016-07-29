@@ -474,7 +474,7 @@
 		 $recBtn.text(recognition ? "Stop" : "Speak");
 	 }
 	 function send(text) {
-		 console.log("hello");
+		 console.log("bye");
 		 $.ajax({
 			 type: "POST",
 			 url: baseUrl + "query/",
@@ -497,12 +497,13 @@
 					var final = beginrec + lengthOfTitleReco + 1
 					var finalfinal = (actualspeech.substring(final,actualspeech.length));
 					console.log(finalfinal);
+
 					$('.js-task-title').val(finalfinal);
 					//console.log(beginrec)
 					//console.log(lets.substring(2,14))
 					//console.log(lets.substring(lastIndexOf(data.result.parameters.starttitlereco), data.result.resolvedQuery.length)
+				}
 					prepareResponse(data);
- 				}
 			 },
 			 error: function() {
 				 respond(messageInternalError);

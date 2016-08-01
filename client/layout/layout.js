@@ -108,6 +108,7 @@ Template.modal.events({
             var tTime = $(".js-task-date").val();
             var tDate = $(".js-task-date").val();
             var tLocation = $(".js-task-destination").val();
+            const tCoordinates = document.getElementById('dvCoor').value;
             var tNote = $(".js-task-note").val();
             const tPriority = $(".js-select-task-priority").val();
             const tCategory = $(".js-select-category").val();
@@ -153,6 +154,7 @@ Template.modal.events({
                 category: tCategory,
                 time: tTime,
                 location: tLocation,
+                coordinates: tCoordinates,
                 note: tNote,
                 createdAt: new Date(),
                 createdBy: Meteor.userId(),
@@ -367,8 +369,7 @@ Template.modal.events({
         event.preventDefault();
         const origin = $(".js-task-origin").val();
         const destination = $(".js-task-destination").val();
-        console.log(origin);
-        console.log(destination);
+        console.log("Origin: " + origin + '\n' +"Destination: " + destination);
         calculateRoute(origin, destination);
     }
 });
@@ -579,6 +580,12 @@ function calculateRoute(origin, destination) {
                     lat: results[0].geometry.location.lat(),
                     lng: results[0].geometry.location.lng()
                   }
+                  document.getElementById('dvCoor').defaultValue = coordinates.lat +", " +coordinates.lng;
+
+                  // Session.set('destCoor', coordinates);
+                  // var coor = Session.get('destCoor');
+                  // console.log(coor);
+
                   // console.log([newLocation.lat, newLocation.lng]);
                   // console.log(coordinates);
                   Meteor.call("saveCoor", coordinates);

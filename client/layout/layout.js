@@ -25,6 +25,8 @@ Template.layout.helpers({
     notifications: function() {
       var n = Meteor.users.find({_id: Meteor.userId()}).fetch()[0].notifications;
       // console.log(n);
+
+      // find way to notify user every time new notification is added to notifications array field
       // checkForNew();
       return n;
     },
@@ -124,7 +126,8 @@ Template.modal.events({
             if ((tTagSelect !== "null" && tTagSelect !== undefined) && tTagNew !== "") {
               sAlert.warning("Select an existing tag or create one.", {position: "top-right"});
               return;
-            } else if (tTagSelect !== "null" && tTagNew === "") {
+            } else if ((tTagSelect !== "null" && tTagSelect !== undefined) && tTagNew === "") {
+              console.log("here");
               tTag = tTagSelect;
               tTagColor = intToRGB(hashCode(tTag));
             } else if ((tTagSelect === "null" || tTagSelect === undefined) && tTagNew !== "") {
@@ -228,7 +231,7 @@ Template.modal.events({
             if ((gTagSelect !== "null" && gTagSelect !== undefined) && gTagNew !== "") {
               sAlert.warning("Select an existing tag or create one.", {position: "top-right"});
               return;
-            } else if (gTagSelect !== "null" && gTagNew === "") {
+            } else if ((gTagSelect !== "null" && gTagSelect !== undefined) && gTagNew === "") {
               gTag = gTagSelect;
               gTagColor = intToRGB(hashCode(gTag));
             } else if ((gTagSelect === "null" || gTagSelect === undefined) && gTagNew !== "") {
@@ -310,18 +313,27 @@ Template.modal.events({
             const txtTitle = $(".js-text-title").val();
             const txtText = $(".js-text-text").val();
             const txtCategory = $(".js-select-category").val();
-            var txtTag = $(".js-select-text-tag").val();
-            var txtTagName = $(".js-new-tag-name").val();
+            var txtTagSelect = $(".js-select-text-tag").val();
+            var txtTagNew = $(".js-new-tag-name").val();
 
-            if (txtTag && txtTagName) {
-                alert("Create new tag or use existing one?");
-                return;
-            } else if (txtTagName != null || txtTagName.length > 0) {
-                txtTag = txtTagName;
-            }
+            var txtTag;
+            var txtTagColor;
 
-            if (txtTag.length > 0) {
-              var txtTagColor = intToRGB(hashCode(txtTag));
+            console.log(txtTagNew);
+            console.log("selected tag: [" + txtTagSelect + "]");
+
+            if ((txtTagSelect !== "null" && txtTagSelect !== undefined) && txtTagNew !== "") {
+              sAlert.warning("Select an existing tag or create one.", {position: "top-right"});
+              return;
+            } else if ((txtTagSelect !== "null" && txtTagSelect !== undefined) && txtTagNew === "") {
+              txtTag = txtTagSelect;
+              txtTagColor = intToRGB(hashCode(txtTag));
+            } else if ((txtTagSelect === "null" || txtTagSelect === undefined) && txtTagNew !== "") {
+              txtTag = txtTagNew;
+              txtTagColor = intToRGB(hashCode(txtTag));
+            } else {
+              txtTag = null;
+              txtTagColor = null;
             }
 
             const newText = {
@@ -331,6 +343,8 @@ Template.modal.events({
                 text: txtText,
                 createdAt: new Date(),
                 createdBy: Meteor.userId(),
+                tag: txtTag,
+                tagColor: txtTagColor,
                 modified_time: moment(new Date()).format('h:mm A'),
                 modified_date: moment(new Date()).format('MMM Do YY'),
                 // reminder: ???

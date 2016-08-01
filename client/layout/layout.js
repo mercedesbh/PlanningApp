@@ -40,6 +40,70 @@ Template.layout.events({
     },
 });
 
+Template.layout.onRendered(function() {
+  var id, target, options;
+
+  function getCurrentLocation(position) {
+      if (navigator.geolocation) {
+        console.log("detecting current location");
+        // navigator.geolocation.watchPosition(showPosition);
+        var currLat = position.coords.latitude;
+        var currLng = position.coords.longitude;
+
+        for(i = 0; i < Tasks.find().count(); i++){
+          var t = Tasks.find().fetch()[i];
+          var destLat = t.coordinates.lat
+          var destLng = t.coordinates.lng
+          console.log("going to calculate distance");
+          var distance = calculateDistance(currLat, currLng, destLat, destLng);
+          // console.log(distance);
+
+          if (distance <= 1){
+            sAlert.warning("Reminder: You are less than 1 km away from " + t.location + ". Would you like to complete " + t.title + "? ");
+          }
+
+        }
+      }
+  }
+  function showPosition(position) {
+      console.log("Latitude: " + position.coords.latitude +
+      "<br>Longitude: " + position.coords.longitude);
+  }
+  function error(err) {
+    console.warn('ERROR(' + err.code + '): ' + err.message);
+  }
+  target = {
+    latitude : 0,
+    longitude: 0
+  };
+  options = {
+    enableHighAccuracy: false,
+    timeout: 5000,
+    maximumAge: 0
+  };
+  id = navigator.geolocation.watchPosition(getCurrentLocation, error, options);
+
+  function calculateDistance (lat1,lon1,lat2,lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2-lat1);  // deg2rad below
+    var dLon = deg2rad(lon2-lon1);
+    var a =
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon/2) * Math.sin(dLon/2)
+      ;
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c; // Distance in km
+    return d;
+  }
+
+  function deg2rad(deg) {
+    return deg * (Math.PI/180)
+  }
+
+
+});
+
 Template.modal.helpers({
     taskChosen: function() {
         return Template.instance().taskChosen.get();
@@ -110,7 +174,8 @@ Template.modal.events({
             var tTime = $(".js-task-date").val();
             var tDate = $(".js-task-date").val();
             var tLocation = $(".js-task-destination").val();
-            const tCoordinates = document.getElementById('dvCoor').value;
+            const tCoordinatesLat = document.getElementById('dvCoorLat').value;
+            const tCoordinatesLng = document.getElementById('dvCoorLng').value;
             var tNote = $(".js-task-note").val();
             const tPriority = $(".js-select-task-priority").val();
             const tCategory = $(".js-select-category").val();
@@ -148,6 +213,10 @@ Template.modal.events({
             if (tNote == "") {
                 tNote = null;
             }
+            const coor = {
+              lat: tCoordinatesLat,
+              lng: tCoordinatesLng
+            }
 
             const newTask = {
                 task: "task",
@@ -157,7 +226,7 @@ Template.modal.events({
                 category: tCategory,
                 time: tTime,
                 location: tLocation,
-                coordinates: tCoordinates,
+                coordinates: coor,
                 note: tNote,
                 createdAt: new Date(),
                 createdBy: Meteor.userId(),
@@ -209,7 +278,9 @@ Template.modal.events({
 
               }
 
+
             });
+
 
         } else if ($(".js-modal-select").val() == "goal") {
 
@@ -485,6 +556,7 @@ Template.modal.onRendered(function() {
               console.log("map loaded with geolocation");
                google.maps.event.trigger(map, 'resize');
                map.setCenter(center);
+
           });
           var input = document.getElementById('end');
           var autocomplete = new google.maps.places.Autocomplete(input);
@@ -497,6 +569,7 @@ Template.modal.onRendered(function() {
           });
       } else {
             //  latlng = new google.maps.LatLng(42.358970, -71.066093);
+          console.log("Can't track location");
       }
       return {
               zoom: 10,
@@ -594,7 +667,8 @@ function calculateRoute(origin, destination) {
                     lat: results[0].geometry.location.lat(),
                     lng: results[0].geometry.location.lng()
                   }
-                  document.getElementById('dvCoor').defaultValue = coordinates.lat +", " +coordinates.lng;
+                  document.getElementById('dvCoorLat').defaultValue = coordinates.lat;
+                  document.getElementById('dvCoorLng').defaultValue = coordinates.lng;
 
                   // Session.set('destCoor', coordinates);
                   // var coor = Session.get('destCoor');
@@ -641,3 +715,17 @@ function calculateRoute(origin, destination) {
           event.preventDefault();
           calculateRoute($("#from").val(), $("#to").val());
         });
+        //************* GEOLOCATION WATCHPOSITION ***************//
+        // var x = document.getElementById("demo");
+        // function getCurrentLocation() {
+        //     if (navigator.geolocation) {
+        //       console.log("detecting current location");
+        //         navigator.geolocation.watchPosition(showPosition);
+        //     } else {
+        //         x.innerHTML = "Geolocation is not supported by this browser.";
+        //     }
+        // }
+        // function showPosition(position) {
+        //     x.innerHTML = "Latitude: " + position.coords.latitude +
+        //     "<br>Longitude: " + position.coords.longitude;
+        // }

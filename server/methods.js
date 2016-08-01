@@ -59,6 +59,7 @@ Meteor.methods({
   },
   sendRequest: function(u) {
     const m = {
+      _id: Random.id(),
       notification: u.profile.first + " " + u.profile.last + " wants to be a collaborator",
       date_time: new Date(),
       sender: u.sender
@@ -70,6 +71,25 @@ Meteor.methods({
   },
   saveCoor: function(coordinates){
     Meteor.users.update({_id: this.userId}, {$addToSet: {"locations": coordinates}});
+  },
+  linkCollab: function(sender) {
+    var e = Meteor.users.findOne({_id: sender}).profile;
+    const d = {
+      collaborator: e.first + " " + e.last,
+      collaboratorId: sender
+    }
+    var s = Meteor.users.findOne({_id: this.userId}).profile;
+    const b = {
+      collaborator: s.first + " " + s.last,
+      collaboratorId: this.userId
+    }
+    Meteor.users.update({_id: this.userId}, {$push: {collaborators: d}});
+    Meteor.users.update({_id: sender}, {$push: {collaborators: b}});
+    // figure out how to remove objects without an _id
+  },
+  removeNotif: function(item) {
+    // console.log(item._id);
+    Meteor.users.update({}, {$pull: {'notifications': {_id: item._id}}});
   },
 
 

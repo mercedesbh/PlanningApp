@@ -15,21 +15,35 @@
 
 				<!-- <a class="css-notify" href="#">[N]</a> -->
 				<div class="css-notify dropdown">
-					<a class=" dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> [N] <span class="badge">...</span></a>
+					<a class=" dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> <img src="/images/size32.png" style="width: 16px;"/> <span class="badge"> {{notificationNum}} </span></a>
 					<ul class="css-notify-dropdown dropdown-menu" aria-labelledby="dropdownMenu1">
 						{{#if notifications}}
+							<li class="css-notification-header">Notifications: <span class="css-clear-all pull-right"><a href="#">Clear all</a></span></li>
 							{{#each notifications}}
 								{{#if title}}
-									<li><a href="#"> {{title}} <input class="css-notification-btn btn" type="button" value="Done"></a></li>
+									<li role="separator" class="divider"></li>
+									<li>
+										<a href="#"> {{title}} </a>
+										<div class="css-notification-btn">
+											<input class="btn" type="button" value="Done">
+										</div>
+									</li>
 								{{/if}}
 								{{#if notification}}
-									<li><a href="#"> {{notification}} <input class="css-notification-btn btn" type="button" value="Accept"></a></li>
+									<li role="separator" class="divider"></li>
+									<li>
+										<a href="#"> {{notification}}</a>
+										<div class="css-notification-btn">
+											<input class="js-accept-request btn" type="button" value="Accept">
+											<input class="js-deny-request btn" type="button" value="Deny">
+										</div>
+									</li>
 								{{/if}}
 							{{/each}}
 						{{else}}
 							<li><a href="#"> Nothing here. </a></li>
 						{{/if}}
-
+						<br>
 					</ul>
 				</div>
 
@@ -357,8 +371,9 @@
 					<div class="modal-footer">
 
 						<button class="css-rec btn2 btn pull-left">Speak</button>
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-						<button type="button" class="js-add-entry btn btn-primary" id="buttonpress">Add to schedule</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelbutton">Cancel</button>
+						<button type="button" class="js-add-entry btn btn-primary" id="addentrybutton">Add to schedule</button>
+
 					</div>
 
 			</div>
@@ -570,9 +585,13 @@
 				console.log(data.result.parameters.exit);
 				if (text.includes(data.result.parameters.exit)) {
 					console.log("entered exit");
-					//var btnPress = document.getElementById("#buttonpress");
+					//var btnPress = document.getElementById("#addentrybutton");
     			// Programmatically click the submit button
-    			$("#buttonpress").trigger('click');
+    			$("#addentrybutton").trigger('click');
+				}
+				if (text.includes(data.result.parameters.cancelnewentry)) {
+					console.log("cancel it");
+					$("#cancelbutton").trigger('click');
 				}
 					prepareResponse(data);
 			 },

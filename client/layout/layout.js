@@ -24,11 +24,24 @@ Template.layout.helpers({
     },
     notifications: function() {
       var n = Meteor.users.find({_id: Meteor.userId()}).fetch()[0].notifications;
-      // console.log(n);
-
-      // find way to notify user every time new notification is added to notifications array field
-      // checkForNew();
       return n;
+    },
+    notificationNum: function() {
+      var t = Session.get("numOfNotifications");
+      var l = Meteor.users.findOne({_id: Meteor.userId()}).notifications.length;
+
+      var j = Meteor.users.findOne({_id: Meteor.userId()}).notifications;
+      var r = j[k - 1];
+      if (l > t) {
+        sAlert.info("New Notification: " + r.notification);
+      }
+      // var w = Session.get("numOfNotifications");
+      // Session.setPersistent("numOfNotifications", w - 1);
+      // Session.setPersistent("numOfNotifications", Meteor.users.findOne({_id: Meteor.userId()}).notifications.length);
+      // Meteor.users.find({_id: Meteor.userId()}).fetch()[0].notifications.length;
+      Session.setPersistent("numOfNotifications", l);
+
+      return Session.get("numOfNotifications");
     },
 });
 
@@ -37,6 +50,15 @@ Template.layout.events({
         event.preventDefault();
 
         Meteor.logout();
+    },
+    "click .js-accept-request": function(event) {
+      event.preventDefault();
+
+      // console.log(this.sender);
+      console.log(this);
+      Meteor.call("linkCollab", this.sender);
+      // console.log("here");
+      Meteor.call("removeNotif", this);
     },
 });
 
@@ -582,6 +604,7 @@ Template.modal.onRendered(function() {
 
 Meteor.setInterval(function() {
   var x = Tasks.find().fetch();
+
   for (var i = 0; i < x.length; i++) {
     if ((x[i].date == moment(new Date()).format("MMM Do YY")) && (x[i].time == moment(new Date()).format("h:mm A"))) {
 
@@ -605,6 +628,7 @@ Meteor.setInterval(function() {
           effect: 'flip',
           position: 'top-right',
           timeout: 4000,
+          stack: true,
           html: true,
           onRouteClose: true,
           stack: false,
@@ -620,7 +644,9 @@ Meteor.setInterval(function() {
       return;
       // console.log("Hey");
     }
+
   }
+
 }, 40000);
 
 //************* MAP CALCULATE ROUTE ***************//

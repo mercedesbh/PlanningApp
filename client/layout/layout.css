@@ -232,6 +232,10 @@ textarea {
   visibility: hidden;
   position: absolute;
 }
+.css-task-dest-coor{
+  visibility: hidden;
+  position: absolute;
+}
 .map-container {
   width: 800px;
   max-width: 100%;

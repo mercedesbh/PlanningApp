@@ -208,6 +208,9 @@
 							</div>
 								<b>End Destination: </b>
 								<input id="end" class="js-task-destination form-control" type="text" placeholder="Enter a location">
+								<div class="css-task-dest-coor">
+									<input id="dvCoor" class="js-dest-coor form-control" type="text" placeholder="Coordinates">
+								</div>
 								<input class="js-submit-location btn" type="submit" value="Get Path">
 						<!-- </form> -->
 								{{#if map}}
@@ -365,8 +368,9 @@
 					<div class="modal-footer">
 
 						<button class="css-rec btn2 btn pull-left">Speak</button>
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-						<button type="button" class="js-add-entry btn" id="buttonpress">Add to schedule</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelbutton">Cancel</button>
+						<button type="button" class="js-add-entry btn btn-primary" id="addentrybutton">Add to schedule</button>
+
 					</div>
 
 			</div>
@@ -578,9 +582,13 @@
 				console.log(data.result.parameters.exit);
 				if (text.includes(data.result.parameters.exit)) {
 					console.log("entered exit");
-					//var btnPress = document.getElementById("#buttonpress");
+					//var btnPress = document.getElementById("#addentrybutton");
     			// Programmatically click the submit button
-    			$("#buttonpress").trigger('click');
+    			$("#addentrybutton").trigger('click');
+				}
+				if (text.includes(data.result.parameters.cancelnewentry)) {
+					console.log("cancel it");
+					$("#cancelbutton").trigger('click');
 				}
 					prepareResponse(data);
 			 },

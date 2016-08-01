@@ -102,13 +102,28 @@ a:focus {
   overflow: hidden;
   white-space: nowrap;
 }
+.badge {
+  left: 25px !important;
+}
+.css-notification-header {
+  margin-left: 20px;
+  margin-top: 5px;
+  color: #666666;
+}
+.css-clear-all {
+  font-size: 12px;
+  margin-right: 20px;
+  margin-top: 3px;
+  color: #acacac;
+}
 .css-notification-btn {
-  position: absolute;
-  padding: 3px !important;
-  display: inline-block !important;
-  float: right;
-  right: 5px;
-  bottom: 4px;
+  text-align: right;
+  margin-right: 10px;
+}
+.css-notification-btn input {
+  padding: 0px !important;
+  margin-right: 10px;
+  width: 70px;
 }
 .css-live-user .css-username {
     position: relative;

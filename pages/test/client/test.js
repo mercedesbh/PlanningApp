@@ -1,4 +1,5 @@
-// 
+
+//
 // if (Meteor.isClient) {
 //   Meteor.startup(function() {
 //     GoogleMaps.load({ v: '3', key: 'AIzaSyBjJkcSNWBO1LHLusupVT4bSMXUgwV1w3M', libraries: 'places' });

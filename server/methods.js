@@ -91,7 +91,15 @@ Meteor.methods({
     // console.log(item._id);
     Meteor.users.update({}, {$pull: {'notifications': {_id: item._id}}});
   },
-
+  setDistanceReminder: function(distance){
+    Meteor.users.update({_id: this.userId}, {$set: {"settings.remindDistance": distance}});
+  },
+  setTimeReminder: function(time){
+    Meteor.users.update({_id: this.userId}, {$set: {"settings.remindTime": time}});
+  },
+  updateReminderCount: function(id, count){
+   Tasks.update({_id: id}, {$set: {"reminderCount": count+1}});
+ },
 
 
   // addEvent( event ) {

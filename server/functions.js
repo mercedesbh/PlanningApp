@@ -29,6 +29,10 @@ Accounts.onCreateUser(function(options, user) {
 
   user.categories = userCategories;
   user.joined = new Date();
+  user.settings = {
+    remindDistance: 1,
+    remindTime: 5
+  };
 
   return user;
 });

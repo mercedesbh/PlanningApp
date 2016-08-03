@@ -824,6 +824,7 @@ function calculateRoute(origin, destination) {
                     lat: results[0].geometry.location.lat(),
                     lng: results[0].geometry.location.lng()
                   }
+                  console.log("here");
                   document.getElementById('dvCoorLat').defaultValue = coordinates.lat;
                   document.getElementById('dvCoorLng').defaultValue = coordinates.lng;
 

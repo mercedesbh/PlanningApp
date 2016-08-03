@@ -204,6 +204,7 @@
 							  <input type="text" class="css-task-destination js-task-destination form-control" id="end" placeholder="Task location" aria-describedby="basic-addon2">
 							  <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-map-marker"></span></span>
 							</div>
+
 							<div class="css-task-dest-coor">
 								<input id="dvCoorLat" class="js-dest-coor form-control" type="text" placeholder="Coordinates">
 								<input id="dvCoorLng" class="js-dest-coor form-control" type="text" placeholder="Coordinates">
@@ -469,8 +470,7 @@
 
 						<button class="css-rec btn2 btn pull-left">Speak</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelbutton">Cancel</button>
-						<button type="button" class="js-add-entry btn" id="addentrybutton">Add to schedule</button>
-
+						<button type="button" class="js-add-entry btn btn-primary" id="addentrybtn">Add to schedule</button>
 					</div>
 
 			</div>
@@ -537,6 +537,15 @@
 				 if (text.includes("upcoming") || text.includes("what is coming up")) {
 					 $('#userModal').modal('hide');
 					 Router.go('/upcoming');
+					//  console.log(data)
+					//  if (text.includes(data.result.parameters.upcomingwhichday) == "today") {
+					// 	 console.log("tester1");
+					 //
+					//  }
+					//  if (text.includes(data.result.parameters.upcomingwhichday) == "tomorrow") {
+					// 	 console.log("tester");
+					// 	 $(".js-tomorrow-tab").trigger('click');
+					//  }
 				 }
 				 if (text.includes("settings") || text.includes("setting")) {
 					 $('#userModal').modal('hide');
@@ -564,7 +573,7 @@
 						$("#entryType").val("task");
 						$("#entryType").trigger('change');
 				 }
-				 if (text.includes("text")) {
+				 if (text.includes("note")) {
 						//$('#userModal').modal('show');
 						$("#entryType").val("text");
 						$("#entryType").trigger('change');
@@ -649,11 +658,28 @@
 
 				 //End Priority
 				 console.log(data);
+				 //Read off the entries in the upcoming page
+				 var speechstring = data.result.resolvedQuery;
+				 if (text.includes("what") || text.includes("what's") || text.includes("tell me") || text.includes("read me")) {
+					 console.log("entered for loop");
+					 var searchforday = data.result.parameters.upcomingwhichday;
+					 console.log(searchforday);
+					 if (searchforday = "today") {
+						 Router.go('/upcoming');
+						 console.log("tester1");
+						 $("#today-tab").trigger('click');
+					 }
+					 if (searchforday = "tomorrow") {
+						 console.log("tester");
+						 Router.go('/upcoming');
+						 $("#tomorrow-tab").trigger('click');
+					 }
+				 }
+				 //The user's speech from the data object (which I think is form API.ai)
+				 var actualspeech = data.result.resolvedQuery;
 				 if (text.includes(data.result.parameters.starttitlereco)) {
  					console.log("print message");
 					console.log(data);
-					//The user's speech from the data object (which I think is form API.ai)
-					var actualspeech = data.result.resolvedQuery;
 					//Length of the string that is the start title recognition word
 					var lengthOfTitleReco = data.result.parameters.starttitlereco.length
 					console.log(lengthOfTitleReco);
@@ -679,13 +705,44 @@
 					//console.log(lets.substring(2,14))
 					//console.log(lets.substring(lastIndexOf(data.result.parameters.starttitlereco), data.result.resolvedQuery.length)
 				}
+				if (text.includes(data.result.parameters.startlocationreco)) {
+				 console.log("print location");
+				 console.log(data);
+				 //The user's speech from the data object (which I think is form API.ai)
+				 //var actualspeech = data.result.resolvedQuery;
+				 //Length of the string that is the start title recognition word
+				 var lengthOfLocaReco = data.result.parameters.startlocationreco.length
+				 console.log(lengthOfLocaReco);
+				 //index of the first letter in the starttitlereco word
+				 var startrec = actualspeech.lastIndexOf(data.result.parameters.startlocationreco)
+				 //in total, it's the length of all of the words said before the actual title is grabbed
+				 var loca = startrec + lengthOfLocaReco + 1
+				 var local = (actualspeech.substring(loca,actualspeech.length));
+				 console.log(local);
+				 var localoca = local.charAt(0).toUpperCase() + local.substring(1,actualspeech.length)
+				 //var finalfinalfinal = capitalizeFirstLetter(finalfinal)
+				 console.log(localoca);
+				 console.log("blah");
+				 //console.log(finalfinalfinal);
+				 if ($("#entryType").val = ("task") && text.includes(data.result.parameters.startlocationreco)) {
+					 console.log("yaya");
+					 $('.js-task-destination').val(localoca);
+					 $(".js-task-date").val("08/06/2016 5:00 AM");
+					 console.log("draw");
+				 }
+				 //console.log(beginrec)
+				 //console.log(lets.substring(2,14))
+				 //console.log(lets.substring(lastIndexOf(data.result.parameters.starttitlereco), data.result.resolvedQuery.length)
+			  }
 				console.log(data.result.parameters.exit);
+				//Hits the Add to Schedule button
 				if (text.includes(data.result.parameters.exit)) {
 					console.log("entered exit");
 					//var btnPress = document.getElementById("#addentrybutton");
     			// Programmatically click the submit button
-    			$("#addentrybutton").trigger('click');
+    			$("#addentrybtn").trigger('click');
 				}
+				//Hits the cancel button in the modal
 				if (text.includes(data.result.parameters.cancelnewentry)) {
 					console.log("cancel it");
 					$("#cancelbutton").trigger('click');

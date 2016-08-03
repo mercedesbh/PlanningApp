@@ -45,6 +45,32 @@ Template.events.helpers({
     //return Goals.findOne({_id:this._id});
     return Template.instance().detailed.get();
   },
+  priorityNeutral: function(priority) {
+    console.log(priority);
+    if (priority === "<span style='color: #666666'>Neutral</span>") {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  priorityImportant: function(priority) {
+    if (priority === "<span style='color: #0c59cf'>Important</span>") {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  priorityUrgent: function(priority) {
+    if (priority === "<span style='color: #e61610'>Urgent</span>") {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  isEdit: function() {
+    // console.log(Session.get("isEdit"));
+    return Session.get("isEdit");
+  },
 });
 
 Template.events.events({
@@ -113,8 +139,73 @@ Template.events.events({
       // console.log(f);
       template.currentCategory.set(f);
     },
+    "click .js-edit-entry": function(event) {
+      event.preventDefault();
+      console.log(this);
+      console.log(event.currentTarget.innerHTML);
+
+      Session.set("isEdit", true);
+      Session.set("editThis", this);
+
+      $(function() {
+        $('#datetimepicker3').datetimepicker({
+          minDate: this.start
+        });
+      });
+    },
+    "click .js-save-edit": function(event) {
+      event.preventDefault();
+
+      const f = $(".js-edit-title").val();
+      const g = $(".js-edit-priority").val();
+      const h = $(".js-edit-date-time").val();
+      const j = $(".js-edit-note").val();
+
+      const editObj = {
+        title: f,
+        priority: g,
+        start: h,
+        time: moment(h).format('h:mm A'),
+        date: moment(h).format('MMM Do YY'),
+        note: j
+      }
+
+      var item = this._id;
+      // console.log(item);
+
+      Meteor.call("editEntry", item, editObj);
+      Session.set("isEdit", false);
+    },
+    "click .js-cancel-edit": function(event) {
+      event.preventDefault();
+
+      Session.set("isEdit", false);
+    },
 
 });
+
+// "click .js-edit-entry": function(event, template) {
+//   event.preventDefault();
+//   console.log(this);
+//   console.log(event.currentTarget.innerHTML);
+//
+//
+//   Session.set("isEdit", true);
+//   // console.log(Template.instance().isEdit.get());
+//   Session.set("editThis", this);
+//   // console.log(Template.instance().edit.get().title);
+//   $('#userModal').modal('show');
+//
+// },
+
+// editThis: function() {
+//   // console.log(Session.get("editThis"));
+//   return Session.get("editThis");
+// },
+// isEdit: function() {
+//   // console.log(Session.get("isEdit"));
+//   return Session.get("isEdit");
+// },
 
 Template.events.onCreated(function() {
     this.showCategoryInput = new ReactiveVar(false);

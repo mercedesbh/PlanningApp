@@ -26,40 +26,62 @@ Template.layout.helpers({
       var n = Meteor.users.find({_id: Meteor.userId()}).fetch()[0].notifications;
       return n;
     },
+    // edit: function() {
+    //   return Template.instance().edit.get();
+    // },
     notificationNum: function() {
       var t = Session.get("numOfNotifications");
       var l = Meteor.users.findOne({_id: Meteor.userId()}).notifications.length;
 
       var j = Meteor.users.findOne({_id: Meteor.userId()}).notifications;
-      var r = j[k - 1];
-      if (l > t) {
+      var r = j[l - 1];
+
+      if ((l > t) && r.hasOwnProperty("notification")) {
         sAlert.info("New Notification: " + r.notification);
+      } else if ((l > t) && r.hasOwnProperty("collab")) {
+        sAlert.info("New collaborator entry", {position: "top-right"});
       }
+      Session.setPersistent("numOfNotifications", l);
       // var w = Session.get("numOfNotifications");
       // Session.setPersistent("numOfNotifications", w - 1);
       // Session.setPersistent("numOfNotifications", Meteor.users.findOne({_id: Meteor.userId()}).notifications.length);
       // Meteor.users.find({_id: Meteor.userId()}).fetch()[0].notifications.length;
-      Session.setPersistent("numOfNotifications", l);
 
       return Session.get("numOfNotifications");
     },
+
 });
 
 Template.layout.events({
     "click .js-logout": function(event) {
         event.preventDefault();
 
+        Session.setPersistent("numOfNotifications", 0);
         Meteor.logout();
+        Router.go("/login")
     },
     "click .js-accept-request": function(event) {
       event.preventDefault();
 
       // console.log(this.sender);
-      console.log(this);
+      // console.log(this);
       Meteor.call("linkCollab", this.sender);
       // console.log("here");
       Meteor.call("removeNotif", this);
     },
+    "click .js-deny-request": function(event) {
+      event.preventDefault();
+
+      Meteor.call("removeNotif", this);
+    },
+    "click .js-notifications-done": function(event) {
+      event.preventDefault();
+
+      // console.log(this);
+
+      Meteor.call("removeNotif", this);
+    },
+
 });
 
 Template.modal.helpers({
@@ -82,7 +104,12 @@ Template.modal.helpers({
     tags: function() {
       return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories[0].tags;
     },
-
+    more: function() {
+      return Template.instance().more.get();
+    },
+    checked: function() {
+      return Template.instance().check.get();
+    },
     //Map helpers
     exampleMapOptions: function() {
       // Make sure the maps API has loaded
@@ -97,6 +124,12 @@ Template.modal.helpers({
         return mapOptions;
       }
     },
+    userGoals: function() {
+      return Goals.find({createdBy: Meteor.userId()}, {fields: {title: 1}}).fetch();
+    },
+    collaborator: function() {
+      return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].collaborators;
+    },
 });
 
 Template.modal.events({
@@ -105,14 +138,17 @@ Template.modal.events({
             template.taskChosen.set(true);
             template.goalChosen.set(false);
             template.textChosen.set(false);
+            template.more.set(false);
         } else if ($(event.target).val() == "goal") {
             template.taskChosen.set(false);
             template.goalChosen.set(true);
             template.textChosen.set(false);
+            template.more.set(false);
         } else if ($(event.target).val() == "text") {
             template.taskChosen.set(false);
             template.goalChosen.set(false);
             template.textChosen.set(true);
+            template.more.set(false);
         }
     },
     "keypress .js-task-destination": function(event, template){
@@ -123,7 +159,20 @@ Template.modal.events({
         template.map.set(false);
       }
     },
-    "click .js-add-entry": function(event) {
+    "change .js-collaborator-select": function(event) {
+      event.preventDefault();
+
+      var u = $(".js-collaborator-select option:selected").text();
+      // console.log(this);
+      for (var i = 0; i < this.length; i++) {
+        if (this[i].collaboratorName === u) {
+          Session.set("collabo", this[i]);
+          console.log(this[i]);
+          return;
+        }
+      }
+    },
+    "click .js-add-entry": function(event, template) {
         event.preventDefault();
 
         if ($(".js-modal-select").val() == "task") {
@@ -138,6 +187,14 @@ Template.modal.events({
             const tCategory = $(".js-select-category").val();
             var tTagSelect = $(".js-select-task-tag").val();
             var tTagNew = $(".js-new-tag-name").val();
+            var tOwner = $(".js-collaborator-select").val();
+
+            if (tOwner === "" || tOwner === undefined || tOwner === null) {
+              // console.log("NO COLLAB");
+              tOwner = Meteor.userId();
+            } else {
+              var collaborator = true;
+            }
 
             var tTag;
             var tTagColor;
@@ -145,7 +202,10 @@ Template.modal.events({
             console.log(tTagNew);
             console.log("selected tag: [" + tTagSelect + "]");
 
-            if ((tTagSelect !== "null" && tTagSelect !== undefined) && tTagNew !== "") {
+            if ((tTagSelect === "null" || tTagSelect === null || tTagSelect === undefined) && (tTagNew === "" || tTagNew === null || tTagNew === undefined)) {
+              tTag = null;
+              tTagColor = null;
+            } else if ((tTagSelect !== "null" && tTagSelect !== undefined) && tTagNew !== "") {
               sAlert.warning("Select an existing tag or create one.", {position: "top-right"});
               return;
             } else if ((tTagSelect !== "null" && tTagSelect !== undefined) && tTagNew === "") {
@@ -155,10 +215,11 @@ Template.modal.events({
             } else if ((tTagSelect === "null" || tTagSelect === undefined) && tTagNew !== "") {
               tTag = tTagNew;
               tTagColor = intToRGB(hashCode(tTag));
-            } else {
-              tTag = null;
-              tTagColor = null;
             }
+            // else {
+            //   tTag = null;
+            //   tTagColor = null;
+            // }
 
             const tStart = tDate;
             tTime = moment(tTime).format('h:mm A');
@@ -182,12 +243,13 @@ Template.modal.events({
                 coordinates: tCoordinates,
                 note: tNote,
                 createdAt: new Date(),
-                createdBy: Meteor.userId(),
+                createdBy: tOwner,
                 modified: new Date(),
                 completed: false,
                 tag: tTag,
                 tagColor: tTagColor,
-                priority: tPriority
+                priority: tPriority,
+                collaborator: collaborator,
                 // isGoal: ???
                 // reminder: ???
                 // repeat: ???
@@ -197,6 +259,18 @@ Template.modal.events({
                 tagName: tTag,
                 tagColor: tTagColor
             }
+
+            if (newTask.collaborator == true) {
+              const collabNotifObj = {
+                  _id: Random.id(),
+                  title: "New entry task from " + Session.get("collabo").collaboratorName,
+                  date_time: new Date(),
+                  collab: true
+              }
+              console.log("XXXXXXX");
+              Meteor.call("addNotification", collabNotifObj);
+            }
+
             console.log("+:" + tTag);
             Meteor.call("createTask", newTask, function(error, result) {
               if (error) {
@@ -250,7 +324,11 @@ Template.modal.events({
             console.log(gTagNew);
             console.log("selected tag: [" + gTagSelect + "]");
 
-            if ((gTagSelect !== "null" && gTagSelect !== undefined) && gTagNew !== "") {
+
+            if ((gTagSelect === "null" || gTagSelect === null || gTagSelect === undefined) && (gTagNew === "" || gTagNew === null || gTagNew === undefined)) {
+              gTag = null;
+              gTagColor = null;
+            } else if ((gTagSelect !== "null" && gTagSelect !== undefined) && gTagNew !== "") {
               sAlert.warning("Select an existing tag or create one.", {position: "top-right"});
               return;
             } else if ((gTagSelect !== "null" && gTagSelect !== undefined) && gTagNew === "") {
@@ -259,10 +337,11 @@ Template.modal.events({
             } else if ((gTagSelect === "null" || gTagSelect === undefined) && gTagNew !== "") {
               gTag = gTagNew;
               gTagColor = intToRGB(hashCode(gTag));
-            } else {
-              gTag = null;
-              gTagColor = null;
             }
+            // else {
+            //   gTag = null;
+            //   gTagColor = null;
+            // }
 
             gDateST = moment(gDateS).format('h:mm A');
             gDateSD = moment(gDateS).format('MMM Do YY');
@@ -397,6 +476,7 @@ Template.modal.events({
           });
 
         }
+        template.more.set(false);
         $('.modal').modal('hide');
         // location.reload();
 
@@ -407,7 +487,40 @@ Template.modal.events({
         const destination = $(".js-task-destination").val();
         console.log("Origin: " + origin + '\n' +"Destination: " + destination);
         calculateRoute(origin, destination);
-    }
+    },
+    "click .css-entry-more-close": function(event, template) {
+      event.preventDefault();
+
+      template.more.set(false);
+    },
+    "click .css-entry-more-open": function(event, template) {
+      event.preventDefault();
+
+      template.more.set(true);
+    },
+    "click .js-task-goal": function(event, template) {
+      // event.preventDefault();
+
+      if ($('.js-task-goal').is(":checked")) {
+        template.check.set(true);
+      } else {
+        template.check.set(false);
+      }
+    },
+    "click .js-new-task-input": function(event) {
+      // event.preventDefault();
+
+      var y = Session.get("numOfTasks");
+      Session.set("numOfTasks", y + 1);
+      console.log(y);
+      if (y < 5) {
+        moreTasksInGoal();
+      } else {
+        sAlert.warning("Let's only stick to 5 tasks for now.", {position: "top-right"})
+      }
+
+    },
+
 });
 
 Meteor.startup(function () {
@@ -461,6 +574,10 @@ Template.modal.onCreated(function() {
     this.goalChosen = new ReactiveVar(false);
     this.textChosen = new ReactiveVar(false);
     this.map = new ReactiveVar(false);
+    this.more = new ReactiveVar(false);
+    this.check = new ReactiveVar(false);
+    // this.edit = new ReactiveVar();
+    // this.isEdit = new ReactiveVar(false);
     // Map onCreated
     // We can use the `ready` callback to interact with the map API once the map is ready.
     GoogleMaps.ready('initMap', function(map) {
@@ -475,6 +592,8 @@ Template.modal.onCreated(function() {
 Template.modal.onRendered(function() {
     this.$('.datetimepicker5').datetimepicker();
     this.$('.datetimepicker6').datetimepicker();
+    Session.set("numOfTasks", 1);
+    // this.edit = new ReactiveVar();
 
     // Map onRendered
     GoogleMaps.load({
@@ -531,11 +650,13 @@ Template.modal.onRendered(function() {
 
 Meteor.setInterval(function() {
   var x = Tasks.find().fetch();
+  var t = Session.get("numOfNotifications");
 
   for (var i = 0; i < x.length; i++) {
     if ((x[i].date == moment(new Date()).format("MMM Do YY")) && (x[i].time == moment(new Date()).format("h:mm A"))) {
 
       const notification = {
+        _id: Random.id(),
         title: x[i].title,
         date_time: new Date(),
         priority: x[i].priority
@@ -571,6 +692,8 @@ Meteor.setInterval(function() {
       return;
       // console.log("Hey");
     }
+
+    // Session.setPersistent("numOfNotifications", t + 1);
 
   }
 
@@ -651,9 +774,9 @@ function calculateRoute(origin, destination) {
                   var distance = response.rows[0].elements[0].distance.text;
                   var duration = response.rows[0].elements[0].duration.text;
                   var dvDistance = document.getElementById("dvDistance");
-                 dvDistance.innerHTML = "";
+                  dvDistance.innerHTML = "";
                   dvDistance.innerHTML += "Distance: " + distance + "<br />";
-                  dvDistance.innerHTML += "Duration:" + duration;
+                  dvDistance.innerHTML += "Duration: " + duration;
                   console.log("Distance: " + distance);
                   console.log("Duration:" + duration);
               } else {

@@ -25,7 +25,7 @@
 									<li>
 										<a href="#"> {{title}} </a>
 										<div class="css-notification-btn">
-											<input class="btn" type="button" value="Done">
+											<input class="js-notifications-done btn" type="button" value="Done">
 										</div>
 									</li>
 								{{/if}}
@@ -170,81 +170,134 @@
 				{{# if taskChosen}}
 				<form class="js-new-task" action="layout.html" method="post">
 					<br>
-					<input class="js-task-title form-control" id="task-title" type="text" placeholder="Title">
-					<br>
-					<select class="js-select-category form-control">
-						{{#each selectCategory}}
-						<option value="{{name}}">{{name}}</option>
-						{{/each}}
-					</select>
-					<br>
-					<!-- <div class="container"> -->
-						<div class="row">
-							<div class='col-sm-6'>
-								<div class="form-group">
-									<h5>Do by:</h5>
-									<div class='input-group date' id='datetimepicker5'>
-										<input type='text' class="js-task-date form-control" placeholder="Date & Time"/>
-										<span class="input-group-addon">
-											<span class="glyphicon glyphicon-calendar"></span>
-										</span>
-									</div>
-								</div>
-							<!-- </div> -->
-							<script type="text/javascript">
-								$(function() {
-									$('#datetimepicker5').datetimepicker({
-										minDate: new Date()
-									});
-								});
-							</script>
-						</div>
+					<div class="input-group">
+					  <input type="text" class="js-task-title form-control" id="task-title" placeholder="Title" aria-describedby="basic-addon2">
+					  <span class="input-group-addon" id="basic-addon2">T</span>
 					</div>
-					<div class="js-task-map">
-						<!-- <form class="js-task-path"> -->
-							<div class="css-task-origin">
-								<b>Start Location: </b>
-								<input id="start" class="js-task-origin form-control" type="text" placeholder="Start">
-							</div>
-								<b>End Destination: </b>
-								<input id="end" class="js-task-destination form-control" type="text" placeholder="Enter a location">
-								<div class="css-task-dest-coor">
-									<input id="dvCoor" class="js-dest-coor form-control" type="text" placeholder="Coordinates">
+					<!-- <br> -->
+					<div class="row">
+						<div class="col-sm-6">
+							<h5>Reminder</h5>
+							<div class="css-date-time form-group">
+								<div class='input-group date' id='datetimepicker5'>
+									<input type='text' class="js-task-date form-control" placeholder="Date & Time"/>
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
 								</div>
-								<input class="js-submit-location btn" type="submit" value="Get Path">
-						<!-- </form> -->
-								{{#if map}}
+							</div>
+						<!-- </div> -->
+						<script type="text/javascript">
+							$(function() {
+								$('#datetimepicker5').datetimepicker({
+									minDate: new Date()
+								});
+							});
+						</script>
+						<br>
+						<div class="css-task-origin">
+							<b>Start Location: </b>
+							<input id="start" class="js-task-origin form-control" type="text" placeholder="Start">
+						</div>
+							<!-- <b>Destination: </b> -->
+							<div class="input-group">
+							  <input type="text" class="css-task-destination js-task-destination form-control" id="end" placeholder="Task location" aria-describedby="basic-addon2">
+							  <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-map-marker"></span></span>
+							</div>
+							<div class="css-task-dest-coor">
+								<input id="dvCoor" class="js-dest-coor form-control" type="text" placeholder="Coordinates">
+							</div>
+							<div id="dvDistance"></div>
+							<input class="css-submit-location js-submit-location btn" type="submit" value="Get Path">
+							<br>
+							<br>
+							<span><input class="js-task-goal" id="js-task-checkbox" type="checkbox"> Make task a part of a Goal.</span>
+							<br>
+							<br>
+							{{#if checked}}
+								{{#if userGoals}}
+									<select class="css-part-of-goal form-control">
+										{{#each userGoals}}
+										<option value="{{title}}">{{title}}</option>
+										{{/each}}
+									</select>
+								{{else}}
+										<h5>It's lonely here, we all have goals.</h5>
+								{{/if}}
+								<br>
+							{{/if}}
+							<h5>Priority</h5>
+							<select class="css-select-task-priority js-select-task-priority form-control">
+								<!-- the html in the values must be removed because i might be hackable -->
+								<option value="<span style='color: #666666'>Neutral</span>">Neutral</option>
+								<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
+								<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
+							</select>
 
+
+						</div>
+						<div class="col-sm-6">
+							<h5>Category:</h5>
+							<div class="css-select-category">
+								<select class="js-select-category form-control">
+									{{#each selectCategory}}
+									<option value="{{name}}">{{name}}</option>
+									{{/each}}
+								</select>
+							</div>
+							<br>
 							<div class="map-container">
-								<div id="dvDistance"> </div>
 								{{> googleMap name="initMap" options=exampleMapOptions}}
 						</div>
-						{{/if}}
+						</div>
+					</div>
+
+					<br>
+					{{#if more}}
+						<h5 class="css-entry-more css-entry-more-close"><a href="#">Show less <span class="glyphicon glyphicon-chevron-up"></span></a></h5>
+					{{else}}
+						<h5 class="css-entry-more css-entry-more-open"><a href="#">Show more <span class="glyphicon glyphicon-chevron-down"></span></a></h5>
+					{{/if}}
+
+					{{#if more}}
+					<div class="row">
+						<div class="col-sm-6">
+							{{#with tags}}
+							{{#if this.length}}
+							<select class="js-select-task-tag form-control">
+								<option value="null">Select tag</option>
+								{{#each tags}}
+								<option value="{{tagName}}">{{tagName}}</option>
+								{{/each}}
+							</select>
+							{{/if}}
+							{{/with}}
+						</div>
+						<div class="col-sm-6">
+							<div class="input-group">
+							  <input type="text" class="js-new-tag-name form-control" placeholder="New tag" aria-describedby="basic-addon2">
+							  <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-tags"></span></span>
+							</div>
+							<br>
+							{{#with collaborator}}
+							{{#if collaborator}}
+							<select class="js-collaborator-select form-control">
+								<option value=""><a href="#">Select collaborator</a></option>
+								{{#each collaborator}}
+								<option value="{{collaboratorId}}"><a href="#">{{collaboratorName}}</a></option>
+								{{/each}}
+							</select>
+							{{/if}}
+							{{/with}}
+						</div>
 					</div>
 					<br>
-					<span><input class="js-task-goal" type="radio" value="other"> Check to make it a part of a Goal.</span>
-					<br>
-					<select class="js-select-task-priority form-control">
-						<!-- the html in the values must be removed because i might be hackable -->
-						<option value="<span style='color: #666666'>Neutral</span>">Neutral</option>
-						<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
-						<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
-					</select>
-					<br>
-					{{#with tags}}
-					{{#if this.length}}
-					<select class="js-select-task-tag form-control">
-						<option value="null">Select tag</option>
-						{{#each tags}}
-						<option value="{{tagName}}">{{tagName}}</option>
-						{{/each}}
-					</select>
+					<div class="input-group">
+						<textarea class="js-task-note form-control" aria-describedby="basic-addon2" style="height: 100px" placeholder="Add task description..."></textarea>
+						<span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-edit"></span></span>
+					</div>
 					{{/if}}
-					{{/with}}
-					<br>
-					<input class="js-new-tag-name form-control" type="text" name="name" placeholder="New tag">
-					<br>
-					<textarea class="js-task-note form-control" placeholder="Add note..."></textarea>
+
 					<br>
 				</form>
 				{{/if}}
@@ -253,83 +306,110 @@
 				{{# if goalChosen}}
 				<form class="js-new-goal" action="layout.html" method="post">
 					<br>
-					<input class="js-goal-title form-control" type="text" placeholder="Title">
-					<br>
-
+					<div class="input-group">
+					  <input type="text" class="js-goal-title form-control" id="task-title" placeholder="Title" aria-describedby="basic-addon2">
+					  <span class="input-group-addon" id="basic-addon2">T</span>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<!-- start goal by... -->
+										<h5>Start by</h5>
+										<div class="form-group">
+											<div class='input-group date' id='datetimepicker5'>
+												<input type='text' class="js-goal-date-s form-control" placeholder="Date & Time"/>
+												<span class="input-group-addon">
+													<span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div>
+									<script type="text/javascript">
+										$(function() {
+											$('#datetimepicker5').datetimepicker({
+												minDate: new Date()
+											});
+										});
+									</script>
+						</div>
+						<div class="col-sm-6">
+							<!-- finish goal by... -->
+										<h5>Finish by</h5>
+										<div class="form-group">
+											<div class='input-group date' id='datetimepicker6'>
+												<input type='text' class="js-goal-date-f form-control" placeholder="Date & Time"/>
+												<span class="input-group-addon">
+													<span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div>
+									<script type="text/javascript">
+										$(function() {
+											$('#datetimepicker6').datetimepicker({
+												minDate: new Date()
+											});
+										});
+									</script>
+							</div>
+					</div>
+					<h5>Category</h5>
 					<select class="js-select-category form-control">
 						{{#each selectCategory}}
 						<option value="{{name}}">{{name}}</option>
 						{{/each}}
 					</select>
 
-					<!-- start goal by... -->
-					<div class="container">
-						<div class="row">
-							<div class='col-sm-6'>
-								<h5>Start by:</h5>
-								<div class="form-group">
-									<div class='input-group date' id='datetimepicker5'>
-										<input type='text' class="js-goal-date-s form-control" placeholder="Date & Time"/>
-										<span class="input-group-addon">
-											<span class="glyphicon glyphicon-calendar"></span>
-										</span>
-									</div>
-								</div>
-							</div>
-							<script type="text/javascript">
-								$(function() {
-									$('#datetimepicker5').datetimepicker({
-										minDate: new Date()
-									});
-								});
-							</script>
+					<div class="js-goal-tasks">
+						<br>
+						<div class="css-add-new-task-input-container">
+							<input class="css-add-new-task-input js-new-task-input btn" type="button" value="Add task">
+							<br>
 						</div>
+						<input class="css-input-new-task js-task-of-goal form-control" type="text" name="name" placeholder="Enter task">
 					</div>
 
-					<!-- finish goal by... -->
-					<div class="container">
-						<div class="row">
-							<div class='col-sm-6'>
-								<h5>Finish by:</h5>
-								<div class="form-group">
-									<div class='input-group date' id='datetimepicker6'>
-										<input type='text' class="js-goal-date-f form-control" placeholder="Date & Time"/>
-										<span class="input-group-addon">
-											<span class="glyphicon glyphicon-calendar"></span>
-										</span>
-									</div>
-								</div>
-							</div>
-							<script type="text/javascript">
-								$(function() {
-									$('#datetimepicker6').datetimepicker({
-										minDate: new Date()
-									});
-								});
-							</script>
-						</div>
-					</div>
+					<br>
+					<h5>Priority</h5>
 					<select class="js-select-goal-priority form-control">
 						<!-- the html in the values must be removed because i might be hackable -->
 						<option value="<span style='color: #666666'>Neutral</span>">Neutral</option>
 						<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
 						<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
 					</select>
+
 					<br>
-					{{#with tags}}
-					{{#if this.length}}
-					<select class="js-select-goal-tag form-control">
-						<option value="">Select tag</option>
-						{{#each tags}}
-						<option value="{{tagName}}">{{tagName}}</option>
-						{{/each}}
-					</select>
+					{{#if more}}
+						<h5 class="css-entry-more css-entry-more-close"><a href="#">Show less <span class="glyphicon glyphicon-chevron-up"></span></a></h5>
+					{{else}}
+						<h5 class="css-entry-more css-entry-more-open"><a href="#">Show more <span class="glyphicon glyphicon-chevron-down"></span></a></h5>
 					{{/if}}
-					{{/with}}
+
+					{{#if more}}
+					<div class="row">
+						<div class="col-sm-6">
+							{{#with tags}}
+							{{#if this.length}}
+							<select class="js-select-goal-tag form-control">
+								<option value="">Select tag</option>
+								{{#each tags}}
+								<option value="{{tagName}}">{{tagName}}</option>
+								{{/each}}
+							</select>
+							{{/if}}
+							{{/with}}
+						</div>
+						<div class="col-sm-6">
+							<div class="input-group">
+							  <input type="text" class="js-new-tag-name form-control" placeholder="New tag" aria-describedby="basic-addon2">
+							  <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-tags"></span></span>
+							</div>
+						</div>
+					</div>
+
 					<br>
-					<input class="js-new-tag-name form-control" type="text" name="name" placeholder="New tag">
-					<br>
-					<textarea class="js-goal-note form-control" style="height: 150px" placeholder="Add note..."></textarea>
+					<div class="input-group">
+						<textarea class="js-goal-note form-control" aria-describedby="basic-addon2" style="height: 100px" placeholder="Add task description..."></textarea>
+						<span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-edit"></span></span>
+					</div>
+					{{/if}}
 					<br>
 				</form>
 				{{/if}}
@@ -338,7 +418,10 @@
 				{{# if textChosen}}
 				<form class="js-new-text" action="index.html" method="post">
 					<br>
-					<input class="js-text-title form-control" type="text" placeholder="Title">
+					<div class="input-group">
+					  <input type="text" class="js-text-title form-control" id="task-title" placeholder="Title" aria-describedby="basic-addon2">
+					  <span class="input-group-addon" id="basic-addon2">T</span>
+					</div>
 					<br>
 					<select class="js-select-category form-control">
 						{{#each selectCategory}}
@@ -346,20 +429,32 @@
 						{{/each}}
 					</select>
 					<br>
-					{{#with tags}}
-					{{#if this.length}}
-					<select class="js-select-text-tag form-control">
-						<option value="">Select tag</option>
-						{{#each tags}}
-						<option value="{{tagName}}">{{tagName}}</option>
-						{{/each}}
-					</select>
-					{{/if}}
-					{{/with}}
+
+					<div class="row">
+						<div class="col-sm-6">
+							{{#with tags}}
+							{{#if this.length}}
+							<select class="js-select-text-tag form-control">
+								<option value="">Select tag</option>
+								{{#each tags}}
+								<option value="{{tagName}}">{{tagName}}</option>
+								{{/each}}
+							</select>
+							{{/if}}
+							{{/with}}
+						</div>
+						<div class="col-sm-6">
+							<div class="input-group">
+							  <input type="text" class="js-new-tag-name form-control" placeholder="New tag" aria-describedby="basic-addon2">
+							  <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-tags"></span></span>
+							</div>
+						</div>
+					</div>
 					<br>
-					<input class="js-new-tag-name form-control" type="text" name="name" placeholder="New tag">
-					<br>
-					<textarea class="js-text-text form-control" style="height: 300px" placeholder="Write text..."></textarea>
+					<div class="input-group">
+						<textarea class="js-text-text form-control" aria-describedby="basic-addon2" style="height: 300px" placeholder="Write as you please..."></textarea>
+						<span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-edit"></span></span>
+					</div>
 					<br>
 				</form>
 				{{/if}}
@@ -369,7 +464,7 @@
 
 						<button class="css-rec btn2 btn pull-left">Speak</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelbutton">Cancel</button>
-						<button type="button" class="js-add-entry btn btn-primary" id="addentrybutton">Add to schedule</button>
+						<button type="button" class="js-add-entry btn" id="addentrybutton">Add to schedule</button>
 
 					</div>
 

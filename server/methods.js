@@ -67,7 +67,7 @@ Meteor.methods({
     var x = Meteor.users.update({_id: u._id}, {$push: {notifications: m}});
   },
   addNotification: function(notification) {
-    Meteor.users.update({_id: this.userId}, {$push: {"notifications": notification}});
+    Meteor.users.update({_id: this.userId}, {$addToSet: {"notifications": notification}});
   },
   saveCoor: function(coordinates){
     Meteor.users.update({_id: this.userId}, {$addToSet: {"locations": coordinates}});
@@ -75,12 +75,14 @@ Meteor.methods({
   linkCollab: function(sender) {
     var e = Meteor.users.findOne({_id: sender}).profile;
     const d = {
-      collaborator: e.first + " " + e.last,
+      _id: Random.id(),
+      collaboratorName: e.first + " " + e.last,
       collaboratorId: sender
     }
     var s = Meteor.users.findOne({_id: this.userId}).profile;
     const b = {
-      collaborator: s.first + " " + s.last,
+      _id: Random.id(),
+      collaboratorName: s.first + " " + s.last,
       collaboratorId: this.userId
     }
     Meteor.users.update({_id: this.userId}, {$push: {collaborators: d}});
@@ -90,6 +92,9 @@ Meteor.methods({
   removeNotif: function(item) {
     // console.log(item._id);
     Meteor.users.update({}, {$pull: {'notifications': {_id: item._id}}});
+  },
+  editEntry: function(item, obj) {
+    Tasks.update({_id: item}, {$set: obj});
   },
 
 

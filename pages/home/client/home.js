@@ -25,7 +25,7 @@ Template.home.events({
           } else {
             Router.go('/upcoming'); // else go to upcoming page
             // sAlert.info("Welcome to PlanningApp");
-            // Session.setPersistent("numOfNotifications", Meteor.users.findOne({_id: Meteor.userId()}).notifications.length);
+            Session.setPersistent("numOfNotifications", Meteor.users.findOne({_id: Meteor.userId()}).notifications.length);
           }
         });
       },

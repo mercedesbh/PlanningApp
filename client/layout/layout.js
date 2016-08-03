@@ -88,6 +88,12 @@ Template.layout.onRendered(function() {
 
     function getCurrentLocation(position) {
         if (navigator.geolocation) {
+          var map = GoogleMaps.maps.initMap.instance;
+          console.log("clicked");
+          var center = map.getCenter();
+            console.log("map loaded with geolocation");
+             google.maps.event.trigger(map, 'resize');
+             map.setCenter(center);
           console.log("detecting current location");
           // navigator.geolocation.watchPosition(showPosition);
           var currLat = position.coords.latitude;
@@ -152,7 +158,6 @@ Template.layout.onRendered(function() {
     function deg2rad(deg) {
       return deg * (Math.PI/180)
     }
-
 });
 
 Template.modal.helpers({
@@ -373,16 +378,8 @@ Template.modal.events({
                 $(".js-task-date").val("");
                 $(".js-task-destination").val("");
                 $(".js-task-note").val("");
-                // console.log("reloading");
-                var map = GoogleMaps.maps.initMap.instance;
-                var center = map.getCenter();
-                   google.maps.event.trigger(map, 'resize');
-                   map.setCenter(center);
-                console.log("complete");
 
               }
-
-
             });
 
 
@@ -824,7 +821,6 @@ function calculateRoute(origin, destination) {
                     lat: results[0].geometry.location.lat(),
                     lng: results[0].geometry.location.lng()
                   }
-                  console.log("here");
                   document.getElementById('dvCoorLat').defaultValue = coordinates.lat;
                   document.getElementById('dvCoorLng').defaultValue = coordinates.lng;
 

@@ -117,7 +117,97 @@
                 </div>
                 <div class="css-entry-detail col-sm-6">
                     <div class="css-entry-detail-data">
+                    {{#if isEdit}}
+                    <!-- ============================================================ -->
+                    {{#with detailed}}
+                      {{#if task}}
+                        <div class="css-detailed-entry">
+                          <input class="form-control js-edit-title" type="text" value="{{detailed.title}}">
+                          <br>
+                          <select class="css-select-task-priority js-select-task-priority js-edit-priority form-control">
+                            {{#if priorityNeutral priority}}
+            								<option value="<span style='color: #666666'>Neutral</span>" selected>Neutral</option>
+            								<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
+            								<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
+                            {{/if}}
+                            {{#if priorityImportant priority}}
+            								<option value="<span style='color: #666666'>Neutral</span>">Neutral</option>
+            								<option value="<span style='color: #0c59cf'>Important</span>" selected>Important</option>
+            								<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
+                            {{/if}}
+                            {{#if priorityUrgent priority}}
+            								<option value="<span style='color: #666666'>Neutral</span>">Neutral</option>
+            								<option value="<span style='color: #0c59cf'>Important</span>">Important</option>
+            								<option value="<span style='color: #e61610'>Urgent</span>" selected>Urgent</option>
+                            {{/if}}
+            							</select>
+                          <br>
+                          <div class="css-date-time form-group">
+            								<div class='input-group date' id='datetimepicker3'>
+            									<input type='text' class="js-task-date js-edit-date-time form-control" value="{{detailed.start}}">
+            									<span class="input-group-addon">
+            										<span class="glyphicon glyphicon-calendar"></span>
+            									</span>
+            								</div>
+            							</div>
+                          <script type="text/javascript">
+              							$(function() {
+              								$('#datetimepicker3').datetimepicker({
+              									minDate: this.start
+              								});
+              							});
+              						</script>
 
+                          <h4>Where: {{detailed.location}}</h4>
+                          <div class="css-tag-color" style="background-color: #{{detailed.tagColor}}"></div>{{detailed.tag}}
+                        </div>
+                        <br>
+
+                        <div class="pull-right">
+                          <button class="js-cancel-edit btn" type="button">Cancel</button>
+                          <button class="js-save-edit btn" type="button">Save</button>
+                        </div>
+
+                        <br>
+                        <hr>
+                        <h5>Notes:</h5>
+                        <textarea class="js-edit-note form-control" rows="15" cols="40">{{detailed.note}}</textarea>
+                      {{/if}}
+                      {{#if goal}}
+                        <div class="css-detailed-entry">
+                          <h3> {{detailed.title}} </h3>
+                          <h4>Priority: {{{detailed.priority}}}</h4>
+                          <h4>Start by: {{detailed.start_date}} </h4>
+                          <h4>Complete by: {{detailed.finish_date}} </h4>
+                          <div class="css-tag-color" style="background-color: #{{detailed.tagColor}}"></div>{{detailed.tag}}
+                        </div>
+                        <!-- show tasks that are part of this goal here -->
+                        <div class="pull-right">
+                          <button class="js-cancel-edit btn" type="button">Cancel</button>
+                          <button class="js-save-edit btn" type="button">Save</button>
+                        </div>
+                        <br>
+                        <h5>Notes:</h5>
+                        <textarea class="form-control" rows="15" cols="40">{{detailed.note}}</textarea>
+                      {{/if}}
+                      {{#if text}}
+                        <div class="css-detailed-entry">
+                          <h3> {{detailed.title}} </h3>
+                          <h5>Last modified: {{detailed.modified_date}} at {{detailed.modified_time}}</h5>
+                          <div class="css-tag-color" style="background-color: #{{detailed.tagColor}}"></div>{{detailed.tag}}
+                        </div>
+                        <div class="pull-right">
+                          <button class="js-cancel-edit btn" type="button">Cancel</button>
+                          <button class="js-save-edit btn" type="button">Save</button>
+                        </div>
+                        <br>
+                        <h4>Notes:</h4>
+                        <textarea class="form-control" rows="30" cols="40">{{detailed.text}}</textarea>
+                      {{/if}}
+                    {{/with}}
+                    <!-- ============================================================ -->
+                    {{else}}
+                    <!-- ============================================================ -->
                       {{#with detailed}}
                         {{#if task}}
                           <div class="css-detailed-entry">
@@ -161,7 +251,8 @@
                           <textarea class="form-control" rows="30" cols="40">{{detailed.text}}</textarea>
                         {{/if}}
                       {{/with}}
-
+                      <!-- ============================================================ -->
+                    {{/if}}
                     </div>
                 </div>
 
@@ -169,10 +260,5 @@
 
         </div>
     </div>
+
 </template>
-
-<!-- <template name="detailed">
-
-  {{detailedGoal.title}}
-
-</template> -->

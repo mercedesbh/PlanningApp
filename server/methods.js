@@ -59,6 +59,7 @@ Meteor.methods({
   },
   sendRequest: function(u) {
     const m = {
+      _id: Random.id(),
       notification: u.profile.first + " " + u.profile.last + " wants to be a collaborator",
       date_time: new Date(),
       sender: u.sender
@@ -66,12 +67,44 @@ Meteor.methods({
     var x = Meteor.users.update({_id: u._id}, {$push: {notifications: m}});
   },
   addNotification: function(notification) {
-    Meteor.users.update({_id: this.userId}, {$push: {"notifications": notification}});
+    Meteor.users.update({_id: this.userId}, {$addToSet: {"notifications": notification}});
   },
   saveCoor: function(coordinates){
     Meteor.users.update({_id: this.userId}, {$addToSet: {"locations": coordinates}});
   },
-
+  linkCollab: function(sender) {
+    var e = Meteor.users.findOne({_id: sender}).profile;
+    const d = {
+      _id: Random.id(),
+      collaboratorName: e.first + " " + e.last,
+      collaboratorId: sender
+    }
+    var s = Meteor.users.findOne({_id: this.userId}).profile;
+    const b = {
+      _id: Random.id(),
+      collaboratorName: s.first + " " + s.last,
+      collaboratorId: this.userId
+    }
+    Meteor.users.update({_id: this.userId}, {$push: {collaborators: d}});
+    Meteor.users.update({_id: sender}, {$push: {collaborators: b}});
+    // figure out how to remove objects without an _id
+  },
+  removeNotif: function(item) {
+    // console.log(item._id);
+    Meteor.users.update({}, {$pull: {'notifications': {_id: item._id}}});
+  },
+  editEntry: function(item, obj) {
+    Tasks.update({_id: item}, {$set: obj});
+  },
+  setDistanceReminder: function(distance){
+    Meteor.users.update({_id: this.userId}, {$set: {"settings.remindDistance": distance}});
+  },
+  setTimeReminder: function(time){
+    Meteor.users.update({_id: this.userId}, {$set: {"settings.remindTime": time}});
+  },
+  updateReminderCount: function(id, count){
+   Tasks.update({_id: id}, {$set: {"reminderCount": count+1}});
+ },
 
 
   // addEvent( event ) {

@@ -24,20 +24,135 @@ Template.layout.helpers({
     },
     notifications: function() {
       var n = Meteor.users.find({_id: Meteor.userId()}).fetch()[0].notifications;
-      // console.log(n);
-
-      // find way to notify user every time new notification is added to notifications array field
-      // checkForNew();
       return n;
     },
+    // edit: function() {
+    //   return Template.instance().edit.get();
+    // },
+    notificationNum: function() {
+      var t = Session.get("numOfNotifications");
+      var l = Meteor.users.findOne({_id: Meteor.userId()}).notifications.length;
+
+      var j = Meteor.users.findOne({_id: Meteor.userId()}).notifications;
+      var r = j[l - 1];
+
+      if ((l > t) && r.hasOwnProperty("notification")) {
+        sAlert.info("New Notification: " + r.notification);
+      } else if ((l > t) && r.hasOwnProperty("collab")) {
+        sAlert.info("New collaborator entry", {position: "top-right"});
+      }
+      Session.setPersistent("numOfNotifications", l);
+      // var w = Session.get("numOfNotifications");
+      // Session.setPersistent("numOfNotifications", w - 1);
+      // Session.setPersistent("numOfNotifications", Meteor.users.findOne({_id: Meteor.userId()}).notifications.length);
+      // Meteor.users.find({_id: Meteor.userId()}).fetch()[0].notifications.length;
+
+      return Session.get("numOfNotifications");
+    },
+
 });
 
 Template.layout.events({
     "click .js-logout": function(event) {
         event.preventDefault();
 
+        Session.setPersistent("numOfNotifications", 0);
         Meteor.logout();
+        Router.go("/login")
     },
+    "click .js-accept-request": function(event) {
+      event.preventDefault();
+
+      // console.log(this.sender);
+      // console.log(this);
+      Meteor.call("linkCollab", this.sender);
+      // console.log("here");
+      Meteor.call("removeNotif", this);
+    },
+    "click .js-deny-request": function(event) {
+      event.preventDefault();
+
+      Meteor.call("removeNotif", this);
+    },
+    "click .js-notifications-done": function(event) {
+      event.preventDefault();
+
+      // console.log(this);
+
+      Meteor.call("removeNotif", this);
+    },
+
+});
+
+Template.layout.onRendered(function() {
+
+    function getCurrentLocation(position) {
+        if (navigator.geolocation) {
+          console.log("detecting current location");
+          // navigator.geolocation.watchPosition(showPosition);
+          var currLat = position.coords.latitude;
+          var currLng = position.coords.longitude;
+
+          for(i = 0; i < Tasks.find().count(); i++){
+            var t = Tasks.find().fetch()[i];
+            var destLat = t.coordinates.lat
+            var destLng = t.coordinates.lng
+            console.log("going to calculate distance");
+            var distance = calculateDistance(currLat, currLng, destLat, destLng);
+            console.log(distance);
+            // console.log(distance);
+            var s = Meteor.users.findOne({_id: Meteor.userId()},{fields: {settings: 1} });
+            var d = s.settings.remindDistance;
+            var count = t.reminderCount
+            if (distance <= d){
+              if(count < 3){
+                console.log(count);
+                Meteor.call("updateReminderCount", t._id, count);
+                const geoNotif = {
+                  title: "Reminder: You are less than " + d + " km away from " + t.location + ". Complete " + t.title + "? ",
+                  date_time: new Date(),
+                  geo: true
+                }
+                Meteor.call("addNotification", geoNotif);
+                console.log("added to notifications");
+
+              }
+            }
+          }
+        }
+    }
+    function error(err) {
+      console.warn('ERROR(' + err.code + '): ' + err.message);
+    }
+    target = {
+      latitude : 0,
+      longitude: 0
+    };
+    options = {
+      enableHighAccuracy: false,
+      timeout: 5000,
+      maximumAge: 0
+    };
+    id = navigator.geolocation.watchPosition(getCurrentLocation, error, options);
+
+    function calculateDistance (lat1,lon1,lat2,lon2) {
+      var R = 6371; // Radius of the earth in km
+      var dLat = deg2rad(lat2-lat1);  // deg2rad below
+      var dLon = deg2rad(lon2-lon1);
+      var a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+        ;
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      var d = R * c; // Distance in km
+      return d;
+    }
+
+    function deg2rad(deg) {
+      return deg * (Math.PI/180)
+    }
+
 });
 
 Template.modal.helpers({
@@ -60,7 +175,12 @@ Template.modal.helpers({
     tags: function() {
       return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].categories[0].tags;
     },
-
+    more: function() {
+      return Template.instance().more.get();
+    },
+    checked: function() {
+      return Template.instance().check.get();
+    },
     //Map helpers
     exampleMapOptions: function() {
       // Make sure the maps API has loaded
@@ -75,6 +195,12 @@ Template.modal.helpers({
         return mapOptions;
       }
     },
+    userGoals: function() {
+      return Goals.find({createdBy: Meteor.userId()}, {fields: {title: 1}}).fetch();
+    },
+    collaborator: function() {
+      return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].collaborators;
+    },
 });
 
 Template.modal.events({
@@ -83,14 +209,17 @@ Template.modal.events({
             template.taskChosen.set(true);
             template.goalChosen.set(false);
             template.textChosen.set(false);
+            template.more.set(false);
         } else if ($(event.target).val() == "goal") {
             template.taskChosen.set(false);
             template.goalChosen.set(true);
             template.textChosen.set(false);
+            template.more.set(false);
         } else if ($(event.target).val() == "text") {
             template.taskChosen.set(false);
             template.goalChosen.set(false);
             template.textChosen.set(true);
+            template.more.set(false);
         }
     },
     "keypress .js-task-destination": function(event, template){
@@ -101,7 +230,20 @@ Template.modal.events({
         template.map.set(false);
       }
     },
-    "click .js-add-entry": function(event) {
+    "change .js-collaborator-select": function(event) {
+      event.preventDefault();
+
+      var u = $(".js-collaborator-select option:selected").text();
+      // console.log(this);
+      for (var i = 0; i < this.length; i++) {
+        if (this[i].collaboratorName === u) {
+          Session.set("collabo", this[i]);
+          console.log(this[i]);
+          return;
+        }
+      }
+    },
+    "click .js-add-entry": function(event, template) {
         event.preventDefault();
 
         if ($(".js-modal-select").val() == "task") {
@@ -110,12 +252,21 @@ Template.modal.events({
             var tTime = $(".js-task-date").val();
             var tDate = $(".js-task-date").val();
             var tLocation = $(".js-task-destination").val();
-            const tCoordinates = document.getElementById('dvCoor').value;
+            const tCoordinatesLat = document.getElementById('dvCoorLat').value;
+            const tCoordinatesLng = document.getElementById('dvCoorLng').value;
             var tNote = $(".js-task-note").val();
             const tPriority = $(".js-select-task-priority").val();
             const tCategory = $(".js-select-category").val();
             var tTagSelect = $(".js-select-task-tag").val();
             var tTagNew = $(".js-new-tag-name").val();
+            var tOwner = $(".js-collaborator-select").val();
+
+            if (tOwner === "" || tOwner === undefined || tOwner === null) {
+              // console.log("NO COLLAB");
+              tOwner = Meteor.userId();
+            } else {
+              var collaborator = true;
+            }
 
             var tTag;
             var tTagColor;
@@ -123,7 +274,10 @@ Template.modal.events({
             console.log(tTagNew);
             console.log("selected tag: [" + tTagSelect + "]");
 
-            if ((tTagSelect !== "null" && tTagSelect !== undefined) && tTagNew !== "") {
+            if ((tTagSelect === "null" || tTagSelect === null || tTagSelect === undefined) && (tTagNew === "" || tTagNew === null || tTagNew === undefined)) {
+              tTag = null;
+              tTagColor = null;
+            } else if ((tTagSelect !== "null" && tTagSelect !== undefined) && tTagNew !== "") {
               sAlert.warning("Select an existing tag or create one.", {position: "top-right"});
               return;
             } else if ((tTagSelect !== "null" && tTagSelect !== undefined) && tTagNew === "") {
@@ -133,10 +287,11 @@ Template.modal.events({
             } else if ((tTagSelect === "null" || tTagSelect === undefined) && tTagNew !== "") {
               tTag = tTagNew;
               tTagColor = intToRGB(hashCode(tTag));
-            } else {
-              tTag = null;
-              tTagColor = null;
             }
+            // else {
+            //   tTag = null;
+            //   tTagColor = null;
+            // }
 
             const tStart = tDate;
             tTime = moment(tTime).format('h:mm A');
@@ -148,6 +303,10 @@ Template.modal.events({
             if (tNote == "") {
                 tNote = null;
             }
+            const coor = {
+              lat: tCoordinatesLat,
+              lng: tCoordinatesLng
+            }
 
             const newTask = {
                 task: "task",
@@ -157,15 +316,17 @@ Template.modal.events({
                 category: tCategory,
                 time: tTime,
                 location: tLocation,
-                coordinates: tCoordinates,
+                coordinates: coor,
                 note: tNote,
                 createdAt: new Date(),
-                createdBy: Meteor.userId(),
+                createdBy: tOwner,
                 modified: new Date(),
                 completed: false,
                 tag: tTag,
                 tagColor: tTagColor,
-                priority: tPriority
+                priority: tPriority,
+                collaborator: collaborator,
+                reminderCount: 1
                 // isGoal: ???
                 // reminder: ???
                 // repeat: ???
@@ -175,6 +336,18 @@ Template.modal.events({
                 tagName: tTag,
                 tagColor: tTagColor
             }
+
+            if (newTask.collaborator == true) {
+              const collabNotifObj = {
+                  _id: Random.id(),
+                  title: "New entry task from " + Session.get("collabo").collaboratorName,
+                  date_time: new Date(),
+                  collab: true
+              }
+              console.log("XXXXXXX");
+              Meteor.call("addNotification", collabNotifObj);
+            }
+
             console.log("+:" + tTag);
             Meteor.call("createTask", newTask, function(error, result) {
               if (error) {
@@ -209,7 +382,9 @@ Template.modal.events({
 
               }
 
+
             });
+
 
         } else if ($(".js-modal-select").val() == "goal") {
 
@@ -228,7 +403,11 @@ Template.modal.events({
             console.log(gTagNew);
             console.log("selected tag: [" + gTagSelect + "]");
 
-            if ((gTagSelect !== "null" && gTagSelect !== undefined) && gTagNew !== "") {
+
+            if ((gTagSelect === "null" || gTagSelect === null || gTagSelect === undefined) && (gTagNew === "" || gTagNew === null || gTagNew === undefined)) {
+              gTag = null;
+              gTagColor = null;
+            } else if ((gTagSelect !== "null" && gTagSelect !== undefined) && gTagNew !== "") {
               sAlert.warning("Select an existing tag or create one.", {position: "top-right"});
               return;
             } else if ((gTagSelect !== "null" && gTagSelect !== undefined) && gTagNew === "") {
@@ -237,10 +416,11 @@ Template.modal.events({
             } else if ((gTagSelect === "null" || gTagSelect === undefined) && gTagNew !== "") {
               gTag = gTagNew;
               gTagColor = intToRGB(hashCode(gTag));
-            } else {
-              gTag = null;
-              gTagColor = null;
             }
+            // else {
+            //   gTag = null;
+            //   gTagColor = null;
+            // }
 
             gDateST = moment(gDateS).format('h:mm A');
             gDateSD = moment(gDateS).format('MMM Do YY');
@@ -375,6 +555,7 @@ Template.modal.events({
           });
 
         }
+        template.more.set(false);
         $('.modal').modal('hide');
         // location.reload();
 
@@ -385,7 +566,40 @@ Template.modal.events({
         const destination = $(".js-task-destination").val();
         console.log("Origin: " + origin + '\n' +"Destination: " + destination);
         calculateRoute(origin, destination);
-    }
+    },
+    "click .css-entry-more-close": function(event, template) {
+      event.preventDefault();
+
+      template.more.set(false);
+    },
+    "click .css-entry-more-open": function(event, template) {
+      event.preventDefault();
+
+      template.more.set(true);
+    },
+    "click .js-task-goal": function(event, template) {
+      // event.preventDefault();
+
+      if ($('.js-task-goal').is(":checked")) {
+        template.check.set(true);
+      } else {
+        template.check.set(false);
+      }
+    },
+    "click .js-new-task-input": function(event) {
+      // event.preventDefault();
+
+      var y = Session.get("numOfTasks");
+      Session.set("numOfTasks", y + 1);
+      console.log(y);
+      if (y < 5) {
+        moreTasksInGoal();
+      } else {
+        sAlert.warning("Let's only stick to 5 tasks for now.", {position: "top-right"})
+      }
+
+    },
+
 });
 
 Meteor.startup(function () {
@@ -439,6 +653,10 @@ Template.modal.onCreated(function() {
     this.goalChosen = new ReactiveVar(false);
     this.textChosen = new ReactiveVar(false);
     this.map = new ReactiveVar(false);
+    this.more = new ReactiveVar(false);
+    this.check = new ReactiveVar(false);
+    // this.edit = new ReactiveVar();
+    // this.isEdit = new ReactiveVar(false);
     // Map onCreated
     // We can use the `ready` callback to interact with the map API once the map is ready.
     GoogleMaps.ready('initMap', function(map) {
@@ -453,6 +671,8 @@ Template.modal.onCreated(function() {
 Template.modal.onRendered(function() {
     this.$('.datetimepicker5').datetimepicker();
     this.$('.datetimepicker6').datetimepicker();
+    Session.set("numOfTasks", 1);
+    // this.edit = new ReactiveVar();
 
     // Map onRendered
     GoogleMaps.load({
@@ -485,6 +705,7 @@ Template.modal.onRendered(function() {
               console.log("map loaded with geolocation");
                google.maps.event.trigger(map, 'resize');
                map.setCenter(center);
+
           });
           var input = document.getElementById('end');
           var autocomplete = new google.maps.places.Autocomplete(input);
@@ -497,6 +718,7 @@ Template.modal.onRendered(function() {
           });
       } else {
             //  latlng = new google.maps.LatLng(42.358970, -71.066093);
+          console.log("Can't track location");
       }
       return {
               zoom: 10,
@@ -509,10 +731,13 @@ Template.modal.onRendered(function() {
 
 Meteor.setInterval(function() {
   var x = Tasks.find().fetch();
+  var t = Session.get("numOfNotifications");
+
   for (var i = 0; i < x.length; i++) {
     if ((x[i].date == moment(new Date()).format("MMM Do YY")) && (x[i].time == moment(new Date()).format("h:mm A"))) {
 
       const notification = {
+        _id: Random.id(),
         title: x[i].title,
         date_time: new Date(),
         priority: x[i].priority
@@ -532,6 +757,7 @@ Meteor.setInterval(function() {
           effect: 'flip',
           position: 'top-right',
           timeout: 4000,
+          stack: true,
           html: true,
           onRouteClose: true,
           stack: false,
@@ -547,7 +773,11 @@ Meteor.setInterval(function() {
       return;
       // console.log("Hey");
     }
+
+    // Session.setPersistent("numOfNotifications", t + 1);
+
   }
+
 }, 40000);
 
 //************* MAP CALCULATE ROUTE ***************//
@@ -594,7 +824,9 @@ function calculateRoute(origin, destination) {
                     lat: results[0].geometry.location.lat(),
                     lng: results[0].geometry.location.lng()
                   }
-                  document.getElementById('dvCoor').defaultValue = coordinates.lat +", " +coordinates.lng;
+                  console.log("here");
+                  document.getElementById('dvCoorLat').defaultValue = coordinates.lat;
+                  document.getElementById('dvCoorLng').defaultValue = coordinates.lng;
 
                   // Session.set('destCoor', coordinates);
                   // var coor = Session.get('destCoor');
@@ -625,9 +857,9 @@ function calculateRoute(origin, destination) {
                   var distance = response.rows[0].elements[0].distance.text;
                   var duration = response.rows[0].elements[0].duration.text;
                   var dvDistance = document.getElementById("dvDistance");
-                 dvDistance.innerHTML = "";
+                  dvDistance.innerHTML = "";
                   dvDistance.innerHTML += "Distance: " + distance + "<br />";
-                  dvDistance.innerHTML += "Duration:" + duration;
+                  dvDistance.innerHTML += "Duration: " + duration;
                   console.log("Distance: " + distance);
                   console.log("Duration:" + duration);
               } else {
@@ -641,3 +873,17 @@ function calculateRoute(origin, destination) {
           event.preventDefault();
           calculateRoute($("#from").val(), $("#to").val());
         });
+        //************* GEOLOCATION WATCHPOSITION ***************//
+        // var x = document.getElementById("demo");
+        // function getCurrentLocation() {
+        //     if (navigator.geolocation) {
+        //       console.log("detecting current location");
+        //         navigator.geolocation.watchPosition(showPosition);
+        //     } else {
+        //         x.innerHTML = "Geolocation is not supported by this browser.";
+        //     }
+        // }
+        // function showPosition(position) {
+        //     x.innerHTML = "Latitude: " + position.coords.latitude +
+        //     "<br>Longitude: " + position.coords.longitude;
+        // }

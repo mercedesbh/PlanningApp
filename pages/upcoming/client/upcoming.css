@@ -8,10 +8,16 @@
 }
 .css-upcoming-middle {
     position: relative;
-    height: 120%;
+    height: 100%;
     background-color: #ffffff;
-    box-shadow: 6px 0px 5px #e6e6e6;
     padding: 0px;
+}
+.css-upcoming-middle-inner {
+  position: relative;
+  height: auto !important;
+  /*box-shadow: 6px 0px 5px #e6e6e6;*/
+  padding: 0px;
+  background-color: #ffffff;
 }
 .css-tab-container {
     position: relative;

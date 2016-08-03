@@ -69,7 +69,7 @@ Template.calendar.onRendered(function(event, template) {
             center: '',
             right: ''
         },
-        events: _.map(Tasks.find().fetch(), function(x) {
+        events: _.map(Tasks.find({createdBy: Meteor.userId()}).fetch(), function(x) {
             // console.dir(x.date);
             const z = {
                 title: x.title,

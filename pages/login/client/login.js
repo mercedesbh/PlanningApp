@@ -18,6 +18,8 @@ Template.login.events({
             } else {
                 Router.go("/upcoming");
                 notification();
+                Session.setPersistent("numOfNotifications", Meteor.users.findOne({_id: Meteor.userId()}).notifications.length);
+                // console.log(k);
                 // sAlert.info('Welcome back!');
             }
         });

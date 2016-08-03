@@ -85,8 +85,15 @@ Template.layout.onRendered(function() {
             if (distance <= d){
               if(count < 3){
                 console.log(count);
-                sAlert.warning("Reminder: You are less than 1 km away from " + t.location + ". Would you like to complete " + t.title + "? ");
                 Meteor.call("updateReminderCount", t._id, count);
+                const geoNotif = {
+                  title: "Reminder: You are less than " + d + " km away from " + t.location + ". Complete " + t.title + "? ",
+                  date_time: new Date(),
+                  geo: true
+                }
+                Meteor.call("addNotification", geoNotif);
+                console.log("added to notifications");
+
               }
             }
           }

@@ -234,6 +234,17 @@
 								<option value="<span style='color: #e61610'>Urgent</span>">Urgent</option>
 							</select>
 
+							<div id="x"> </div>
+
+								<b>End Destination: </b>
+								<input id="end" class="js-task-destination form-control" type="text" placeholder="Enter a location">
+								<div class="css-task-dest-coor">
+									<input id="dvCoorLat" class="js-dest-coor-lat form-control" type="text" placeholder="Coordinates">
+									<input id="dvCoorLng" class="js-dest-coor-lng form-control" type="text" placeholder="Coordinates">
+								</div>
+								<input class="js-submit-location btn" type="submit" value="Get Path">
+						<!-- </form> -->
+								{{#if map}}
 
 						</div>
 						<div class="col-sm-6">

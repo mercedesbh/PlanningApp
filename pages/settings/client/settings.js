@@ -2,6 +2,9 @@ Template.settings.helpers({
   collaborator: function() {
     return Template.instance().collaborator.get();
   },
+  checked: function(){
+    return Template.instance().check.get();
+  },
 
 });
 
@@ -24,8 +27,6 @@ Template.settings.events({
       console.log(c);
     }
 
-
-
   },
   "click .js-request": function(event, template) {
     event.preventDefault();
@@ -42,8 +43,17 @@ Template.settings.events({
     });
   },
 
+  "click .js-save-reminder-settings": function(event, template){
+    var d = $(".js-distance-select").val();
+      Meteor.call("setDistanceReminder", d);
+      var t = $(".js-time-select").val();
+      Meteor.call("setTimeReminder", t);
+    sAlert.success("Reminder settings saved");
+  },
+
 });
 
 Template.settings.onCreated(function() {
   this.collaborator = new ReactiveVar();
+  this.check = new ReactiveVar(false);
 });

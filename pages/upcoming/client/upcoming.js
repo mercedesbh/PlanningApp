@@ -12,7 +12,9 @@ Template.upcoming.helpers({
     function isToday(p) {
       // var q = moment(p.date, "MMM Do YY").fromNow(true);
       if (moment(p.date, "MMM Do YY").format("MM-DD-YYYY") === moment(new Date(), "MMM Do YY").format("MM-DD-YYYY")) {
-        return p;
+        if (p.completed === false) {
+          return p;
+        }
       }
       // return p.time - new Date() < 86400000;
     }
@@ -40,7 +42,9 @@ Template.upcoming.helpers({
     function isTomorrow(p) {
       // only entries for tomorrow should stay (not today nor the day after tomorrow [to be fixed])
       if (moment(p.date, "MMM Do YY").format("MM-DD-YYYY") === moment().add(1, "days").format("MM-DD-YYYY")) {
-        return p;
+        if (p.completed === false) {
+          return p;
+        }
       }
     }
 

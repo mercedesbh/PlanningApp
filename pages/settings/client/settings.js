@@ -5,7 +5,9 @@ Template.settings.helpers({
   checked: function(){
     return Template.instance().check.get();
   },
-
+  reminderSets: function() {
+    return Meteor.users.find({_id: Meteor.userId()}).fetch()[0].settings;
+  },
 });
 
 Template.settings.events({
@@ -30,10 +32,12 @@ Template.settings.events({
   },
   "click .js-request": function(event, template) {
     event.preventDefault();
+    // console.log(this);
 
     var u = this;
+    var i = Meteor.users.findOne({_id: Meteor.userId()}).profile;
 
-    Meteor.call("sendRequest", u, function(error) {
+    Meteor.call("sendRequest", u, i, function(error) {
       if (error) {
         console.log(error.reason);
         sAlert.error("Sorry: " + error.reason);
@@ -45,9 +49,12 @@ Template.settings.events({
 
   "click .js-save-reminder-settings": function(event, template){
     var d = $(".js-distance-select").val();
-      Meteor.call("setDistanceReminder", d);
-      var t = $(".js-time-select").val();
-      Meteor.call("setTimeReminder", t);
+    var t = $(".js-time-select").val();
+    d = Number(d);
+    t = Number(t);
+
+    Meteor.call("setDistanceReminder", d);
+    Meteor.call("setTimeReminder", t);
     sAlert.success("Reminder settings saved");
   },
 

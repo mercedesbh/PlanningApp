@@ -67,6 +67,7 @@ Template.layout.events({
       // console.log(this);
       Meteor.call("linkCollab", this.sender);
       // console.log("here");
+      console.log(this);
       Meteor.call("removeNotif", this);
     },
     "click .js-deny-request": function(event) {
@@ -81,7 +82,15 @@ Template.layout.events({
 
       Meteor.call("removeNotif", this);
     },
+    "click .js-completed": function(event) {
+      event.preventDefault();
 
+
+      console.log(this);
+      console.log("here");
+      Meteor.call("entryComplete", this);
+      console.log("there");
+    },
 });
 
 Template.layout.onRendered(function() {
@@ -273,6 +282,14 @@ Template.modal.events({
               var collaborator = true;
             }
 
+            if (tPriority === "<span style='color: #666666'>Neutral</span>") {
+              var tPriorityLevel = 1;
+            } else if (tPriority === "<span style='color: #0c59cf'>Important</span>") {
+              var tPriorityLevel = 2;
+            } else if (tPriority === "<span style='color: #e61610'>Urgent</span>") {
+              var tPriorityLevel = 3;
+            }
+
             var tTag;
             var tTagColor;
 
@@ -331,7 +348,8 @@ Template.modal.events({
                 tagColor: tTagColor,
                 priority: tPriority,
                 collaborator: collaborator,
-                reminderCount: 1
+                reminderCount: 1,
+                pLevel: tPriorityLevel
                 // isGoal: ???
                 // reminder: ???
                 // repeat: ???
@@ -347,7 +365,8 @@ Template.modal.events({
                   _id: Random.id(),
                   title: "New entry task from " + Session.get("collabo").collaboratorName,
                   date_time: new Date(),
-                  collab: true
+                  collab: true,
+                  sendTo: tOwner
               }
               console.log("XXXXXXX");
               Meteor.call("addNotification", collabNotifObj);
@@ -394,6 +413,22 @@ Template.modal.events({
             var gTagSelect = $(".js-select-goal-tag").val();
             var gTagNew = $(".js-new-tag-name").val();
 
+            var first = $(".js-task-of-goal").val();
+            var second = $(".js-task-of-goal2").val();
+            var third = $(".js-task-of-goal3").val();
+            var fourth = $(".js-task-of-goal4").val();
+            var fifth = $(".js-task-of-goal5").val();
+
+            var taskArray = [first, second, third, fourth, fifth];
+
+            taskArray = _.filter(taskArray, function(task) {
+              if (task === "" || task === undefined || task === null) {
+                return;
+              } else {
+                return 1;
+              }
+            });
+
             var gTag;
             var gTagColor;
 
@@ -433,8 +468,9 @@ Template.modal.events({
                 goal: "goal",
                 title: gTitle,
                 category: gCategory,
-                start: gDateSD,
+                start: gDateS,
                 time: gDateST,
+                date: gDateSD,
                 finish_date: gDateFD,
                 finish_time: gDateFT,
                 note: gNote,
@@ -442,7 +478,7 @@ Template.modal.events({
                 createdBy: Meteor.userId(),
                 modified: new Date(),
                 completed: false,
-                tasks: [],
+                tasks: taskArray,
                 priority: gPriority,
                 tag: gTag,
                 tagColor: gTagColor
@@ -455,8 +491,6 @@ Template.modal.events({
                 tagName: gTag,
                 tagColor: gTagColor
             }
-
-            $('#calendar').fullCalendar( 'renderEvent', newGoal , 'stick');
 
             Meteor.call("createGoal", newGoal, function(error, result) {
               if (error) {
@@ -729,9 +763,10 @@ Template.modal.onRendered(function() {
 Meteor.setInterval(function() {
   var x = Tasks.find().fetch();
   var t = Session.get("numOfNotifications");
+  var a = Meteor.users.findOne({_id: Meteor.userId()}).settings.remindTime;
 
   for (var i = 0; i < x.length; i++) {
-    if ((x[i].date == moment(new Date()).format("MMM Do YY")) && (x[i].time == moment(new Date()).format("h:mm A"))) {
+    if ((x[i].date == moment(new Date()).format("MMM Do YY")) && (moment(x[i].start).subtract(a, 'minutes').format("h:mm A") == moment(new Date()).format("h:mm A"))) {
 
       const notification = {
         _id: Random.id(),

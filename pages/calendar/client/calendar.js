@@ -27,6 +27,8 @@ Template.calendar.events({
 });
 
 Template.calendar.onRendered(function(event, template) {
+  var r = Tasks.find({createdBy: Meteor.userId()}).fetch();
+  var p = r.concat(Goals.find({createdBy: Meteor.userId()}).fetch());
   this.autorun(function(event, template) {
     $('#calendar').fullCalendar({
         dayClick: function(date) {
@@ -69,7 +71,7 @@ Template.calendar.onRendered(function(event, template) {
             center: '',
             right: ''
         },
-        events: _.map(Tasks.find({createdBy: Meteor.userId()}).fetch(), function(x) {
+        events: _.map(p, function(x) {
             // console.dir(x.date);
             const z = {
                 title: x.title,
@@ -99,3 +101,9 @@ Tracker.autorun(function() {
   $('#calendar').fullCalendar('refetchEvents');
   $('#calendar').fullCalendar('rerenderEvents');
 });
+
+// Template.calendar.onRendered(function() {
+//   var r = Tasks.find({createdBy: Meteor.userId()}).fetch();
+//   var p = r.concat(Goals.find({createdBy: Meteor.userId()}).fetch());
+//   Session.set("calendarEvent");
+// });

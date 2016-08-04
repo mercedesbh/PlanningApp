@@ -19,8 +19,9 @@
 						{{#if todoToday}}
 							{{#each todoToday}}
 
+							<a href="#">
 								<div class="css-upcoming-days">
-									<a href="#"><h2>{{title}}</h2></a>
+									<h2>{{title}}</h2>
 									<span>
 										<h4>
 											{{time}}
@@ -32,12 +33,13 @@
 										<span class="pull-right"> <h4> {{{priority}}} </h4> </span>
 									</span>
 									{{#if task}}
-										<h4>Task</h4>
+										<h4>Task | <a class="js-completed" href="#" style="color: #fe5a5a;">Done</a></h4>
 									{{/if}}
 									{{#if goal}}
-										<h4>Goal</h4>
+										<h4>Goal | <a class="js-completed" href="#" style="color: #fe5a5a;">Done</a></h4>
 									{{/if}}
 								</div>
+							</a>
 
 							{{/each}}
 						{{else}}
@@ -64,10 +66,10 @@
 												<span class="pull-right"> <h4> {{{priority}}} </h4> </span>
 											</span>
 											{{#if task}}
-												<h4>Task</h4>
+												<h4>Task | <a class="js-completed" href="#" style="color: #fe5a5a;">Done</a></h4>
 											{{/if}}
 											{{#if goal}}
-												<h4>Goal</h4>
+												<h4>Goal | <a class="js-completed" href="#" style="color: #fe5a5a;">Done</a></h4>
 											{{/if}}
 										</div>
 									</a>

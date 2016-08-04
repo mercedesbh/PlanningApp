@@ -57,17 +57,22 @@ Meteor.methods({
       }
     }
   },
-  sendRequest: function(u) {
+  sendRequest: function(u, i) {
     const m = {
       _id: Random.id(),
-      notification: u.profile.first + " " + u.profile.last + " wants to be a collaborator",
+      notification: i.first + " " + i.last + " wants to be a collaborator",
       date_time: new Date(),
       sender: u.sender
     }
     var x = Meteor.users.update({_id: u._id}, {$push: {notifications: m}});
   },
   addNotification: function(notification) {
-    Meteor.users.update({_id: this.userId}, {$addToSet: {"notifications": notification}});
+    if (notification.collab == true) {
+      Meteor.users.update({_id: notification.sendTo}, {$addToSet: {"notifications": notification}});
+    } else {
+      Meteor.users.update({_id: this.userId}, {$addToSet: {"notifications": notification}});
+    }
+
   },
   saveCoor: function(coordinates){
     Meteor.users.update({_id: this.userId}, {$addToSet: {"locations": coordinates}});
@@ -91,7 +96,7 @@ Meteor.methods({
   },
   removeNotif: function(item) {
     // console.log(item._id);
-    Meteor.users.update({}, {$pull: {'notifications': {_id: item._id}}});
+    Meteor.users.update({_id: this.userId}, {$pull: {'notifications': {_id: item._id}}});
   },
   editEntry: function(item, obj) {
     Tasks.update({_id: item}, {$set: obj});
@@ -105,6 +110,15 @@ Meteor.methods({
   updateReminderCount: function(id, count){
    Tasks.update({_id: id}, {$set: {"reminderCount": count+1}});
  },
+ entryComplete: function(item) {
+   if (item.hasOwnProperty("task")) {
+     console.log("TASK");
+     Tasks.update({_id: item._id}, {$set: {completed: true}});
+   } else if (item.hasOwnProperty("goal")) {
+     console.log("GOAL");
+     Goals.update({_id: item._id}, {$set: {completed: true}});
+   }
+ }
 
 
   // addEvent( event ) {

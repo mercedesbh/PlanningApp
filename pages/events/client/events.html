@@ -13,24 +13,28 @@
                 </a>
               </div>
               <div class="col-sm-3">
+                  {{#if sort}}
+                  <a class="css-clear-all js-clear-all" href="#">
+                    Clear sort
+                  </a>
+                  {{/if}}
                   <div class="css-events-nav-dropdown dropdown">
                       <a href="#" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                          Refine
+                          Sort
                           <span class="caret"></span>
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                          <li><a href="#">by priority</a></li>
-                          <li><a href="#">by group</a></li>
-                          <li><a href="#">by date</a></li>
-                          <li><a href="#">by time</a></li>
+                          <li class="js-sort-priority"><a href="#">by priority</a></li>
+                          <li class="js-sort-tag"><a href="#">by tag</a></li>
+                          <li class="js-sort-date"><a href="#">by date</a></li>
                       </ul>
                   </div>
               </div>
               <div class="col-sm-6">
                   <ul class="css-events-nav-tabs nav nav-justified">
-                      <li><a href="#">Tasks</a></li>
-                      <li><a href="#">Goals</a></li>
-                      <li><a href="#">Texts</a></li>
+                      <li class="js-refine-tasks {{hightlightType 'task'}}"><a href="#">Tasks</a></li>
+                      <li class="js-refine-goals {{hightlightType 'goal'}}"><a href="#">Goals</a></li>
+                      <li class="js-refine-texts {{hightlightType 'text'}}"><a href="#">Texts</a></li>
                   </ul>
               </div>
           </div>
@@ -67,11 +71,11 @@
                         <li>
                           <h5> {{title}} </h5>
                           <h5>
-                            {{#if task }}
+                            {{#if task}}
                               {{time}}
                             {{/if}}
                             {{#if goal}}
-                              {{start_time}}
+                              {{time}}
                             {{/if}}
                             {{#if text}}
                               {{modified_time}}
@@ -81,7 +85,7 @@
                                 {{date}}
                               {{/if}}
                               {{#if goal}}
-                                {{start_date}}
+                                {{date}}
                               {{/if}}
                               {{#if text}}
                                 {{modified_date}}
@@ -181,6 +185,7 @@
                           <h4>Complete by: {{detailed.finish_date}} </h4>
                           <div class="css-tag-color" style="background-color: #{{detailed.tagColor}}"></div>{{detailed.tag}}
                         </div>
+
                         <!-- show tasks that are part of this goal here -->
                         <div class="pull-right">
                           <button class="js-cancel-edit btn" type="button">Cancel</button>
@@ -232,7 +237,20 @@
                             <h4>Start by: {{detailed.start_date}} </h4>
                             <h4>Complete by: {{detailed.finish_date}} </h4>
                             <div class="css-tag-color" style="background-color: #{{detailed.tagColor}}"></div>{{detailed.tag}}
+
+                            <div class="css-task-of-goal">
+                              {{#if detailed.tasks}}
+                              <h5>Tasks:</h5>
+                              <ol>
+                                {{#each task in detailed.tasks}}
+                                  <li>{{task}}</li>
+                                {{/each}}
+                              </ol>
+                              {{/if}}
+                            </div>
+
                           </div>
+                          <br>
                           <!-- show tasks that are part of this goal here -->
                           <button class="js-edit-entry btn pull-right" type="button">Edit</button>
                           <br>

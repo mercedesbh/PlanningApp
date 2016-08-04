@@ -61,7 +61,6 @@
   position: relative;
   width: 70%;
   height: auto;
-  height: auto;
   margin: 10px auto;
   border-bottom: 1px solid #f0f0f0;
   /*background-color: blue;*/
@@ -72,7 +71,11 @@
 }
 .css-upcoming-days h2 {
   text-align: center;
+  /*font-family: Sukhumvit Set;*/
 }
+/*.css-upcoming-days h3, h4, span {
+  font-family: Sukhumvit Set;
+}*/
 .css-upcoming-tag-color {
   position: relative;
   display: inline-block;
